@@ -3,6 +3,7 @@ class DatabaseUtil extends Util {
 	
 	public function get($name) {
 		return manager('Database')->get($name);
+		
 	}
 	
 }
