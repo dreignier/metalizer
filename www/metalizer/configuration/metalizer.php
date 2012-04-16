@@ -1,2 +1,2 @@
 <?php
-	$config['metalizer.mode'] = MODE_PRODUCTION;
+	$config['metalizer.mode'] = MODE_DEVELOPMENT;

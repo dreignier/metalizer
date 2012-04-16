@@ -38,7 +38,7 @@ require PATH_APPLICATION_PAGE . 'Home.php';
 
 try {
 	
-	// *** Create the controller ***
+	// *** Create the page ***
 	$pathInfo = explode(config('url.separator'), trim(@Util('Server')->get('PATH_INFO'), '/'));
 	
 	$pathInfoPointer = 0;
