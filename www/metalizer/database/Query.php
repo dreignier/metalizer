@@ -5,6 +5,15 @@ class Query extends MetalizerObject {
 		
 	}
 	
-	//public function 
+	public function next() {
+		
+	}
 	
+	public function count() {
+		
+	}
+	
+	public function isEmpty() {
+		
+	}
 }
