@@ -1,1 +1,4 @@
 <?php
+interface IDatabaseDriver {
+	
+}
