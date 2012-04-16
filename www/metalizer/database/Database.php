@@ -1,6 +1,5 @@
 <?php
 class Database extends MetalizerObject {
-	
 	private $host;
 	private $port;
 	private $login;
@@ -64,5 +63,4 @@ class Database extends MetalizerObject {
 		
 		return new Query($result);
 	}
-	
 }
