@@ -11,3 +11,7 @@ class DatabaseManager extends Manager {
 	}
 	
 }
+
+function database($name = 'metalizer') {
+	return manager('Database')->get($name);
+}

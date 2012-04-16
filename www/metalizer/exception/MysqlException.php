@@ -1,2 +1,8 @@
 <?php
-class MysqlException extends MetalizerException {}
+class MysqlException extends MetalizerException {
+
+	public function __construct() {
+		
+	}
+	
+}
