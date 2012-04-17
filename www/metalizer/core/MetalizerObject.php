@@ -19,7 +19,7 @@
 
 /**
  * Mother class of all classes in Metalizer.
- * @author Magus
+ * @author David Reignier
  *
  */
 class MetalizerObject {
@@ -50,7 +50,7 @@ class MetalizerObject {
 	 * @param $manager Manager
 	 * 	A manager
 	 */
-	public function setManager(Manager $manager) {
+	public function setManager($manager) {
 		$this->manager = $manager;
 	}
 
@@ -84,7 +84,7 @@ class MetalizerObject {
 	 * @param $manager Manager
 	 * 	Optional. The new manager of the object.
 	 */
-	public function wakeUp(Manager $manager = null) {
+	public function wakeUp($manager = null) {
 		if ($this->sleeping) {
 			if ($manager) {
 				$this->manager = $manager;
