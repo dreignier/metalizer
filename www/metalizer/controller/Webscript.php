@@ -14,10 +14,11 @@ class Webscript extends Controller {
 
 	/**
 	 * Construct a new webscript
-	 * @param $data Optional. The data for the webscript.
+	 * @param $data array[mixed]
+	 * 	Optional. The data for the webscript.
 	 * @return Webscript
 	 */
-	public function __construct(array $data = array()) {
+	public function __construct($data = array()) {
 		$this->data = $data;
 		$file = classLoader()->getFile($this->getClass());
 		$this->folder = substr($file, 0, -(strlen($this->getClass()) + 4));
@@ -50,10 +51,12 @@ class Webscript extends Controller {
 
 	/**
 	 * Construct the path to a file for this webscript.
-	 * @param $file The file.
-	 * @return string The path to the given file for this webscript.
+	 * @param $file string
+	 * 	The file.
+	 * @return string 
+	 * 	The path to the given file for this webscript.
 	 */
-	public function getFile(string $file) {
+	public function getFile($file) {
 		return $this->folder . $file;
 	}
 }

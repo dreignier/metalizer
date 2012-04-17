@@ -1,6 +1,15 @@
 <?php
+/**
+ * Manager of all Utils.
+ * @author David Reignier
+ *
+ */
 class UtilManager extends Manager {
 	
+	/**
+	 * Construct a new UtilManager
+	 * @return UtilManager
+	 */
 	public function __construct() {
 		parent::__construct('Util');
 		
@@ -17,6 +26,13 @@ class UtilManager extends Manager {
 	
 }
 
+/**
+ * Get an Util by its name.
+ * @param $name string
+ * 	The name of an Util.
+ * @return Util 
+ * 	The Util corresponding to the given name.
+ */
 function util($name) {
 	return manager('Util')->get($name);
 }

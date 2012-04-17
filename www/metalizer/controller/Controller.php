@@ -15,10 +15,12 @@ class Controller extends MetalizerObject {
 
 	/**
 	 * Add a data.
-	 * @param name The name of the data.
-	 * @param value The value of the data. Can be anything.
+	 * @param name string 
+	 * 	The name of the data.
+	 * @param value mixed
+	 * 	The value of the data. Can be anything.
 	 */
-	public function data(string $name, mixed $value) {
+	public function data($name, $value) {
 		$this->data[$name] = $value;
 	}
 }

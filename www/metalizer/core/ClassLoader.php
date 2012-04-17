@@ -25,10 +25,11 @@ class ClassLoader extends MetalizerObject {
 
 	/**
 	 * Load a class.
-	 * @param $class The class name.
+	 * @param $class string
+	 * 	The class name.
 	 * @return mixed Nothing if the class is loaded correctly, false otherwise.
 	 */
-	public function load(string $class) {
+	public function load($class) {
 		if (isset($this->files[$class])) {
 			require_once $this->files[$class];
 			return;
@@ -88,9 +89,10 @@ class ClassLoader extends MetalizerObject {
 
 	/**
 	 * Browse a directory recursively and get all the classes files (A class file begin with an upper case).
-	 * @param $directory The directory to browse.
+	 * @param $directory string
+	 * 	The directory to browse.
 	 */
-	private function browseFiles(string $directory) {
+	private function browseFiles($directory) {
 		static $upperCases = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 		$dirHandle = opendir($directory);
@@ -108,8 +110,10 @@ class ClassLoader extends MetalizerObject {
 
 	/**
 	 * Get the file of a class.
-	 * @param $class A class.
-	 * @return The class of the given file.
+	 * @param $class string
+	 * 	A class.
+	 * @return string
+	 * 	The class of the given file.
 	 */
 	public function getFile($class) {
 		if (isset($this->files[$class])) {
