@@ -17,33 +17,31 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-define('IN_MILLISECONDS', 1000);
-define('MINUTE', 60);
-define('HOUR', MINUTE * 60);
-define('DAY', HOUR * 24);
-define('WEEK', DAY * 7);
-
 /**
- * Provide some constants and helper for time and date.
+ * Provide an easy access to Database objects.
  * @author David Reignier
  *
  */
-class TimeUtil extends Util {
+class DatabaseUtil extends Util {
 
 	/**
-	 * Return the current date in a Unix timestamp.
-	 * @return long
-	 * 	The current date.
+	 * Get a Database with its name.
+	 * @param $name string
+	 * 	The name of a Database
+	 * @return Database
+	 * 	The Database corresponding to the given name.
 	 */
-	public function now() {
-		return time();
+	public function get($name) {
+		return manager('Database')->get($name);
 	}
 
 }
 
 /**
- * @see TimeUtil#now
+ * @see DatabaseUtil#get
+ * @param $name string
+ * 	Optional. 'metalizer' by default.
  */
-function now() {
-	return Util('Time')->now();
+function database($name = 'metalizer') {
+	return util('Database')->get($name);
 }

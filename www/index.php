@@ -1,20 +1,20 @@
 <?php
 /*
- 	Metalizer, a MVC php Framework.
- 	Copyright (C) 2012 David Reignier
- 
- 	This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ Metalizer, a MVC php Framework.
+ Copyright (C) 2012 David Reignier
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
 /**
@@ -55,23 +55,23 @@ require PATH_METALIZER . 'initialize.php';
 require PATH_APPLICATION_PAGE . 'Home.php';
 
 try {
-	
+
 	// *** Create the page ***
 	$pathInfo = explode(config('url.separator'), trim(@Util('Server')->get('PATH_INFO'), '/'));
-	
+
 	$pathInfoPointer = 0;
 	$page = null;
 	$method = null;
 	$params = array();
-	
+
 	if ($pathInfo && is_array($pathInfo)) {
 		$pathInfoSize = sizeof($pathInfo);
 		$folder = PATH_APPLICATION_PAGE;
-		
+
 		// Search for the controller
 		while (($pathInfoPointer < $pathInfoSize) && !$page) {
 			$element = $pathInfo[$pathInfoPointer];
-			
+				
 			if (is_dir($folder . $element)) {
 				$folder = $folder . $element;
 			} else if (class_exists($element) && is_subclass_of($element, 'Page')) {
@@ -79,53 +79,53 @@ try {
 			} else {
 				throw new PageNotFoundException("Page not found : $page");
 			}
-			
+				
 			$pathInfoPointer += 1;
 		}
-		
+
 		// Search for the method
 		if ($pathInfoPointer < $pathInfoSize) {
 			$method = $pathInfo[$pathInfoPointer];
 			$pathInfoPointer += 1;
 		}
-		
+
 		// Search for params
 		while ($pathInfoPointer < $pathInfoSize) {
 			$params[] = $pathInfo[$pathInfoPointer];
 			$pathInfoPointer += 1;
 		}
-		
+
 	}
-	
+
 	if ($page == null) {
 		$page = config('page.name.default');
 	}
-	
+
 	if (!$page || !class_exists($page) || !is_subclass_of($page, 'Page')) {
 		throw new PageNotFoundException("page.name.default ($page) is not a valid Page class");
 	}
-	
+
 	if ($method == null) {
 		$method = config('page.method.default');
 	}
-	
+
 	// Check if all is ok
 	$reflectionClass = new ReflectionClass($page);
-	
+
 	if (!$reflectionClass->hasMethod($method)) {
 		throw new PageNotFoundException("Method not found : $method");
 	}
-	
+
 	$reflectionMethod = $reflectionClass->getMethod($method);
-	
+
 	if (!$reflectionMethod->isPublic() || $reflectionMethod->isStatic()) {
 		throw new PageNotFoundException("Method not found : $method");
 	}
-	
+
 	if (sizeof($params) < $reflectionMethod->getNumberOfRequiredParameters()) {
 		throw new PageNotFoundException("Not enought argument");
 	}
-	
+
 	// Let's go !
 	$page = new $page();
 	call_user_func_array(array($page, $method), $params);

@@ -1,20 +1,20 @@
 <?php
 /*
- 	Metalizer, a MVC php Framework.
- 	Copyright (C) 2012 David Reignier
- 
- 	This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ Metalizer, a MVC php Framework.
+ Copyright (C) 2012 David Reignier
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
 /**
@@ -29,43 +29,43 @@
  *
  */
 class Database extends MetalizerObject {
-	
+
 	/**
 	 * The host
 	 * @var string
 	 */
 	private $host;
-	
+
 	/**
 	 * The port
 	 * @var string
 	 */
 	private $port;
-	
+
 	/**
 	 * The username
 	 * @var string
 	 */
 	private $login;
-	
+
 	/**
 	 * The password
 	 * @var string
 	 */
 	private $password;
-	
+
 	/**
 	 * The name of the database
 	 * @var string
 	 */
 	private $name;
-	
+
 	/**
 	 * The link to the database. null if the Database is not connected
 	 * @var mysqli_link
 	 */
 	private $link;
-	
+
 	/**
 	 * Create a new Database
 	 * @param $name string
@@ -74,7 +74,7 @@ class Database extends MetalizerObject {
 	 */
 	public function __construct($name) {
 		$key = "database.$name";
-		
+
 		$this->host = config("$key.host");
 		$this->port = config("$key.port");
 		$this->login = config("$key.login");
@@ -82,17 +82,17 @@ class Database extends MetalizerObject {
 		$this->name = config("$key.name");
 		$this->connect();
 	}
-	
+
 	/**
 	 * Override the default getLogName.
-	 * @return string 
+	 * @return string
 	 * 	[host:name]
 	 * @see MetalizerObject#getLogName()
 	 */
 	public function getLogName() {
 		return "[$this->host:$this->name]";
 	}
-	
+
 	/**
 	 * Connect the database.
 	 */
@@ -102,10 +102,10 @@ class Database extends MetalizerObject {
 			$this->link = null;
 			$errno = mysqli_connect_errno();
 			$error = mysqli_connect_error();
-			throw new MysqlException("Error during connection : ($errno) $error");		
+			throw new MysqlException("Error during connection : ($errno) $error");
 		}
 	}
-	
+
 	/**
 	 * Disconnect the database
 	 */
@@ -113,7 +113,7 @@ class Database extends MetalizerObject {
 		mysqli_close($this->link);
 		$this->link = null;
 	}
-	
+
 	/**
 	 * On sleep, the database disconnect itself.
 	 * @see MetalizerObject#onSleep()
@@ -121,7 +121,7 @@ class Database extends MetalizerObject {
 	public function onSleep() {
 		$this->disconnect();
 	}
-	
+
 	/**
 	 * On wake up, the database connect itself.
 	 * @see MetalizerObject#onWakeUp()
@@ -129,29 +129,29 @@ class Database extends MetalizerObject {
 	public function onWakeUp() {
 		$this->connect();
 	}
-	
+
 	/**
 	 * Do a query on the database.
 	 * @param $query string
 	 * 	The mysql query.
-	 * @return mixed 
+	 * @return mixed
 	 * 	A QueryResult or a boolean. As specify by the mysqli_query function.
 	 * @throws MysqlException
 	 *  If the query result if false (an error).
 	 */
 	public function query($query) {
 		$this->logInfo($query);
-		
+
 		$result = mysqli_query($this->link, $query);
-		
-		if ($result === false && mysqli_stmt_errno()) {
-			throw new MysqlException(mysqli_stmt_errno(), mysqli_stmt_error());
+
+		if ($result === false && mysqli_errno($this->link)) {
+			throw new MysqlException(mysqli_errno($this->link), mysqli_error($this->link));
 		}
-		
+
 		if ($result === true) {
 			return true;
 		}
-		
+
 		return new QueryResult($result);
 	}
 }

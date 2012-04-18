@@ -1,20 +1,20 @@
 <?php
 /*
- 	Metalizer, a MVC php Framework.
- 	Copyright (C) 2012 David Reignier
- 
- 	This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ Metalizer, a MVC php Framework.
+ Copyright (C) 2012 David Reignier
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
 /**
@@ -24,13 +24,13 @@
  *
  */
 class Template extends View {
-	
+
 	/**
 	 * Components of the Template.
 	 * @var array[View]
 	 */
 	private $components;
-	
+
 	/**
 	 * Construct a new template.
 	 * @param $name string
@@ -43,7 +43,7 @@ class Template extends View {
 		parent::__construct(PATH_APPLICATION_TEMPLATE . $name, $data);
 		$this->components = array();
 	}
-	
+
 	/**
 	 * Put a component in the region of the template.
 	 * @param $name string
@@ -54,7 +54,7 @@ class Template extends View {
 	public function component($name, $webscriptName) {
 		$this->components[$name] = $webscriptName;
 	}
-	
+
 	/**
 	 * Display a region.
 	 * @param $name string
@@ -65,7 +65,7 @@ class Template extends View {
 	protected function region($name, $chrome = null) {
 		$class = $this->components[$name];
 		$webscript = new $class($this->data);
-		
+
 		if ($chrome) {
 			$chrome = new Chrome($webscript, $chrome, $this->data);
 			$chrome->display();
@@ -73,7 +73,7 @@ class Template extends View {
 			$webscript->display();
 		}
 	}
-	
+
 	/**
 	 * Display a template in the template. The template give its component and data to the new template and display it.
 	 * @param $name string
@@ -83,6 +83,6 @@ class Template extends View {
 		$template = new Template($name, $this->data);
 		$template->components = $this->components;
 		$template->display();
-	} 
-	
+	}
+
 }

@@ -1,20 +1,20 @@
 <?php
 /*
- 	Metalizer, a MVC php Framework.
- 	Copyright (C) 2012 David Reignier
- 
- 	This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ Metalizer, a MVC php Framework.
+ Copyright (C) 2012 David Reignier
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
 /**
@@ -38,7 +38,7 @@ class MetalizerObject {
 
 	/**
 	 * Get the manager of the object.
-	 * @return Manager 
+	 * @return Manager
 	 * 	The manager of the object, or null.
 	 */
 	public function getManager() {
@@ -102,7 +102,7 @@ class MetalizerObject {
 	}
 
 	/**
-	 * @return string 
+	 * @return string
 	 * 	A string representation of the object.
 	 */
 	public function toString() {
@@ -111,7 +111,7 @@ class MetalizerObject {
 
 	/**
 	 *
-	 * @return string 
+	 * @return string
 	 * 	Same as <code>get_class($object)</code>
 	 */
 	public function getClass() {
@@ -120,7 +120,7 @@ class MetalizerObject {
 
 	/**
 	 * Get the log name (for log messages). Subclasses should override this method.
-	 * @return string 
+	 * @return string
 	 * 	An empty string
 	 */
 	public function getLogName() {
@@ -131,7 +131,7 @@ class MetalizerObject {
 	 * Make a log message.
 	 * @param $message string
 	 * 	The message
-	 * @return string 
+	 * @return string
 	 * 	The object log name and the message.
 	 */
 	private function makeLogMessage($message) {
@@ -144,7 +144,7 @@ class MetalizerObject {
 	 * 	The message
 	 */
 	public function logTrace($message) {
-		logTrace($this, makeLogMessage($message));
+		_log($this, $this->makeLogMessage($message), METALIZER_LOG_TRACE);
 	}
 
 	/**
@@ -153,7 +153,7 @@ class MetalizerObject {
 	 * 	The message
 	 */
 	public function logDebug($message) {
-		logDebug($this, makeLogMessage($message));
+		_log($this, $this->makeLogMessage($message), METALIZER_LOG_DEBUG);
 	}
 
 	/**
@@ -162,7 +162,7 @@ class MetalizerObject {
 	 * 	The message
 	 */
 	public function logInfo($message) {
-		logInfo($this, makeLogMessage($message));
+		_log($this, $this->makeLogMessage($message), METALIZER_LOG_INFO);
 	}
 
 	/**
@@ -171,7 +171,7 @@ class MetalizerObject {
 	 * 	The message
 	 */
 	public function logWarning($message) {
-		logWarning($this, makeLogMessage($message));
+		logWarning($this, $this->makeLogMessage($message), METALIZER_LOG_WARNING);
 	}
 
 	/**
@@ -180,7 +180,7 @@ class MetalizerObject {
 	 * 	The message
 	 */
 	public function logError($message) {
-		logError($this, makeLogMessage($message));
+		logError($this, $this->makeLogMessage($message), METALIZER_LOG_ERROR);
 	}
 
 }
