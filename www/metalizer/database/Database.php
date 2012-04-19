@@ -154,4 +154,15 @@ class Database extends MetalizerObject {
 
 		return new QueryResult($result);
 	}
+	
+	/**
+	 * Escape a value
+	 * @param $value string
+	 * 	A value.
+	 * @return string
+	 *  The value escaped for the Database.
+	 */
+	public function escape($value) {
+		return mysqli_real_escape_string($this->link, $value);
+	}
 }

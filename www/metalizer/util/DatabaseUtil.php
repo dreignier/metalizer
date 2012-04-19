@@ -45,3 +45,16 @@ class DatabaseUtil extends Util {
 function database($name = 'metalizer') {
 	return util('Database')->get($name);
 }
+
+/**
+ * Escape a value
+ * @param $value string
+ * 	A value.
+ * @param $name string
+ * 	The name of a Database. Optional. 'metalizer' by default.
+ * @return string
+ *  The value escaped for the Database.
+ */
+function escape($value, $name = 'metalizer') {
+	return database($name)->escape($value);
+}

@@ -18,7 +18,7 @@ $config['database.metalizer.port'] = 3306;
 $config['database.metalizer.login'] = 'root';
 
 /**
- * The password for the metalizer database. Specify an empty string for an empty password
+ * The password for the metalizer database. Specify an empty string for no password
  * @var string
  */
 $config['database.metalizer.password'] = '';
