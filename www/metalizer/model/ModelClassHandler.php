@@ -17,3 +17,21 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
+class ModelClassHandler extends MetalizerObject
+{
+	// is defined in each subclas
+	protected $_table_name;
+	public function find($where)
+	{
+		$sql = "SELECT * FROM {$this->_table_name} WHERE ({$where});";
+		$lines = database()->query($sql);
+		$line = $lines->next();
+		$result = array();
+		$class_name = str_replace('ClassHandler', '', $this->getClass());
+		while($line) {
+			$result[] = new $class_name($line);
+			$line = $lines->next();
+		}
+		return $result;
+	}
+}

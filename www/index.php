@@ -54,6 +54,8 @@ require PATH_METALIZER . 'initialize.php';
 
 require PATH_APPLICATION_PAGE . 'Home.php';
 
+error_reporting(-1);
+
 try {
 
 	// *** Create the page ***
