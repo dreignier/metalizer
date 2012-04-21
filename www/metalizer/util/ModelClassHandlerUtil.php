@@ -1,4 +1,4 @@
-<?php
+<?php 
 /*
  Metalizer, a MVC php Framework.
  Copyright (C) 2012 David Reignier
@@ -18,34 +18,29 @@
  */
 
 /**
- * A ModelClassHandler handle a subclass of Model. Each subclass of Model must have a ModelClassHandler.
- * The ModelClassHandler of a class is an instance of a subclass of ModelClassHandler.
+ * Provide an easy way to access all model classes.
  * @author David Reignier
  *
  */
-class ModelClassHandler extends MetalizerObject {
+class ModelClassHandlerUtil extends Util {
 
 	/**
-	 * The handled class of the ModelClassHandler.
-	 * @var string
+	 * Get a ModelClassHandler.
+	 * @param $name string
+	 * 	The name of the ModelClassHandler.
+	 * @return ModelClassHandler
+	 *  The ModelClassHandler with the class name '$nameClassHandler'
 	 */
-	private $class;
-
-
-
-	// is defined in each subclas
-	protected $_table_name;
-	public function find($where)
-	{
-		$sql = "SELECT * FROM {$this->_table_name} WHERE ({$where});";
-		$lines = database()->query($sql);
-		$line = $lines->next();
-		$result = array();
-		$class_name = str_replace('ClassHandler', '', $this->getClass());
-		while($line) {
-			$result[] = new $class_name($line);
-			$line = $lines->next();
-		}
-		return $result;
+	public function get($name) {
+		return manager('ModelClassHandler')->get($name);
 	}
+	
+}
+
+/**
+ * Get a ModelClassHandler.
+ * @see ModelClassHandlerUtil#get
+ */
+function model($name) {
+	return Util('ModelClassHandler')->get($name);
 }

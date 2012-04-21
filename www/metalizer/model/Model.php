@@ -24,6 +24,18 @@
  */
 class Model extends MetalizerObject {
 
+	/**
+	 * Every model object have an unique id.
+	 * @var integer
+	 */
+	protected $id;
+	
+	/**
+	 * The ModelClassHandler of the object.
+	 * @var ModelClassHandler
+	 */
+	protected $classHandler;
+	
 	public $data;
 
 	public function __construct($data = array())

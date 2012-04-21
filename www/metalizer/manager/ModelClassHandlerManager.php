@@ -18,34 +18,28 @@
  */
 
 /**
- * A ModelClassHandler handle a subclass of Model. Each subclass of Model must have a ModelClassHandler.
- * The ModelClassHandler of a class is an instance of a subclass of ModelClassHandler.
+ * The manager of all ModelClassHandler objects.
  * @author David Reignier
  *
  */
-class ModelClassHandler extends MetalizerObject {
-
+class ModelClassHandlerManager extends Manager {
+	
 	/**
-	 * The handled class of the ModelClassHandler.
-	 * @var string
+	 * Construct a new ModelClassHandlerManager. Just call the Manager construct with "ModelClassHandler".
+	 * @return ModelClassHandlerManager
 	 */
-	private $class;
-
-
-
-	// is defined in each subclas
-	protected $_table_name;
-	public function find($where)
-	{
-		$sql = "SELECT * FROM {$this->_table_name} WHERE ({$where});";
-		$lines = database()->query($sql);
-		$line = $lines->next();
-		$result = array();
-		$class_name = str_replace('ClassHandler', '', $this->getClass());
-		while($line) {
-			$result[] = new $class_name($line);
-			$line = $lines->next();
-		}
-		return $result;
+	public function __construct() {
+		parent::__construct("ModelClassHandler");
 	}
+	
+	/**
+	 * The ModelClassHandlerManager will search for a ModelClassHandler with the class name '$nameClassHandler'.
+	 * @see Manager#get
+	 */
+	protected function load($name) {
+		$class = $name . 'ClassHandler';
+		$item = new $class();
+		$this->items[$name] = $item;
+	}
+	
 }
