@@ -47,6 +47,7 @@ define('PATH_APPLICATION_WEBSCRIPT', PATH_ROOT . 'application/webscript/');
 
 define('PATH_CACHE', PATH_ROOT . '../cache/');
 define('PATH_LOG', PATH_ROOT . '../log/');
+define('PATH_DATA', PATH_ROOT . '../data/');
 
 // *** Metalizer initialization ***
 

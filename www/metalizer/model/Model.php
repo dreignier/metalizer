@@ -36,10 +36,11 @@ class Model extends MetalizerObject {
 	 */
 	protected $classHandler;
 	
+
+	
 	public $data;
 
-	public function __construct($data = array())
-	{
+	public function __construct($data = array()) {
 		$this->data = $data;
 	}
 }

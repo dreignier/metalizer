@@ -182,5 +182,19 @@ class MetalizerObject {
 	public function logError($message) {
 		logError($this, $this->makeLogMessage($message), METALIZER_LOG_ERROR);
 	}
+	
+	/**
+	 * Override the __sleep php method.
+	 */
+	public function __sleep() {
+		$this->sleep();		
+	}
+	
+	/**
+	 * Override the __wakeup php method.
+	 */
+	public function __wakeup() {
+		$this->wakeUp();
+	}
 
 }

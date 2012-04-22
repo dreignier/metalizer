@@ -31,8 +31,6 @@ class ModelClassHandler extends MetalizerObject {
 	 */
 	private $class;
 
-
-
 	// is defined in each subclas
 	protected $_table_name;
 	public function find($where)

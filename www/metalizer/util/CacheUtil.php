@@ -55,11 +55,7 @@ class CacheUtil extends Util {
 			return;
 		}
 
-		if (is_a($value, 'MetalizerObject')) {
-			$value->sleep();
-		}
-
-		file_put_contents($file, serialize($data));
+		file_put_contents($file, serialize($value));
 	}
 
 	/**
@@ -92,13 +88,7 @@ class CacheUtil extends Util {
 			return null;
 		}
 
-		$result = unserialize(file_get_contents($file));
-
-		if (is_a($result, 'MetalizerObject')) {
-			$result->sleep();
-		}
-
-		return $result;
+		return unserialize(file_get_contents($file));
 	}
 
 	/**
