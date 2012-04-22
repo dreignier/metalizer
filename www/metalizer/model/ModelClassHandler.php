@@ -30,20 +30,114 @@ class ModelClassHandler extends MetalizerObject {
 	 * @var string
 	 */
 	private $class;
+	
+	/**
+	 * The name of the table used by the ModelClassHandler
+	 * @var string
+	 */
+	protected $table;
 
-	// is defined in each subclas
-	protected $_table_name;
-	public function find($where)
-	{
-		$sql = "SELECT * FROM {$this->_table_name} WHERE ({$where});";
+	/**
+	 * Construct a new ModelClassHandler
+	 * @param $class string
+	 * 	The class handled by the ModelClassHandler.
+	 * @return ModelClassHandler
+	 */
+	public function __construct($class) {
+		$this->class = $class;
+		$this->table = strtolower($class);
+	}
+	
+	/**
+	 * Find some object of the handled class.
+	 * @param $where string
+	 * 	The where part of the query.
+	 * @param $offset int
+	 * 	Optional. The offset of the query. 0 by default.
+	 * @param $count int
+	 * 	Optional. The number of element. If undefined, all objets are returned.
+	 * @return mixed
+	 * 	An array of the handled class. Or a single object (or null) if $count is 1.
+	 */
+	public function find($where, $count = null, $offset = 0) {
+	}
+	
+	/**
+	 * Find all objects of the handled class.
+	 * @param $offset int
+	 * 	Optional. The offset of the query. 0 by default.
+	 * @param $count int
+	 * 	Optional. The number of element. If undefined, all objets are returned.
+	 * @return array[Model]
+	 * 	An array of the handled class.
+	 */
+	public function findAll($count = null, $offset = 0) {
+		return $this->find(null, $count, $offset);
+	}
+	
+	 /**
+	 * Find some object of the handled class by a specific field.s.
+	 * @param $field string
+	 * 	The name of a field of the handled class
+	 * @param $value mixed
+	 * 	The expected value of the given field.
+	 * @param $offset int
+	 * 	Optional. The offset of the query. 0 by default.
+	 * @param $count int
+	 * 	Optional. The number of element. If undefined, all objets are returned.
+	 * @return mixed
+	 * 	An array of the handled class. Or a single object (or null) if $count is 1.
+	 */
+	public function findBy($field, $value, $count = null, $offset = 0) {
+		return $this->find("`$field` = $value", $count, $offset);	
+	}
+	
+	/**
+	 * Same as findBy, expect that $field is always 'id' and $count is 1.
+	 * @see ModelClassHandler#findBy 
+	 */
+	public function findById($value) {
+		return $this->findBy('id', $value, 1, 0);
+	}
+	
+	/**
+	 * Get the table of the ModelClassHandler.
+	 * @return string
+	 * 	The table of the ModelClassHandler
+	 */
+	public function getTable() {
+		return $this->table;
+	}
+	
+	/**
+	 * Delete an object from the database.
+	 * @param $model Model
+	 * 	A model. It must be of the handled class (or at least, a subclass of the handled class).
+	 */
+	public function delete($model) {
+		
+	}
+
+	
+	/**
+	 * Register or update a model in the database.
+	 * @param $model Model
+	 * 	A model. It must be of the handled class (or at least, a subclass of the handled class).
+	 */
+	public function save($model) {
+		
+	}
+	
+	/*public function find($where) {
+		$sql = "SELECT * FROM {$this->table} WHERE ({$where});";
 		$lines = database()->query($sql);
 		$line = $lines->next();
 		$result = array();
-		$class_name = str_replace('ClassHandler', '', $this->getClass());
+		$class_name = $this->class;
 		while($line) {
 			$result[] = new $class_name($line);
 			$line = $lines->next();
 		}
 		return $result;
-	}
+	}*/
 }

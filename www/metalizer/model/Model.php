@@ -25,10 +25,10 @@
 class Model extends MetalizerObject {
 
 	/**
-	 * Every model object have an unique id.
+	 * Every model object have an unique id. If id is 0, the object is not registered in the database.
 	 * @var integer
 	 */
-	protected $id;
+	protected $id = 0;
 	
 	/**
 	 * The ModelClassHandler of the object.
@@ -36,11 +36,50 @@ class Model extends MetalizerObject {
 	 */
 	protected $classHandler;
 	
-
-	
-	public $data;
-
-	public function __construct($data = array()) {
-		$this->data = $data;
+	/**
+	 * Construct a new empty Model.
+	 * @return Model
+	 */
+	public function __construct() {
+		$this->classHandler = model($this->getClass());
 	}
+	
+	/**
+	 * @see ModelClasshandler#save 
+	 */
+	public function save() {
+		$this->classHandler->save($this);
+	}
+	
+	/**
+	 * @see ModelClasshandler#delete 
+	 */
+	public function delete() {
+		$this->classHandler->delete($this);
+	}
+	
+	/**
+	 * @return boolean
+	 * 	true if the object is registered in the database, false otherwise.
+	 */
+	public function isRegistered() {
+		return $this->id === 0;
+	}
+	
+	/**
+	 * Set classHandler to null.
+	 * @see MetalizerObject#onSleep()
+	 */
+	public function onSleep() {
+		$this->classHandler = null;
+	}
+	
+	/**
+	 * Initialize the classHandler.
+	 * @see MetalizerObject#onWakeUp()
+	 */
+	public function onWakeUp() {
+		$this->classHandler = model($this->getClass());
+	}
+	
 }
