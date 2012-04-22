@@ -21,4 +21,4 @@
  * Metalizer finalization file.
  */
 
-ManagerManager::finalize();
+ManagerManager::terminate();

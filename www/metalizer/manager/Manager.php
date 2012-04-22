@@ -56,6 +56,17 @@ abstract class Manager extends MetalizerObject {
 			$item->sleep();
 		}
 	}
+	
+	/**
+	 * Call MetalizerObject#finalize on all items.
+	 * @see MetalizerObject#onFinalize()
+	 */
+	public function onFinalize() {
+		$this->logInfo('Finalize');
+		foreach ($this->items as $item) {
+			$item->finalize();
+		}
+	}
 
 	/**
 	 * Get a item. It return the object of the class '$name' . '$handledClass'. The result is awaken.

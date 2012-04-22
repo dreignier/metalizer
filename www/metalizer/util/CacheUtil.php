@@ -54,7 +54,8 @@ class CacheUtil extends Util {
 		if (isDevMode()) {
 			return;
 		}
-
+	
+		util('File')->checkDirecoty($file);
 		file_put_contents($file, serialize($value));
 	}
 

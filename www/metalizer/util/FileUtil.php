@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  Metalizer, a MVC php Framework.
  Copyright (C) 2012 David Reignier
@@ -18,29 +18,38 @@
  */
 
 /**
- * Provide an easy way to access all model classes.
+ * Provide some helper for file and directory manipulation.
  * @author David Reignier
  *
  */
-class ModelClassHandlerUtil extends Util {
-
+class FileUtil extends Util {
+	
 	/**
-	 * Get a ModelClassHandler.
-	 * @param $name string
-	 * 	The name of the ModelClassHandler.
-	 * @return ModelClassHandler
-	 *  The ModelClassHandler with the class name '$nameClassHandler'
+	 * Check if the directory for a file path exists. If not, the directory is created.
+	 * @param $file string
+	 *  A file path.
 	 */
-	public function get($name) {
-		return manager('ModelClassHandler')->get($name);
+	public function checkDirecoty($file) {
+		if (file_exists($file)) {
+			return;
+		}
+		
+		$file = explode('/', $file);
+				
+		if (sizeof($file) > 0) {
+			// Remove the file name
+			$file = array_slice($file, 0, sizeof($file) - 1);
+			
+			// Remove the last /
+			$path = substr(PATH_ROOT, 0, -1);
+			foreach($file as $directory) {
+				$path =  "$path/$directory";
+				
+				if (!file_exists($path)) {
+					mkdir($path);
+				}
+			}
+		}
 	}
 	
-}
-
-/**
- * Get a ModelClassHandler.
- * @see ModelClassHandlerUtil#get
- */
-function model($name) {
-	return Util('ModelClassHandler')->get($name);
 }

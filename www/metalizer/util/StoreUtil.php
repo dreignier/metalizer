@@ -43,6 +43,8 @@ class StoreUtil extends Util {
 	 */
 	public function store($name, $value) {
 		$file = $this->getFilePath($name);
+		$this->cache[$file] = $value;
+		util('File')->checkDirecoty($file);
 		file_put_contents($file, serialize($value));
 	}
 	
@@ -54,8 +56,20 @@ class StoreUtil extends Util {
 	 * 	The value. Or null if no value with $name is found.
 	 */
 	public function load($name) {
+		if (!$this->exists($name)) {
+			return null;
+		}
+		
 		$file = $this->getFilePath($name);
-		return unserialize(file_get_contents($file));
+		
+		if (isset($this->cache[$file])) {
+			return $this->cache[$file];
+		}
+		
+		$result = unserialize(file_get_contents($file));
+		$this->cache[$file] = $result;
+		
+		return $result;
 	}
 	
 	/**
@@ -66,6 +80,8 @@ class StoreUtil extends Util {
 	public function delete($name) {
 		$file = $this->getFilePath($name);
 
+		unset($this->cache[$file]);
+		
 		if ($this->exists($name)) {
 			unlink($file);
 			return;
@@ -85,6 +101,11 @@ class StoreUtil extends Util {
 	 */
 	public function exists($name) {
 		$file = $this->getFilePath($name);
+		
+		if (isset($this->cache[$file])) {
+			return true;
+		}
+		
 		return file_exists($file);
 	}
 	

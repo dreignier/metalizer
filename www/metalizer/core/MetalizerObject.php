@@ -196,5 +196,20 @@ class MetalizerObject {
 	public function __wakeup() {
 		$this->wakeUp();
 	}
+	
+	/**
+	 * Called at the end of the application, just before every objet are put in the sleep mode.
+	 */
+	public function finalize() {
+		$this->onFinalize();
+	}
+	
+	/**
+	 * Called in MetalizerObject#finalize().
+	 * Subclasses should override it.
+	 */
+	public function onFinalize() {
+		
+	}
 
 }
