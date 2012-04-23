@@ -63,7 +63,7 @@ class Model extends MetalizerObject {
 	 * 	true if the object is registered in the database, false otherwise.
 	 */
 	public function isRegistered() {
-		return $this->id === 0;
+		return $this->id !== 0;
 	}
 	
 	/**
