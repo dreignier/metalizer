@@ -137,7 +137,7 @@ try {
 		$page = new Error();
 		$page->handle($exception);
 	} else {
-		echo 'Exception occured and no Error page found : ' . $exception->getMessage() . '<br/>';
+		echo 'Exception occured and no Error page found : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
 		echo str_replace('#', '<br/>#', $exception->getTraceAsString());
 	}
 }

@@ -22,7 +22,7 @@
  * @author David Reignier
  *
  */
-class MysqlException extends MetalizerException {
+class MysqlException extends HttpException {
 
 	/**
 	 * Constrcut a new MysqlException.
@@ -33,7 +33,7 @@ class MysqlException extends MetalizerException {
 	 * @return MysqlException
 	 */
 	public function __construct($errno, $error) {
-		parent::__construct("Query error ($errno) : $error");
+		parent::__construct("Query error ($errno) : $error", 500);
 	}
 
 }

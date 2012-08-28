@@ -18,14 +18,21 @@
  */
 
 /**
- * Represent a 404 error.
+ * Http exceptions trigger an error for the request.
  * @author David Reignier
  *
  */
-class PageNotFoundException extends HttpException {
-
-	public function __construct() {
-		parent::__construct('Page not found', 404);
+class HttpException extends MetalizerException {
+	
+	/**
+	 * Construct a new HttpException
+	 * @param $code int
+	 * 	The error code for the request
+	 * @param $message string
+	 * 	The exception message
+	 */
+	public function __construct($code, $message) {
+		parent::__construct($message, $code);
 	}
-
-};
+	
+}

@@ -19,12 +19,12 @@
 
 /**
  * Handle the database and queries.
- * A database retrieve its configuration from its name. All keys are "$name.$key". So a database need this keys in the configuration :
- *  $name.host
- *  $name.port
- *  $name.login
- *  $name.password
- *  $name.name
+ * A database retrieve its configuration from its name. All keys are "database.$name.$key". So a database need this keys in the configuration :
+ *  database.$name.host
+ *  database.$name.port
+ *  database.$name.login
+ *  database.$name.password
+ *  database.$name.name
  * @author David Reignier
  *
  */

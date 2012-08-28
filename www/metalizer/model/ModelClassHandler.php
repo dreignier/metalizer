@@ -35,8 +35,14 @@ class ModelClassHandler extends MetalizerObject {
 	 * The name of the table used by the ModelClassHandler
 	 * @var string
 	 */
-	protected $table;
-
+	private $table;
+	
+	/**
+	 * The class descriptor.
+	 * @var ModelClassDescriptor
+	 */
+	private $descriptor;
+	
 	/**
 	 * Construct a new ModelClassHandler
 	 * @param $class string
@@ -46,6 +52,8 @@ class ModelClassHandler extends MetalizerObject {
 	public function __construct($class) {
 		$this->class = $class;
 		$this->table = strtolower($class);
+		$descriptorClass = $class + 'ClassDescriptor';
+		$this->descriptor = new $descriptorClass();
 	}
 	
 	/**
@@ -117,7 +125,6 @@ class ModelClassHandler extends MetalizerObject {
 	public function delete($model) {
 		
 	}
-
 	
 	/**
 	 * Register or update a model in the database.
@@ -127,17 +134,4 @@ class ModelClassHandler extends MetalizerObject {
 	public function save($model) {
 		
 	}
-	
-	/*public function find($where) {
-		$sql = "SELECT * FROM {$this->table} WHERE ({$where});";
-		$lines = database()->query($sql);
-		$line = $lines->next();
-		$result = array();
-		$class_name = $this->class;
-		while($line) {
-			$result[] = new $class_name($line);
-			$line = $lines->next();
-		}
-		return $result;
-	}*/
 }

@@ -18,14 +18,14 @@
  */
 
 /**
- * Represent a 404 error.
+ * Describe a model class
  * @author David Reignier
  *
  */
-class PageNotFoundException extends HttpException {
-
+class ModelClassDescriptor extends MetalizerObject {
+	
 	public function __construct() {
-		parent::__construct('Page not found', 404);
-	}
-
-};
+		
+	}	
+	
+}

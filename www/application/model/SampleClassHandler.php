@@ -1,6 +1,9 @@
 <?php
 
-class SampleClassHandler extends ModelClassHandler
-{
-	protected $_table_name = 'samples';
+class SampleClassHandler extends ModelClassHandler {
+	
+	public function __construct() {
+		parent::__construct('Sample');
+	}
+	
 }
