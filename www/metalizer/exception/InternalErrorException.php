@@ -18,14 +18,14 @@
  */
 
 /**
- * Represent a 404 error.
+ * Represent a 500 error.
  * @author David Reignier
  *
  */
-class PageNotFoundException extends HttpException {
+class InternalErrorException extends HttpException {
 
 	public function __construct($message = null) {
-		parent::__construct(404, $message ? $message : 'Page not found');
+		parent::__construct(500, $message ? $message : 'Internal Error');
 	}
 
 };

@@ -6,4 +6,6 @@ class SampleClassHandler extends ModelClassHandler {
 		parent::__construct('Sample');
 	}
 	
+	
+	
 }

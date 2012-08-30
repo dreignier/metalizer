@@ -60,84 +60,59 @@ error_reporting(-1);
 try {
 
 	// *** Create the page ***
-	$pathInfo = explode(config('url.separator'), trim(@Util('Server')->get('PATH_INFO'), '/'));
+	$pathInfo = trim(@Util('Server')->get('PATH_INFO'));
 
 	$pathInfoPointer = 0;
 	$page = null;
-	$method = null;
 	$params = array();
 
-	if ($pathInfo && is_array($pathInfo)) {
-		$pathInfoSize = sizeof($pathInfo);
-		$folder = PATH_APPLICATION_PAGE;
-
-		// Search for the controller
-		while (($pathInfoPointer < $pathInfoSize) && !$page) {
-			$element = $pathInfo[$pathInfoPointer];
-				
-			if (is_dir($folder . $element)) {
-				$folder = $folder . $element;
-			} else if (class_exists($element) && is_subclass_of($element, 'Page')) {
-				$page = $element;
-			} else {
-				throw new PageNotFoundException("Page not found : $page");
+	if (!$pathInfo || $pathInfo == '/') {
+		$page = config('page.home');
+	} else {
+		foreach(config('page.patterns') as $name => $pattern) {
+			if (preg_match("@^$pattern$@", $pathInfo, $params)) {
+				$page = $name;
+				break;
 			}
-				
-			$pathInfoPointer += 1;
 		}
-
-		// Search for the method
-		if ($pathInfoPointer < $pathInfoSize) {
-			$method = $pathInfo[$pathInfoPointer];
-			$pathInfoPointer += 1;
+		
+		if (!$page) {
+			throw new PageNotFoundException();
 		}
-
-		// Search for params
-		while ($pathInfoPointer < $pathInfoSize) {
-			$params[] = $pathInfo[$pathInfoPointer];
-			$pathInfoPointer += 1;
-		}
-
 	}
-
-	if ($page == null) {
-		$page = config('page.name.default');
-	}
-
+	
 	if (!$page || !class_exists($page) || !is_subclass_of($page, 'Page')) {
-		throw new PageNotFoundException("page.name.default ($page) is not a valid Page class");
-	}
-
-	if ($method == null) {
-		$method = config('page.method.default');
+		throw new PageNotFoundException("$page is not a valid Page class");
 	}
 
 	// Check if all is ok
 	$reflectionClass = new ReflectionClass($page);
-
-	if (!$reflectionClass->hasMethod($method)) {
-		throw new PageNotFoundException("Method not found : $method");
+	
+	if (!$reflectionClass->hasMethod('execute')) {
+		throw new NotImplementedException("Page found but not implemented");
 	}
+	
+	$reflectionMethod = $reflectionClass->getMethod('execute');
 
-	$reflectionMethod = $reflectionClass->getMethod($method);
-
-	if (!$reflectionMethod->isPublic() || $reflectionMethod->isStatic()) {
-		throw new PageNotFoundException("Method not found : $method");
+	if (!$reflectionMethod->isPublic() || $reflectionMethod->isStatic() || $reflectionMethod->isAbstract()) {
+		throw new NotImplementedException("The method 'execute' in the $page class is not valid");
 	}
-
-	if (sizeof($params) < $reflectionMethod->getNumberOfRequiredParameters()) {
-		throw new PageNotFoundException("Not enought argument");
-	}
-
+	
 	// Let's go !
+	ob_start();
 	$page = new $page();
-	call_user_func_array(array($page, $method), $params);
+	call_user_func_array(array($page, 'execute'), $params);
+	ob_end_flush();
 } catch (Exception $exception) {
+	header("HTTP/1.1 " . (is_a($exception, 'HttpException') ? $exception->getCode() : 500));
+	ob_end_clean();
 	if (class_exists('Error') && is_a('Error', 'Page')) {
 		$page = new Error();
-		$page->handle($exception);
+		$page->execute($exception);
 	} else {
-		echo 'Exception occured and no Error page found : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
+		// Default error handle
+		echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
+		echo $exception->getFile() . '(' . $exception->getLine() . ')';
 		echo str_replace('#', '<br/>#', $exception->getTraceAsString());
 	}
 }

@@ -18,14 +18,14 @@
  */
 
 /**
- * Represent a 404 error.
+ * Represent a 501 error.
  * @author David Reignier
  *
  */
-class PageNotFoundException extends HttpException {
+class NotImplementedException extends HttpException {
 
 	public function __construct($message = null) {
-		parent::__construct(404, $message ? $message : 'Page not found');
+		parent::__construct(501, $message ? $message : 'Not implemented');
 	}
 
 };

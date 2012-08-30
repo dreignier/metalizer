@@ -28,4 +28,11 @@ class ModelClassDescriptor extends MetalizerObject {
 		
 	}	
 	
+	protected function makeMembers() {
+		
+	}
+	
+	protected function makeMember($name, $type, $unique) {
+		
+	}
 }

@@ -1,11 +1,5 @@
 <?php
 /**
- * The separator used in an URL for the path info.
- * @var string
- */
-$config['url.separator'] = '/';
-
-/**
  * The url root of the application.
  * @var string
  */
