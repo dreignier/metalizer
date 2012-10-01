@@ -53,8 +53,6 @@ define('PATH_DATA', PATH_ROOT . '../data/');
 
 require PATH_METALIZER . 'initialize.php';
 
-require PATH_APPLICATION_PAGE . 'Home.php';
-
 error_reporting(-1);
 
 try {
