@@ -90,7 +90,7 @@ class Database extends MetalizerObject {
 	 * @see MetalizerObject#getLogName()
 	 */
 	public function getLogName() {
-		return "[$this->host:$this->name]";
+		return "$this->host:$this->name";
 	}
 
 	/**

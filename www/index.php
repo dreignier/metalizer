@@ -56,62 +56,30 @@ require PATH_METALIZER . 'initialize.php';
 error_reporting(-1);
 
 try {
-
-	// *** Create the page ***
+	// *** Resolve the page, the method and the parameters ***
 	$pathInfo = trim(@Util('Server')->get('PATH_INFO'));
-
-	$pathInfoPointer = 0;
-	$page = null;
-	$params = array();
-
-	if (!$pathInfo || $pathInfo == '/') {
-		$page = config('page.home');
-	} else {
-		foreach(config('page.patterns') as $name => $pattern) {
-			if (preg_match("@^$pattern$@", $pathInfo, $params)) {
-				$page = $name;
-				break;
-			}
-		}
-		
-		if (!$page) {
-			throw new PageNotFoundException();
-		}
-	}
-	
-	if (!$page || !class_exists($page) || !is_subclass_of($page, 'Page')) {
-		throw new PageNotFoundException("$page is not a valid Page class");
-	}
-
-	// Check if all is ok
-	$reflectionClass = new ReflectionClass($page);
-	
-	if (!$reflectionClass->hasMethod('execute')) {
-		throw new NotImplementedException("Page found but not implemented");
-	}
-	
-	$reflectionMethod = $reflectionClass->getMethod('execute');
-
-	if (!$reflectionMethod->isPublic() || $reflectionMethod->isStatic() || $reflectionMethod->isAbstract()) {
-		throw new NotImplementedException("The method 'execute' in the $page class is not valid");
-	}
+	$resolver = new PageResolver($pathInfo);
 	
 	// Let's go !
 	ob_start();
-	$page = new $page();
-	call_user_func_array(array($page, 'execute'), $params);
+	$resolver->run();
 	ob_end_flush();
 } catch (Exception $exception) {
 	header("HTTP/1.1 " . (is_a($exception, 'HttpException') ? $exception->getCode() : 500));
 	ob_end_clean();
+	
 	if (class_exists('Error') && is_a('Error', 'Page')) {
 		$page = new Error();
-		$page->execute($exception);
+		call_user_func_array(array($page, config('page.default_method')));
 	} else {
 		// Default error handle
 		echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
 		echo $exception->getFile() . '(' . $exception->getLine() . ')';
 		echo str_replace('#', '<br/>#', $exception->getTraceAsString());
+
+		logError('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());
+		logError($exception->getFile() . '(' . $exception->getLine() . ')');
+		logError($exception->getTraceAsString());
 	}
 }
 

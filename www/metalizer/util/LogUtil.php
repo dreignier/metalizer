@@ -58,7 +58,6 @@ class LogUtil extends Util {
 			
 			$level = config('log.level.' . $caller->getClass());	
 			
-
 			if ($level !== null) {
 				return $level;
 			}
@@ -76,8 +75,8 @@ class LogUtil extends Util {
 	 * @param $level int
 	 * 	The level of the message.
 	 */
-	public function log($caller, $message, $level) {
-		if ($level < $this->getLevel($caller)) {
+	public function _log($caller, $message, $level) {
+		if (!$this->isLogEnabled($caller, $level)) {
 			return;
 		}
 
@@ -86,9 +85,26 @@ class LogUtil extends Util {
 		$time = date('H:i:s');
  		$class = ($caller !== null) ? $caller->getClass() : '';
 		$level = LogUtil::$logLabels[$level];
+		
+		if ($class) {
+			$class = "[$class]";
+		}
 
-		fwrite($handle, "[$time][$level][$class] $message \n");
+		fwrite($handle, "[$time][$level]$class $message \n");
 		fclose($handle);
+	}
+	
+	/**
+	 * Check if log is enabled for a caller and a level
+	 * @param $caller MetalizerObject
+	 * 	The caller
+	 * @param $level int
+	 *  The level of the message
+	 * @return bool
+	 * 	true if log is enabled for the caller and the level, false otherwise.
+	 */
+	public function isLogEnabled($caller, $level) {
+		return $level >= $this->getLevel($caller); 
 	}
 }
 
@@ -96,7 +112,14 @@ class LogUtil extends Util {
  * @see LogUtil#log
  */
 function _log($caller, $message, $level) {
-	Util('Log')->log($caller, $message, $level);
+	Util('Log')->_log($caller, $message, $level);
+}
+
+/**
+ * @see LogUtil#isLogEnabled
+ */
+function isLogEnabled($caller, $level) {
+	return Util('Log')->isLogEnabled($caller, $level);
 }
 
 /**

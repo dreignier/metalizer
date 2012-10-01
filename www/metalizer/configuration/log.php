@@ -10,7 +10,7 @@
  *
  * @var integer
  */
-$config['log.level'] = METALIZER_LOG_INFO;
+$config['log.level'] = METALIZER_LOG_TRACE;
 
 /**
  * If you want a specific log level for a class, just create a value with this name : 'log.level.$class'

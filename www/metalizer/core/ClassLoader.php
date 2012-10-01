@@ -60,6 +60,7 @@ class ClassLoader extends MetalizerObject {
 			return;
 		}
 
+		// Class not found
 		return false;
 	}
 

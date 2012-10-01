@@ -62,7 +62,6 @@ abstract class Manager extends MetalizerObject {
 	 * @see MetalizerObject#onFinalize()
 	 */
 	public function onFinalize() {
-		$this->logInfo('Finalize');
 		foreach ($this->items as $item) {
 			$item->finalize();
 		}

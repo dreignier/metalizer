@@ -25,7 +25,7 @@
 class MetalizerObject {
 
 	/**
-	 * Say if the objet is sleeping.
+	 * Say if the object is sleeping.
 	 * @var boolean
 	 */
 	private $sleeping = false;
@@ -35,7 +35,13 @@ class MetalizerObject {
 	 * @var Manager
 	 */
 	private $manager = null;
-
+	
+	/**
+	 * The looger for the object
+	 * @var Logger
+	 */
+	private $logger = null;
+	
 	/**
 	 * Get the manager of the object.
 	 * @return Manager
@@ -69,9 +75,10 @@ class MetalizerObject {
 			$this->onSleep();
 			$this->manager = null;
 			$this->sleeping = true;
+			$this->logger = null;
 		}
 	}
-
+	
 	/**
 	 * Called when MetalizerObject#sleep is called. Do nothing by default. Subclasses should override this method.
 	 */
@@ -126,79 +133,22 @@ class MetalizerObject {
 	public function getLogName() {
 		return "";
 	}
-
-	/**
-	 * Make a log message.
-	 * @param $message string
-	 * 	The message
-	 * @return string
-	 * 	The object log name and the message.
-	 */
-	private function makeLogMessage($message) {
-		return $this->getLogName() . " $message";
-	}
-
-	/**
-	 * Log a trace level message.
-	 * @param $message string
-	 * 	The message
-	 */
-	public function logTrace($message) {
-		_log($this, $this->makeLogMessage($message), METALIZER_LOG_TRACE);
-	}
-
-	/**
-	 * Log a debug level message.
-	 * @param $message string
-	 * 	The message
-	 */
-	public function logDebug($message) {
-		_log($this, $this->makeLogMessage($message), METALIZER_LOG_DEBUG);
-	}
-
-	/**
-	 * Log a info level message.
-	 * @param $message string
-	 * 	The message
-	 */
-	public function logInfo($message) {
-		_log($this, $this->makeLogMessage($message), METALIZER_LOG_INFO);
-	}
-
-	/**
-	 * Log a warning level message.
-	 * @param $message string
-	 * 	The message
-	 */
-	public function logWarning($message) {
-		logWarning($this, $this->makeLogMessage($message), METALIZER_LOG_WARNING);
-	}
-
-	/**
-	 * Log a error level message.
-	 * @param $message string
-	 * 	The message
-	 */
-	public function logError($message) {
-		logError($this, $this->makeLogMessage($message), METALIZER_LOG_ERROR);
-	}
 	
 	/**
-	 * Override the __sleep php method.
+	 * Get the logger
+	 * @return Logger
+	 * 	The logger of the current object.
 	 */
-	public function __sleep() {
-		$this->sleep();		
+	public function log() {
+		if (!$this->logger) {
+			$this->logger = new Logger($this);
+		}
+		
+		return $this->logger;
 	}
-	
+
 	/**
-	 * Override the __wakeup php method.
-	 */
-	public function __wakeup() {
-		$this->wakeUp();
-	}
-	
-	/**
-	 * Called at the end of the application, just before every objet are put in the sleep mode.
+	 * Called at the end of the application, just before every object are put in the sleep mode.
 	 */
 	public function finalize() {
 		$this->onFinalize();

@@ -65,7 +65,7 @@ class ConfigurationUtil extends Util {
 		if (isset($this->configuration[$key])) {
 			return $this->configuration[$key];
 		}
-
+		
 		return null;
 	}
 
