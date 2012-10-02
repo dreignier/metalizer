@@ -53,6 +53,7 @@ define('PATH_DATA', PATH_ROOT . '../data/');
 
 require PATH_METALIZER . 'initialize.php';
 
+// TODO Put this in a conf file
 error_reporting(-1);
 
 try {

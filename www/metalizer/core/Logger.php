@@ -18,12 +18,16 @@
  */
 
 /**
- * Handle logs for an MetalizerObject 
+ * Handle logs for a MetalizerObject 
  * @author David Reignier
  *
  */
 class Logger extends MetalizerObject {
 	
+	/**
+	 * The handled object
+	 * @var MetalizerObject
+	 */
 	private $object = null;
 	
 	/**

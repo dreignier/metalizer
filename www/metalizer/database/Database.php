@@ -18,7 +18,7 @@
  */
 
 /**
- * Handle the database and queries.
+ * Handle the database and queries. Database use the mysqli api.
  * A database retrieve its configuration from its name. All keys are "database.$name.$key". So a database need this keys in the configuration :
  *  database.$name.host
  *  database.$name.port
@@ -92,11 +92,23 @@ class Database extends MetalizerObject {
 	public function getLogName() {
 		return "$this->host:$this->name";
 	}
+	
+	/**
+	 * @return boolean
+	 * 	True is the database is connected, false otherwise.
+	 */
+	public function isConnected() {
+		return $this->link != null;
+	}
 
 	/**
 	 * Connect the database.
 	 */
 	public function connect() {
+		if ($this->isConnected()) {
+			return;
+		}
+		
 		$this->link = mysqli_connect($this->host, $this->login, $this->password, $this->name, $this->port);
 		if (mysqli_connect_errno()) {
 			$this->link = null;
@@ -110,6 +122,10 @@ class Database extends MetalizerObject {
 	 * Disconnect the database
 	 */
 	public function disconnect() {
+		if (!$this->isConnected()) {
+			return;
+		}
+		
 		mysqli_close($this->link);
 		$this->link = null;
 	}
@@ -137,7 +153,7 @@ class Database extends MetalizerObject {
 	 * @return mixed
 	 * 	A QueryResult or a boolean. As specify by the mysqli_query function.
 	 * @throws MysqlException
-	 *  If the query result if false (an error).
+	 *  If the query result is false (an error).
 	 */
 	public function query($query) {
 		$this->logInfo($query);

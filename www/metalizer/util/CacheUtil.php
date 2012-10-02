@@ -25,7 +25,6 @@
  *
  * @author David Reignier
  *
- * @todo Handle a local cache
  * @todo Clean the entire cache when it's needed
  */
 class CacheUtil extends Util {
@@ -49,14 +48,20 @@ class CacheUtil extends Util {
 	 * 	The value. Must be serializable.
 	 */
 	public function put($name, $value) {
-		$file = $this->getFilePath($name);
-
 		if (isDevMode()) {
 			return;
 		}
-	
+		
+		$file = $this->getFilePath($name);
+
 		util('File')->checkDirecoty($file);
-		file_put_contents($file, serialize($value));
+		
+		if (is_a($value, 'MetalizerObject')) {
+			$value->sleep();
+		}
+		
+		$value = serialize($value);
+		file_put_contents($file, $value);
 	}
 
 	/**
@@ -83,13 +88,25 @@ class CacheUtil extends Util {
 	 * 	The value, or null if the value is not in the cache.
 	 */
 	public function get($name) {
-		$file = $this->getFilePath($name);
-
-		if (isDevMode() || !$this->exists($name)) {
+		if (isDevMode()) {
 			return null;
 		}
+		
+		if (!$this->exists($name)) {
+			$this->logWarning("There's no value with the name '$name' in the cache");
+			return null;
+		}
+		
+			
+		$file = $this->getFilePath($name);
+		$result = file_get_contents($file);
+		$result = unserialize($result);
+		
+		if (is_a($result, 'MetalizerObject')) {
+			$result->wakeUp();
+		}
 
-		return unserialize(file_get_contents($file));
+		return $result;
 	}
 
 	/**
@@ -108,7 +125,10 @@ class CacheUtil extends Util {
 		// Maybe it's a folder
 		if (is_dir($file)) {
 			rmdir($file);
+			return;
 		}
+		
+		$this->logWarning("A clean for '$name' is called, but there's nothing to clean here");
 	}
 
 }

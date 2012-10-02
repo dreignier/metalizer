@@ -42,5 +42,5 @@ class ModelUtil extends Util {
  * @see ModelClassHandlerUtil#get
  */
 function model($name) {
-	return Util('ModelClassHandler')->get($name);
+	return Util('Model')->get($name);
 }

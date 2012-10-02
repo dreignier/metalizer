@@ -61,9 +61,12 @@ class ManagerManager extends Manager {
 	 * In production mode, the ManagerManager will try to retrieve itself in its cache file.
 	 */
 	static public function initialize() {
+		// REMINDER : We can't use utils here, because absolutely nothing is initialized
+		
 		// Look for the cache file
 		if (file_exists(MANAGER_MANAGER_CACHE_FILE)) {
 			ManagerManager::$instance = unserialize(file_get_contents(MANAGER_MANAGER_CACHE_FILE));
+			ManagerManager::$instance->wakeUp();
 		} else {
 			ManagerManager::$instance = new ManagerManager();
 		}

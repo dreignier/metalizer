@@ -68,7 +68,7 @@ abstract class Manager extends MetalizerObject {
 	}
 
 	/**
-	 * Get a item. It return the object of the class '$name' . '$handledClass'. The result is awaken.
+	 * Get a item. It return the object of the class '$name' . '$class'. The result is awaken.
 	 * @param $name string
 	 * 	The name of the item.
 	 * @return MetalizerObject
