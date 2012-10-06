@@ -27,14 +27,14 @@ define('MODE_PRODUCTION', 'production');
  */
 class ModeUtil extends Util {
 
-	/**
-	 * Get the application mode. It's the 'metalizer.mode' configuration value.
-	 * @return string
-	 * 	MODE_DEVELOPMENT or MODE_PRODUCTION
-	 */
-	public function getMode() {
-		return config('metalizer.mode');
-	}
+   /**
+    * Get the application mode. It's the 'metalizer.mode' configuration value.
+    * @return string
+    * 	MODE_DEVELOPMENT or MODE_PRODUCTION
+    */
+   public function getMode() {
+      return config('metalizer.mode');
+   }
 
 }
 
@@ -43,6 +43,5 @@ class ModeUtil extends Util {
  * 	true if the current application mode is MODE_DEVELOPMENT. False otherwise.
  */
 function isDevMode() {
-	return Util('Mode')->getMode() == MODE_DEVELOPMENT;
+   return Util('Mode')->getMode() == MODE_DEVELOPMENT;
 }
-

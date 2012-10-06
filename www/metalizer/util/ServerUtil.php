@@ -24,26 +24,26 @@
  */
 class ServerUtil extends Util {
 
-	/**
-	 * Get a value in $_SERVER.
-	 * @param $key string
-	 * 	The key of the value/
-	 * @return mixed
-	 * 	$_SERVER[$key]
-	 */
-	public function get($key) {
-		return $_SERVER[$key];
-	}
-	
-	/**
-	 * Get the IP of the current client.
-	 */
-	public function getIp() {
-		return $this->get('REMOTE_ADDR');
-	}
+   /**
+    * Get a value in $_SERVER.
+    * @param $key string
+    * 	The key of the value/
+    * @return mixed
+    * 	$_SERVER[$key]
+    */
+   public function get($key) {
+      return $_SERVER[$key];
+   }
+
+   /**
+    * Get the IP of the current client.
+    */
+   public function getIp() {
+      return $this->get('REMOTE_ADDR');
+   }
 
 }
 
 function getIp() {
-	return util('Server')->getIp();
+   return util('Server')->getIp();
 }

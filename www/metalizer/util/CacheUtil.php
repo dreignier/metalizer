@@ -29,107 +29,106 @@
  */
 class CacheUtil extends Util {
 
-	/**
-	 * Get the path for a file.
-	 * @param $name string
-	 * 	The name of the file.
-	 * @return string
-	 * 	The path to the file.
-	 */
-	private function getFilePath($name) {
-		return str_replace('.', '/', PATH_CACHE . $name);
-	}
+   /**
+    * Get the path for a file.
+    * @param $name string
+    * 	The name of the file.
+    * @return string
+    * 	The path to the file.
+    */
+   private function getFilePath($name) {
+      return str_replace('.', '/', PATH_CACHE . $name);
+   }
 
-	/**
-	 * Put a value in the cache.
-	 * @param $name string
-	 * 	The name of the value.
-	 * @param $value mixed
-	 * 	The value. Must be serializable.
-	 */
-	public function put($name, $value) {
-		if (isDevMode()) {
-			return;
-		}
-		
-		$file = $this->getFilePath($name);
+   /**
+    * Put a value in the cache.
+    * @param $name string
+    * 	The name of the value.
+    * @param $value mixed
+    * 	The value. Must be serializable.
+    */
+   public function put($name, $value) {
+      if (isDevMode()) {
+         return;
+      }
 
-		util('File')->checkDirecoty($file);
-		
-		if (is_a($value, 'MetalizerObject')) {
-			$value->sleep();
-		}
-		
-		$value = serialize($value);
-		file_put_contents($file, $value);
-	}
+      $file = $this->getFilePath($name);
 
-	/**
-	 * @param $name string
-	 * 	The name of a value
-	 * @return bool
-	 * 	true if the value is in the cache, false otherwise.
-	 */
-	public function exists($name) {
-		$file = $this->getFilePath($name);
+      util('File')->checkDirecoty($file);
 
-		if (isDevMode()) {
-			return false;
-		}
+      if (is_a($value, 'MetalizerObject')) {
+         $value->sleep();
+      }
 
-		return file_exists($file);
-	}
+      $value = serialize($value);
+      file_put_contents($file, $value);
+   }
 
-	/**
-	 * Retrieve a value.
-	 * @param $name string
-	 * 	The name of a value
-	 * @return mixed
-	 * 	The value, or null if the value is not in the cache.
-	 */
-	public function get($name) {
-		if (isDevMode()) {
-			return null;
-		}
-		
-		if (!$this->exists($name)) {
-			$this->logWarning("There's no value with the name '$name' in the cache");
-			return null;
-		}
-		
-			
-		$file = $this->getFilePath($name);
-		$result = file_get_contents($file);
-		$result = unserialize($result);
-		
-		if (is_a($result, 'MetalizerObject')) {
-			$result->wakeUp();
-		}
+   /**
+    * @param $name string
+    * 	The name of a value
+    * @return bool
+    * 	true if the value is in the cache, false otherwise.
+    */
+   public function exists($name) {
+      $file = $this->getFilePath($name);
 
-		return $result;
-	}
+      if (isDevMode()) {
+         return false;
+      }
 
-	/**
-	 * Clean a value from the cache.
-	 * @param $name string
-	 * 	The name of a value. It can be a subname of a value.
-	 */
-	public function clean($name) {
-		$file = $this->getFilePath($name);
+      return file_exists($file);
+   }
 
-		if ($this->exists($name)) {
-			unlink($file);
-			return;
-		}
+   /**
+    * Retrieve a value.
+    * @param $name string
+    * 	The name of a value
+    * @return mixed
+    * 	The value, or null if the value is not in the cache.
+    */
+   public function get($name) {
+      if (isDevMode()) {
+         return null;
+      }
 
-		// Maybe it's a folder
-		if (is_dir($file)) {
-			rmdir($file);
-			return;
-		}
-		
-		$this->logWarning("A clean for '$name' is called, but there's nothing to clean here");
-	}
+      if (!$this->exists($name)) {
+         $this->logWarning("There's no value with the name '$name' in the cache");
+         return null;
+      }
+
+      $file = $this->getFilePath($name);
+      $result = file_get_contents($file);
+      $result = unserialize($result);
+
+      if (is_a($result, 'MetalizerObject')) {
+         $result->wakeUp();
+      }
+
+      return $result;
+   }
+
+   /**
+    * Clean a value from the cache.
+    * @param $name string
+    * 	The name of a value. It can be a subname of a value.
+    */
+   public function clean($name) {
+      $file = $this->getFilePath($name);
+
+      if ($this->exists($name)) {
+         unlink($file);
+         return;
+      }
+
+      // Maybe it's a folder
+      if (is_dir($file)) {
+         rmdir($file);
+         return;
+      }
+
+      $this->logWarning("A clean for '$name' is called, but there's nothing to clean here");
+   }
 
 }
 
@@ -139,5 +138,5 @@ class CacheUtil extends Util {
  * 	The CacheUtil.
  */
 function cache() {
-	return Util('Cache');
+   return Util('Cache');
 }

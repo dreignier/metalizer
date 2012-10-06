@@ -24,5 +24,4 @@
  */
 class Util extends MetalizerObject {
 
-
 }

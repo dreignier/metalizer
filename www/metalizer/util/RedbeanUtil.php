@@ -23,54 +23,54 @@
  *
  */
 class RedbeanUtil extends Util {
-	
-	/**
-	 * Used in the get method.
-	 */
-	private $dynamicToStatic;
-	
-	/**
-	 * Construct a new RedbeanUtil
-	 */
-	public function __construct() {
-		$this->dynamicToStatic = new RedbeanUtil_DynamicToStatic();
-		$this->connect();
-	}
-	
-	/**
-	 * Connect the database and set the freeze parameter.
-	 * Also set the formatter.
-	 */
-	public function connect() {
-		require_once PATH_METALIZER_EXTERNAL . 'redbean/redbean.php';
-		R::setup(config('database.connection_string'), config('database.user'), config('database.password'));
-		R::freeze(config('redbean.freeze'));
-	}
-	
-	/**
-	 * We need to require the redbean file and connect to the database.
-	 */
-	public function onWakeUp() {
-		$this->connect();	
-	}
-	
-	/**
-	 * Close the database connection.
-	 */
-	public function onSleep() {
-		if (class_exists('R')) {
-			R::close();
-		}
-	}
-	
-	/**
-	 * @return RedbeanUtil_DynamicToStatic
-	 * 	You can use this to access to the "R" classes without the "static" way.
-	 */
-	public function get() {
-		return $this->dynamicToStatic;
-	}
-	
+
+   /**
+    * Used in the get method.
+    */
+   private $dynamicToStatic;
+
+   /**
+    * Construct a new RedbeanUtil
+    */
+   public function __construct() {
+      $this->dynamicToStatic = new RedbeanUtil_DynamicToStatic();
+      $this->connect();
+   }
+
+   /**
+    * Connect the database and set the freeze parameter.
+    * Also set the formatter.
+    */
+   public function connect() {
+      require_once PATH_METALIZER_EXTERNAL . 'redbean/redbean.php';
+      R::setup(config('database.connection_string'), config('database.user'), config('database.password'));
+      R::freeze(config('redbean.freeze'));
+   }
+
+   /**
+    * We need to require the redbean file and connect to the database.
+    */
+   public function onWakeUp() {
+      $this->connect();
+   }
+
+   /**
+    * Close the database connection.
+    */
+   public function onSleep() {
+      if (class_exists('R')) {
+         R::close();
+      }
+   }
+
+   /**
+    * @return RedbeanUtil_DynamicToStatic
+    * 	You can use this to access to the "R" classes without the "static" way.
+    */
+   public function get() {
+      return $this->dynamicToStatic;
+   }
+
 }
 
 /**
@@ -78,19 +78,19 @@ class RedbeanUtil extends Util {
  * All method call are passed to the R class.
  */
 class RedbeanUtil_DynamicToStatic extends MetalizerObject {
-	
-	/**
-	 * Override the __call method
-	 */
-	public function __call($name, $arguments) {
-		return call_user_func_array("R::$name", $arguments);
-	}
+
+   /**
+    * Override the __call method
+    */
+   public function __call($name, $arguments) {
+      return call_user_func_array("R::$name", $arguments);
+   }
+
 }
 
 /**
  * @see RedbeanUtil#get
  */
 function R() {
-	return Util('Redbean')->get();
+   return Util('Redbean')->get();
 }
-	

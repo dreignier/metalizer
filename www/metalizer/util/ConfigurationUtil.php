@@ -24,51 +24,50 @@
  */
 class ConfigurationUtil extends Util {
 
-	/**
-	 * All configuration values
-	 * @var array[mixed]
-	 */
-	private $configuration;
+   /**
+    * All configuration values
+    * @var array[mixed]
+    */
+   private $configuration;
 
-	/**
-	 * Construct a new ConfigurationUtil. All configuration files are loaded.
-	 * @return ConfigurationUtil
-	 */
-	public function __construct() {
-		// Load the configuration.
+   /**
+    * Construct a new ConfigurationUtil. All configuration files are loaded.
+    * @return ConfigurationUtil
+    */
+   public function __construct() {
+      // Load the configuration.
 
-		$config = array();
+      $config = array();
 
-		// Metalizer default configuration
-		foreach (glob(PATH_METALIZER_CONFIGURATION . '*.php') as $file) {
-			require $file;
-		}
+      // Metalizer default configuration
+      foreach (glob(PATH_METALIZER_CONFIGURATION . '*.php') as $file) {
+         require $file;
+      }
 
-		// Application configuration
-		foreach (glob(PATH_APPLICATION_CONFIGURATION . '*.php') as $file) {
-			require $file;
-		}
+      // Application configuration
+      foreach (glob(PATH_APPLICATION_CONFIGURATION . '*.php') as $file) {
+         require $file;
+      }
 
-		$this->configuration = $config;
-	}
+      $this->configuration = $config;
+   }
 
-	/**
-	 * Get a configuration value.
-	 * @param $key string
-	 * 	The name of the value
-	 * @return mixed
-	 * 	The value
-	 * @throws ConfigurationKeyNotFoundException
-	 * 	If the key can't be found in the configuration values.
-	 */
-	public function get($key) {
-		if (isset($this->configuration[$key])) {
-			return $this->configuration[$key];
-		}
-		
-		return null;
-	}
+   /**
+    * Get a configuration value.
+    * @param $key string
+    * 	The name of the value
+    * @return mixed
+    * 	The value
+    * @throws ConfigurationKeyNotFoundException
+    * 	If the key can't be found in the configuration values.
+    */
+   public function get($key) {
+      if (isset($this->configuration[$key])) {
+         return $this->configuration[$key];
+      }
 
+      return null;
+   }
 
 }
 
@@ -76,5 +75,5 @@ class ConfigurationUtil extends Util {
  * @see ConfigurationUtil#get
  */
 function config($key) {
-	return util('Configuration')->get($key);
+   return util('Configuration')->get($key);
 }

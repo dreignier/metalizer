@@ -31,9 +31,9 @@ define('WEEK', DAY * 7);
 class TimeUtil extends Util {
 
 	/**
-	 * Return the current date in a Unix timestamp.
+	 * Return the current time in a Unix timestamp.
 	 * @return long
-	 * 	The current date.
+	 * 	The current time.
 	 */
 	public function now() {
 		return time();

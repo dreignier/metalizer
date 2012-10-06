@@ -57,31 +57,31 @@ require PATH_METALIZER . 'initialize.php';
 error_reporting(-1);
 
 try {
-	// *** Resolve the page, the method and the parameters ***
-	$pathInfo = trim(@Util('Server')->get('PATH_INFO'));
-	$resolver = new PageResolver($pathInfo);
-	
-	// Let's go !
-	ob_start();
-	$resolver->run();
-	ob_end_flush();
-} catch (Exception $exception) {
-	header("HTTP/1.1 " . (is_a($exception, 'HttpException') ? $exception->getCode() : 500));
-	ob_end_clean();
-	
-	if (class_exists('Error') && is_a('Error', 'Page')) {
-		$page = new Error();
-		call_user_func_array(array($page, config('page.default_method')));
-	} else {
-		// Default error handle
-		echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
-		echo $exception->getFile() . '(' . $exception->getLine() . ')';
-		echo str_replace('#', '<br/>#', $exception->getTraceAsString());
+   // *** Resolve the page, the method and the parameters ***
+   $pathInfo = trim(@Util('Server')->get('PATH_INFO'));
+   $resolver = new PageResolver($pathInfo);
 
-		logError('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());
-		logError($exception->getFile() . '(' . $exception->getLine() . ')');
-		logError($exception->getTraceAsString());
-	}
+   // Let's go !
+   ob_start();
+   $resolver->run();
+   ob_end_flush();
+} catch (Exception $exception) {
+   header("HTTP/1.1 " . (is_a($exception, 'HttpException') ? $exception->getCode() : 500));
+   ob_end_clean();
+
+   if (class_exists('Error') && is_a('Error', 'Page')) {
+      $page = new Error();
+      call_user_func_array(array($page, config('page.default_method')));
+   } else {
+      // Default error handle
+      echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
+      echo $exception->getFile() . '(' . $exception->getLine() . ')';
+      echo str_replace('#', '<br/>#', $exception->getTraceAsString());
+
+      logError('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());
+      logError($exception->getFile() . '(' . $exception->getLine() . ')');
+      logError($exception->getTraceAsString());
+   }
 }
 
 // *** Metalizer finalization ***

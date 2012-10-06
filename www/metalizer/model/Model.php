@@ -23,35 +23,70 @@
  *
  */
 class Model extends MetalizerObject {
-	
-	protected $model;
-	
-	public function initialize() {
-		
-	}
-	
-	public function getModel() {
-		return $this->model;
-	}
-	
-	public function setModel($model) {
-		$this->model = $model;
-	}
-	
-	public function getId() {
-		return $this->model->id;
-	}
-	
-	public function store() {
-		$this->getClassHandler()->store($this);
-	}
-	
-	public function trash() {
-		$this->getClassHandler()->trash($this);
-	}
-	
-	public function getClassHandler() {
-		return model($this->getClass());
-	}
+
+   /**
+    * The redbean bean used by the model.
+    * @var RedBean_OODBBean
+    */
+   protected $model;
+
+   /**
+    * Called right after the construction of a new model. It does nothing.
+    * Subclasses should override this method.
+    */
+   public function initialize() {
+
+   }
+
+   /**
+    * Get the redbean bean of this model.
+    * You'll need this method if you want to make a relation between two model object.
+    * @return RedBean_OODBBean
+    *	 The redbean of this model.
+    */
+   public function getModel() {
+      return $this->model;
+   }
+
+   /**
+    * Set the redbean bean of this model.
+    * This method should _NOT_ be used by an other class than ModelFactory.
+    * @param $model RedBean_OODBBean
+    *		The new redbean bean for this model.
+    */
+   public function setModel($model) {
+      $this->model = $model;
+   }
+
+   /**
+    * Get the current id of the model.
+    * @return int
+    * 	The current id of the model.
+    */
+   public function getId() {
+      return $this->model->id;
+   }
+
+   /**
+    * Store or update the current model in the database.
+    */
+   public function store() {
+      $this->getClassHandler()->store($this);
+   }
+
+   /**
+    * Detele the current model in the database and caches.
+    */
+   public function trash() {
+      $this->getClassHandler()->trash($this);
+   }
+
+   /**
+    * @return ModelFactory
+    * 	The factory for this model.
+    */
+   public function getClassHandler() {
+      return model($this->getClass());
+   }
 
 }

@@ -23,33 +23,33 @@
  *
  */
 class FileUtil extends Util {
-	
-	/**
-	 * Check if the directory for a file path exists. If not, the directory is created.
-	 * @param $file string
-	 *  A file path.
-	 */
-	public function checkDirecoty($file) {
-		if (file_exists($file)) {
-			return;
-		}
-		
-		$file = explode('/', $file);
-				
-		if (sizeof($file) > 0) {
-			// Remove the file name
-			$file = array_slice($file, 0, sizeof($file) - 1);
-			
-			// Remove the last /
-			$path = substr(PATH_ROOT, 0, -1);
-			foreach($file as $directory) {
-				$path =  "$path/$directory";
-				
-				if (!file_exists($path)) {
-					mkdir($path);
-				}
-			}
-		}
-	}
-	
+
+   /**
+    * Check if the directory for a file path exists. If not, the directory is created.
+    * @param $file string
+    *  A file path.
+    */
+   public function checkDirecoty($file) {
+      if (file_exists($file)) {
+         return;
+      }
+
+      $file = explode('/', $file);
+
+      if (sizeof($file) > 0) {
+         // Remove the file name
+         $file = array_slice($file, 0, sizeof($file) - 1);
+
+         // Remove the last /
+         $path = substr(PATH_ROOT, 0, -1);
+         foreach ($file as $directory) {
+            $path = "$path/$directory";
+
+            if (!file_exists($path)) {
+               mkdir($path);
+            }
+         }
+      }
+   }
+
 }

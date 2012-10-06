@@ -24,16 +24,16 @@
  */
 class WebscriptView extends View {
 
-	/**
-	 * Construct a new WebscriptView
-	 * @param $webscript Webscript
-	 * 	The Webscript of the view.
-	 * @param $data array[mixed]
-	 * 	Data for the view.
-	 * @return WebscriptView
-	 */
-	public function __construct($webscript, $data) {
-		parent::__construct($webscript->getFolder() . strtolower($webscript->getClass()) . '.view', $data);
-	}
+   /**
+    * Construct a new WebscriptView
+    * @param $webscript Webscript
+    * 	The Webscript of the view.
+    * @param $data array[mixed]
+    * 	Data for the view.
+    * @return WebscriptView
+    */
+   public function __construct($webscript, $data) {
+      parent::__construct($webscript->getFolder() . strtolower($webscript->getClass()) . '.view', $data);
+   }
 
 }

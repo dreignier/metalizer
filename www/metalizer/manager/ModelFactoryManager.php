@@ -22,23 +22,23 @@
  * @author David Reignier
  */
 class ModelFactoryManager extends Manager {
-	
-	/**
-	 * Construct a new ModelFactoryManager
-	 * @return ModelFactoryManager
-	 */
-	public function __construct() {
-		parent::__construct('ModelFactory');
-	}
-	
-	/**
-	 * Override the load function.
-	 * @param $name string
-	 * 	The name of the item.
-	 */
-	protected function load($name) {
-		$item = new ModelFactory($name);
-		$this->items[$name] = $item;
-	}
-	
+
+   /**
+    * Construct a new ModelFactoryManager
+    * @return ModelFactoryManager
+    */
+   public function __construct() {
+      parent::__construct('ModelFactory');
+   }
+
+   /**
+    * Override the load function.
+    * @param $name string
+    * 	The name of the item.
+    */
+   protected function load($name) {
+      $item = new ModelFactory($name);
+      $this->items[$name] = $item;
+   }
+
 }

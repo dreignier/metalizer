@@ -24,142 +24,142 @@
  */
 class MetalizerObject {
 
-	/**
-	 * Say if the object is sleeping.
-	 * @var boolean
-	 */
-	private $sleeping = false;
+   /**
+    * Say if the object is sleeping.
+    * @var boolean
+    */
+   private $sleeping = false;
 
-	/**
-	 * The manager of the object. Can be null.
-	 * @var Manager
-	 */
-	private $manager = null;
-	
-	/**
-	 * The looger for the object
-	 * @var Logger
-	 */
-	private $logger = null;
-	
-	/**
-	 * Get the manager of the object.
-	 * @return Manager
-	 * 	The manager of the object, or null.
-	 */
-	public function getManager() {
-		return $this->manager;
-	}
+   /**
+    * The manager of the object. Can be null.
+    * @var Manager
+    */
+   private $manager = null;
 
-	/**
-	 * Set the manager of the object.
-	 * @param $manager Manager
-	 * 	A manager
-	 */
-	public function setManager($manager) {
-		$this->manager = $manager;
-	}
+   /**
+    * The looger for the object
+    * @var Logger
+    */
+   private $logger = null;
 
-	/**
-	 * @return true if the object is sleeping, false otherwise.
-	 */
-	public function isSleeping() {
-		return $this->sleeping;
-	}
+   /**
+    * Get the manager of the object.
+    * @return Manager
+    * 	The manager of the object, or null.
+    */
+   public function getManager() {
+      return $this->manager;
+   }
 
-	/**
-	 * Put the object in the sleep state. MetalizerObject#onSleep will be called.
-	 */
-	public function sleep() {
-		if (!$this->sleeping) {
-			$this->onSleep();
-			$this->manager = null;
-			$this->sleeping = true;
-			$this->logger = null;
-		}
-	}
-	
-	/**
-	 * Called when MetalizerObject#sleep is called. Do nothing by default. Subclasses should override this method.
-	 */
-	public function onSleep() {
+   /**
+    * Set the manager of the object.
+    * @param $manager Manager
+    * 	A manager
+    */
+   public function setManager($manager) {
+      $this->manager = $manager;
+   }
 
-	}
+   /**
+    * @return true if the object is sleeping, false otherwise.
+    */
+   public function isSleeping() {
+      return $this->sleeping;
+   }
 
-	/**
-	 * Wake up the object.
-	 * @param $manager Manager
-	 * 	Optional. The new manager of the object.
-	 */
-	public function wakeUp($manager = null) {
-		if ($this->sleeping) {
-			if ($manager) {
-				$this->manager = $manager;
-			}
-			$this->onWakeUp();
-			$this->sleeping = false;
-		}
-	}
+   /**
+    * Put the object in the sleep state. MetalizerObject#onSleep will be called.
+    */
+   public function sleep() {
+      if (!$this->sleeping) {
+         $this->onSleep();
+         $this->manager = null;
+         $this->sleeping = true;
+         $this->logger = null;
+      }
+   }
 
-	/**
-	 * Called when MetalizerObject#wakeUp is called. Do nothing by default. Subclasses should override this method.
-	 */
-	public function onWakeUp() {
+   /**
+    * Called when MetalizerObject#sleep is called. Do nothing by default. Subclasses should override this method.
+    */
+   public function onSleep() {
 
-	}
+   }
 
-	/**
-	 * @return string
-	 * 	A string representation of the object.
-	 */
-	public function toString() {
-		return $this->getClass();
-	}
+   /**
+    * Wake up the object.
+    * @param $manager Manager
+    * 	Optional. The new manager of the object.
+    */
+   public function wakeUp($manager = null) {
+      if ($this->sleeping) {
+         if ($manager) {
+            $this->manager = $manager;
+         }
+         $this->onWakeUp();
+         $this->sleeping = false;
+      }
+   }
 
-	/**
-	 *
-	 * @return string
-	 * 	Same as <code>get_class($object)</code>
-	 */
-	public function getClass() {
-		return get_class($this);
-	}
+   /**
+    * Called when MetalizerObject#wakeUp is called. Do nothing by default. Subclasses should override this method.
+    */
+   public function onWakeUp() {
 
-	/**
-	 * Get the log name (for log messages). Subclasses should override this method.
-	 * @return string
-	 * 	An empty string
-	 */
-	public function getLogName() {
-		return "";
-	}
-	
-	/**
-	 * Get the logger
-	 * @return Logger
-	 * 	The logger of the current object.
-	 */
-	public function log() {
-		if (!$this->logger) {
-			$this->logger = new Logger($this);
-		}
-		
-		return $this->logger;
-	}
+   }
 
-	/**
-	 * Called at the end of the application, just before every object are put in the sleep mode.
-	 */
-	public function finalize() {
-		$this->onFinalize();
-	}
-	
-	/**
-	 * Called in MetalizerObject#finalize().
-	 * Subclasses should override it.
-	 */
-	public function onFinalize() {
-		
-	}
+   /**
+    * @return string
+    * 	A string representation of the object.
+    */
+   public function toString() {
+      return $this->getClass();
+   }
+
+   /**
+    *
+    * @return string
+    * 	Same as <code>get_class($object)</code>
+    */
+   public function getClass() {
+      return get_class($this);
+   }
+
+   /**
+    * Get the log name (for log messages). Subclasses should override this method.
+    * @return string
+    * 	An empty string
+    */
+   public function getLogName() {
+      return "";
+   }
+
+   /**
+    * Get the logger
+    * @return Logger
+    * 	The logger of the current object.
+    */
+   public function log() {
+      if (!$this->logger) {
+         $this->logger = new Logger($this);
+      }
+
+      return $this->logger;
+   }
+
+   /**
+    * Called at the end of the application, just before every object are put in the sleep mode.
+    */
+   public function finalize() {
+      $this->onFinalize();
+   }
+
+   /**
+    * Called in MetalizerObject#finalize().
+    * Subclasses should override it.
+    */
+   public function onFinalize() {
+
+   }
 
 }

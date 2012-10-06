@@ -16,20 +16,20 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
- 
+
 /**
  * Provide easy way to access to ModelClassHandler objects.
  */
 class ModelUtil extends Util {
 
-	/**
-	 * Get a ModelClassHandler with its name.
-	 * @return ModelClassHandler
-	 */
-	public function get($name) {
-		return manager('ModelFactory')->get($name);
-	}
-	
+   /**
+    * Get a ModelClassHandler with its name.
+    * @return ModelClassHandler
+    */
+   public function get($name) {
+      return manager('ModelFactory')->get($name);
+   }
+
 }
 
 /**
@@ -37,6 +37,5 @@ class ModelUtil extends Util {
  * @return ModelClassHandler
  */
 function model($name) {
-	return Util('Model')->get($name);
+   return Util('Model')->get($name);
 }
-

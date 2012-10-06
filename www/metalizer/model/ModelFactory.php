@@ -48,6 +48,9 @@ class ModelFactory extends MetalizerObject {
     */
    private $subClassesHandlers = array();
 
+   /**
+    * Represent the level difference between the handled class and Model.
+    */
    private $level = 1;
 
    /**
@@ -71,10 +74,18 @@ class ModelFactory extends MetalizerObject {
       $this->table = strtolower($class);
    }
 
+   /**
+    * Clear instances.
+    */
    public function onSleep() {
       $this->instances = array();
    }
 
+   /**
+    * Create a new model object.
+    * @return Model
+    * 	A new model object ready to be used. The class of the object is the handled class of this factory.
+    */
    public function dispense() {
       $model = $this->newInstance();
       $model->setModel(R()->dispense($this->table));
@@ -83,27 +94,42 @@ class ModelFactory extends MetalizerObject {
       return $model;
    }
 
+   /**
+    * Store a model object in the database
+    * @param $model Model
+    * 	The model object to store.
+    */
    public function store($model) {
       $model->getModel()->metalizer_level = $this->level;
-      $model->getModel()->metalizer_class = $this->class;
 
       $id = R()->store($model->getModel());
       $this->instances[$id] = $model;
    }
 
+   /**
+    * Delete a model object in the database
+    * @param $model Model
+    * 	The model object to delete.
+    */
    public function trash($model) {
       R()->trash($model->getModel());
       unset($this->instances[$model->getId()]);
    }
 
-   public function wipe() {
-      R()->wipe($this->table);
-   }
-
+   /**
+    * Same as findById.
+    */
    public function load($id) {
       return $this->findById($id);
    }
 
+   /**
+    * Find a model by its id
+    * @param $id int
+    * 	An id.
+    * @return Model
+    * 	The model object with the given id. Or null.
+    */
    public function findById($id) {
       if (isset($this->instances[$id])) {
          return $this->instances[$id];
@@ -111,7 +137,7 @@ class ModelFactory extends MetalizerObject {
 
       $bean = R()->load($this->table, $id);
 
-      if (!$bean->id) {
+      if (!$bean->id || $bean->metalizer_level > $this->level) {
          return null;
       }
 
@@ -120,40 +146,106 @@ class ModelFactory extends MetalizerObject {
       return $model;
    }
 
+   /**
+    * Find all objects for this factory.
+    * @param $orderBy string
+    * 	The ORDER BY part of the query.
+    * @param $offset int
+    * 	The offset of the query.
+    * @param $limit int
+    * 	The limit of the query.
+    * @return array
+    * 	An array of Model.
+    */
    public function findAll($orderBy = null, $offset = 0, $limit = null) {
-   	return $this->find(null, array(), $orderBy, $offset, $limit);
+      return $this->find(null, array(), $orderBy, $offset, $limit);
    }
-	
-	public function findOne($where, $params = array()) {
-		$bean = R()->findOne($this->table, $where, $params);
-		
-		if (!$bean->id) {
+
+   /**
+    * Find one object for this factory.
+    * @param $where string
+    * 	The WHERE part of the query.
+    * @param $params array
+    * 	The parameters for $where.
+    * @return Model
+    * 	The model corresponding to the query. Or null.
+    */
+   public function findOne($where, $params = array()) {
+      $where = "($where) AND metalizer_level >= $this->level";
+
+      $bean = R()->findOne($this->table, $where, $params);
+
+      if (!$bean->id) {
          return null;
       }
-		
-		if (isset($this->instances[$bean->id])) {
+
+      if (isset($this->instances[$bean->id])) {
          return $this->instances[$bean->id];
       }
 
       $model = $this->loadInstance($bean);
 
       return $model;
-	}
-	
-	public function findBy($property, $value, $orderBy = null, $offset = 0, $limit = null) {
-		return $this->find("$property = ?", array($value), $orderBy, $offset, $limit);
-	}
-	
-	public function findOneBy($property, $value) {
-		return $this->findOne("$property = ?", array($value));
-	}
-	
-   public function find($where = '', $params = array(), $orderBy = null, $offset = 0, $limit = null) {
+   }
+
+   /**
+    * Find objects by a property.
+    * @param $property string
+    * 	The name of a property
+    * @param $value mixed
+    * 	The value of the property for the query.
+    * @param $orderBy string
+    * 	The ORDER BY part of the query.
+    * @param $offset int
+    * 	The offset of the query.
+    * @param $limit int
+    * 	The limit of the query.
+    * @return array
+    * 	An array of Model.
+    */
+   public function findBy($property, $value, $orderBy = null, $offset = 0, $limit = null) {
+      return $this->find("$property = ?", array($value), $orderBy, $offset, $limit);
+   }
+
+   /**
+    * Find one object by a prorperty.
+    * @param $property string
+    * 	The name of a property
+    * @param $value mixed
+    * 	The value of the property for the query
+    * @return Model
+    * 	The model corresponding to the query. Or null.
+    */
+   public function findOneBy($property, $value) {
+      return $this->findOne("$property = ?", array($value));
+   }
+
+   /**
+    * The base 'find' method.
+    * @param $where string
+    * 	The WHERE part of the query.
+    * @param $params array
+    * 	The parameters for $where.
+    * @param $orderBy string
+    * 	The ORDER BY part of the query.
+    * @param $offset int
+    * 	The offset of the query.
+    * @param $limit int
+    * 	The limit of the query.
+    * @return array
+    * 	An array of Model.
+    */
+   public function find($where, $params = array(), $orderBy = null, $offset = 0, $limit = null) {
       $result = array();
       $extra = '';
 
-      $useNamedParam = !$where || !sizeof($params);
-      if (!$useNamedParam) {
+      if ($where) {
+         $where = "($where) AND ";
+      }
+      $where .= " metalizer_level >= $this->level";
+
+      $useNamedParam = !sizeof($params);
+      if ($useNamedParam) {
          $paramsKeys = array_keys($params);
          $useNamedParam = !is_integer($paramsKeys[0]);
       }
@@ -206,12 +298,20 @@ class ModelFactory extends MetalizerObject {
       return $result;
    }
 
+   /**
+    * Make a new instance for this factory.
+    */
    private function newInstance() {
       $class = $this->class;
       $model = new $class();
       return $model;
    }
-	
+
+   /**
+    * Create a new instance for this factory with a bean.
+    * @param $bean RedBean_OODBBean
+    * 	The bean for the new instance
+    */
    private function loadInstance($bean) {
       $model = $this->newInstance();
       $model->setModel($bean);
