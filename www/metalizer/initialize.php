@@ -19,7 +19,8 @@
 
 /**
  * Metalizer initialization file.
- */
+ */ 
+ 
 // *** Classloader initialization ***
 
 require_once PATH_METALIZER_CORE . 'ClassLoader.php';

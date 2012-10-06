@@ -26,24 +26,24 @@
 define('PATH_ROOT', './');
 
 define('PATH_METALIZER', PATH_ROOT . 'metalizer/');
-define('PATH_METALIZER_CONTROLLER', PATH_ROOT . 'metalizer/controller/');
-define('PATH_METALIZER_CORE', PATH_ROOT . 'metalizer/core/');
-define('PATH_METALIZER_DATABASE', PATH_ROOT . 'metalizer/database/');
-define('PATH_METALIZER_EXCEPTION', PATH_ROOT . 'metalizer/exception/');
-define('PATH_METALIZER_MANAGER', PATH_ROOT . 'metalizer/manager/');
-define('PATH_METALIZER_MODEL', PATH_ROOT . 'metalizer/model/');
-define('PATH_METALIZER_UTIL', PATH_ROOT . 'metalizer/util/');
-define('PATH_METALIZER_VIEW', PATH_ROOT . 'metalizer/view/');
-define('PATH_METALIZER_CONFIGURATION', PATH_ROOT . 'metalizer/configuration/');
+define('PATH_METALIZER_CONTROLLER', PATH_METALIZER . 'controller/');
+define('PATH_METALIZER_CORE', PATH_METALIZER . 'core/');
+define('PATH_METALIZER_DATABASE', PATH_METALIZER . 'database/');
+define('PATH_METALIZER_EXCEPTION', PATH_METALIZER . 'exception/');
+define('PATH_METALIZER_MANAGER', PATH_METALIZER . 'manager/');
+define('PATH_METALIZER_MODEL', PATH_METALIZER . 'model/');
+define('PATH_METALIZER_UTIL', PATH_METALIZER . 'util/');
+define('PATH_METALIZER_VIEW', PATH_METALIZER . 'view/');
+define('PATH_METALIZER_CONFIGURATION', PATH_METALIZER . 'configuration/');
+define('PATH_METALIZER_EXTERNAL', PATH_METALIZER . 'external/');
 
 define('PATH_APPLICATION', PATH_ROOT . 'application/');
-define('PATH_APPLICATION_PAGE', PATH_ROOT . 'application/page/');
-define('PATH_APPLICATION_MODEL', PATH_ROOT . 'application/model/');
-define('PATH_APPLICATION_UTIL', PATH_ROOT . 'application/util/');
-define('PATH_APPLICATION_TEMPLATE', PATH_ROOT . 'application/template/');
-define('PATH_APPLICATION_CHROME', PATH_ROOT . 'application/chrome/');
-define('PATH_APPLICATION_CONFIGURATION', PATH_ROOT . 'application/configuration/');
-define('PATH_APPLICATION_WEBSCRIPT', PATH_ROOT . 'application/webscript/');
+define('PATH_APPLICATION_PAGE', PATH_APPLICATION . 'page/');
+define('PATH_APPLICATION_MODEL', PATH_APPLICATION . 'model/');
+define('PATH_APPLICATION_UTIL', PATH_APPLICATION . 'util/');
+define('PATH_APPLICATION_TEMPLATE', PATH_APPLICATION . 'template/');
+define('PATH_APPLICATION_CHROME', PATH_APPLICATION . 'chrome/');
+define('PATH_APPLICATION_CONFIGURATION', PATH_APPLICATION . 'configuration/');
 
 define('PATH_CACHE', PATH_ROOT . '../cache/');
 define('PATH_LOG', PATH_ROOT . '../log/');

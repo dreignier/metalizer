@@ -1,30 +1,28 @@
 <?php
 /**
- * The host for the metalizer database
- * @var string
+ * The database connection string.
+ * @ar string
  */
-$config['database.metalizer.host'] = '127.0.0.1';
+// MySQL
+$config['database.connection_string'] = 'mysql:host=localhost;dbname=metalizer';
 
-/**
- * The port for the metalizer database
- * @var int
- */
-$config['database.metalizer.port'] = 3306;
+// PostgreSQL
+//$config['database.connection_string'] = 'pgsql:host=localhost;dbname=metalizer';
+
+// SQLite
+//$config['database.connection_string'] = 'sqlite:/sqlite/dbfile.txt';
+
+// CUBRID
+//$config['database.connection_string'] = 'cubrid:host=localhost;port=30000';
 
 /**
  * The login for the metalizer database
  * @var string
  */
-$config['database.metalizer.login'] = 'root';
+$config['database.user'] = 'metalizer';
 
 /**
  * The password for the metalizer database. Specify an empty string for no password
  * @var string
  */
-$config['database.metalizer.password'] = '';
-
-/**
- * The database name for the metalizer database
- * @var string
- */
-$config['database.metalizer.name'] = 'metalizer';
+$config['database.password'] = 'metalizer';
