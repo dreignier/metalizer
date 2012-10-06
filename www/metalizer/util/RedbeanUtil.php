@@ -38,11 +38,13 @@ class RedbeanUtil extends Util {
 	}
 	
 	/**
-	 * Require the redbean file and connect the database.
+	 * Connect the database and set the freeze parameter.
+	 * Also set the formatter.
 	 */
 	public function connect() {
 		require_once PATH_METALIZER_EXTERNAL . 'redbean/redbean.php';
 		R::setup(config('database.connection_string'), config('database.user'), config('database.password'));
+		R::freeze(config('redbean.freeze'));
 	}
 	
 	/**
@@ -72,6 +74,7 @@ class RedbeanUtil extends Util {
 }
 
 /**
+ * Private class.
  * All method call are passed to the R class.
  */
 class RedbeanUtil_DynamicToStatic extends MetalizerObject {

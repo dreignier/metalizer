@@ -18,22 +18,27 @@
  */
 
 /**
- * Used by Database.
+ * Manager ModelClassHandler objects.
  * @author David Reignier
- *
  */
-class MysqlException extends HttpException {
-
+class ModelFactoryManager extends Manager {
+	
 	/**
-	 * Constrcut a new MysqlException.
-	 * @param $errno int
-	 * 	The error number.
-	 * @param $error string
-	 * 	The error message.
-	 * @return MysqlException
+	 * Construct a new ModelFactoryManager
+	 * @return ModelFactoryManager
 	 */
-	public function __construct($errno, $error) {
-		parent::__construct("Query error ($errno) : $error", 500);
+	public function __construct() {
+		parent::__construct('ModelFactory');
 	}
-
+	
+	/**
+	 * Override the load function.
+	 * @param $name string
+	 * 	The name of the item.
+	 */
+	protected function load($name) {
+		$item = new ModelFactory($name);
+		$this->items[$name] = $item;
+	}
+	
 }

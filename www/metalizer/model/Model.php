@@ -18,27 +18,40 @@
  */
 
 /**
- * The manager of Database objects.
+ * Represent a model object.
  * @author David Reignier
  *
  */
-class DatabaseManager extends Manager {
-
-	/**
-	 * Construct a new DatabaseManager. Just call the Manager construct with "Database".
-	 * @return DatabaseManager
-	 */
-	public function __construct() {
-		parent::__construct("Database");
+class Model extends MetalizerObject {
+	
+	protected $model;
+	
+	public function initialize() {
+		
 	}
-
-	/**
-	 * Override the load method of Manager.
-	 * @see Manager#load($name)
-	 */
-	protected function load($name) {
-		$database = new Database($name);
-		$this->items[$name] = $database;
+	
+	public function getModel() {
+		return $this->model;
+	}
+	
+	public function setModel($model) {
+		$this->model = $model;
+	}
+	
+	public function getId() {
+		return $this->model->id;
+	}
+	
+	public function store() {
+		$this->getClassHandler()->store($this);
+	}
+	
+	public function trash() {
+		$this->getClassHandler()->trash($this);
+	}
+	
+	public function getClassHandler() {
+		return model($this->getClass());
 	}
 
 }
