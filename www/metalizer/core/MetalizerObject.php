@@ -146,20 +146,4 @@ class MetalizerObject {
 
       return $this->logger;
    }
-
-   /**
-    * Called at the end of the application, just before every object are put in the sleep mode.
-    */
-   public function finalize() {
-      $this->onFinalize();
-   }
-
-   /**
-    * Called in MetalizerObject#finalize().
-    * Subclasses should override it.
-    */
-   public function onFinalize() {
-
-   }
-
 }

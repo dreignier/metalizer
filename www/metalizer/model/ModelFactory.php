@@ -75,7 +75,7 @@ class ModelFactory extends MetalizerObject {
    }
 
    /**
-    * Clear instances.
+    * Cache and clear instances.
     */
    public function onSleep() {
       $this->instances = array();

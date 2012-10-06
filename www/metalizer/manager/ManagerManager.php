@@ -45,7 +45,6 @@ class ManagerManager extends Manager {
     * Finalize the ManagerManager. Must be called at the end of the application. The ManagerManager put itself in sleep mode and in a cache file.
     */
    static public function terminate() {
-      ManagerManager::$instance->finalize();
       if (!isDevMode()) {
          ManagerManager::$instance->sleep();
          file_put_contents(MANAGER_MANAGER_CACHE_FILE, serialize(ManagerManager::$instance));

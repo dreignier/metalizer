@@ -37,3 +37,9 @@ ManagerManager::initialize();
 // *** UtilManager initialization ***
 // Create the UtilManager if it doesn't exist
 manager('Util');
+
+// *** Application initialization ***
+$initFile = PATH_APPLICATION . 'initialize.php';
+if (file_exists($initFile)) {
+	require_once $initFile;
+}

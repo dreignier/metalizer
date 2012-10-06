@@ -92,7 +92,7 @@ class PropertyUtil extends Util {
     * Save the properties.
     * @see MetalizerObject#onFinalize()
     */
-   public function onFinalize() {
+   public function finalize() {
       store()->store(PROPERTIES_FILE_NAME, $this->properties);
    }
 

@@ -35,7 +35,6 @@ class ModeUtil extends Util {
    public function getMode() {
       return config('metalizer.mode');
    }
-
 }
 
 /**
