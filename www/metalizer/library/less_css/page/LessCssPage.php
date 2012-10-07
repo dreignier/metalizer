@@ -27,8 +27,13 @@ class LessCssPage extends Page {
     * Don't use this in production mode. But it's fine in development mode.
     */
    public function compile($file) {
+      $file = PATH_RESSOURCE_CSS . $file;
       $this->setContentType('text/css');
-      echo Util('LessCss')->compile(PATH_RESSOURCE_CSS . $file);
+      if (file_exists($file)) {
+         echo Util('LessCss')->compile($file);
+      } else {
+         echo "/* Resource not found : $file */";
+      }
    }
 
 }   

@@ -30,15 +30,30 @@ class LessCssUtil extends Util {
     */
    private $lessc;
 
+   /**
+    * Create the less compiler and requite the lessc.php file.
+    */
    public function __construct() {
       require_once getLibraryPath('less_css') . 'external/lessc.php';
       $this->lessc = new lessc();      
    }
    
+   /**
+    * Require the lessc.php file.
+    */
    public function onWakeUp() {
       require_once getLibraryPath('less_css') . 'external/lessc.php';
    }
    
+   /**
+    * Compile a less file.
+    * @param $inFile string
+    *    The input file.
+    * @param $outFile
+    *    Optional. If given, this file is used as the output.
+    * @return mixed
+    *    Return the result if $outFile is missing. Otherwise, it return nothing.
+    */
    public function compile($inFile, $outFile = null) {
       $result = $this->lessc->compileFile($inFile, $outFile);
       
@@ -47,6 +62,13 @@ class LessCssUtil extends Util {
       }
    }
    
+   /**
+    * Create an url for a less file.
+    * @param $file string
+    *    The file name.
+    * @return string
+    *    The url for the less file.
+    */
    public function url($file) {
       $url = siteUrl("less/$file");
       
@@ -59,6 +81,9 @@ class LessCssUtil extends Util {
    
 }
 
+/**
+ * @see LessCssUtil#url
+ */
 function lessCssUrl($file) {
    return Util('LessCss')->url($file);
 }
