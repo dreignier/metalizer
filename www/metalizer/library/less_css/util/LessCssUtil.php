@@ -31,12 +31,12 @@ class LessCssUtil extends Util {
    private $lessc;
 
    public function __construct() {
-      require_once getLibraryPath('less') . 'external/lessc.php';
+      require_once getLibraryPath('less_css') . 'external/lessc.php';
       $this->lessc = new lessc();      
    }
    
    public function onWakeUp() {
-      require_once getLibraryPath('less') . 'external/lessc.php';
+      require_once getLibraryPath('less_css') . 'external/lessc.php';
    }
    
    public function compile($inFile, $outFile = null) {

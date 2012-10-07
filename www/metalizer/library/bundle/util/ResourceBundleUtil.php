@@ -40,7 +40,7 @@ class ResourceBundleUtil extends Util {
       if (isDevMode()) {
          foreach($files as $file) {
             $url;
-            if (isLibraryExists('less') && substr($file, -5) == '.less') {
+            if (isLibraryExists('less_css') && substr($file, -5) == '.less') {
                $url = lessCssUrl($file);
             } else {
                $url = cssUrl($file);
@@ -56,7 +56,7 @@ class ResourceBundleUtil extends Util {
             $handle = fopen($path, 'w');
             foreach($files as $file) {
                $file = PATH_RESSOURCE_CSS . $file;
-               if (isLibraryExists('less') && substr($file, -5) == '.less') {
+               if (isLibraryExists('less_css') && substr($file, -5) == '.less') {
                   $content = util('LessCss')->compile($file);
                } else {
                   $content = file_get_contents($file);
