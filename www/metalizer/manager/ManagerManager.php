@@ -31,7 +31,7 @@ class ManagerManager extends Manager {
     * @var ManagerManager
     */
    static private $instance;
-
+   
    /**
     * Construct a new ManagerManager. Because of php, we can't set this constructor in private.
     * _DO NOT USE IT_
@@ -40,7 +40,7 @@ class ManagerManager extends Manager {
    public function __construct() {
       parent::__construct('Manager');
    }
-
+   
    /**
     * Finalize the ManagerManager. Must be called at the end of the application. The ManagerManager put itself in sleep mode and in a cache file.
     */
@@ -64,7 +64,7 @@ class ManagerManager extends Manager {
 
       // Look for the cache file
       if (file_exists(MANAGER_MANAGER_CACHE_FILE)) {
-         ManagerManager::$instance = unserialize(file_get_contents(MANAGER_MANAGER_CACHE_FILE));
+         ManagerManager::$instance = unserialize(file_get_contents(MANAGER_MANAGER_CACHE_FILE));   
          ManagerManager::$instance->wakeUp();
       } else {
          ManagerManager::$instance = new ManagerManager();
