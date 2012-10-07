@@ -63,15 +63,17 @@ class Template extends View {
     * 	Optional. The chrome name of the region.
     */
    protected function region($name, $chrome = null) {
-      $class = $this->components[$name];
-      $webscript = new $class($this->data);
-
-      if ($chrome) {
-         $chrome = new Chrome($webscript, $chrome, $this->data);
-         $chrome->display();
-      } else {
-         $webscript->display();
-      }
+   	if (isset($this->components[$name])) {
+	      $class = $this->components[$name];
+	      $webscript = new $class($this->data);
+	
+	      if ($chrome) {
+	         $chrome = new Chrome($webscript, $chrome, $this->data);
+	         $chrome->display();
+	      } else {
+	         $webscript->display();
+	      }
+		}
    }
 
    /**
