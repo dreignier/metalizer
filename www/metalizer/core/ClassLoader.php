@@ -65,7 +65,7 @@ class ClassLoader extends MetalizerObject {
    }
 
    /**
-    * Initialize the class loader. The class loader should use his cache or create it.
+    * Initialize the class loader. The class loader should use its cache or create it.
     */
    public function initialize() {
       if (file_exists(CLASS_LOADER_CACHE_FILE)) {
