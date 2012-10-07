@@ -27,7 +27,7 @@ class ServerUtil extends Util {
    /**
     * Get a value in $_SERVER.
     * @param $key string
-    * 	The key of the value/
+    * 	The key of the value.
     * @return mixed
     * 	$_SERVER[$key]
     */
@@ -36,14 +36,27 @@ class ServerUtil extends Util {
    }
 
    /**
-    * Get the IP of the current client.
+    * @return string
+    *    The current remote IP.
     */
    public function getIp() {
       return $this->get('REMOTE_ADDR');
+   }
+   
+   /**
+    * @return string
+    *    The current request method.
+    */
+   public function getRequestMethod() {
+      return $this->get('REQUEST_METHOD');
    }
 
 }
 
 function getIp() {
    return util('Server')->getIp();
+}
+
+function getRequestMethod() {
+   return util('Server')->getRequestMethod();
 }
