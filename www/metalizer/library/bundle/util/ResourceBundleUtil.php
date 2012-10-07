@@ -18,8 +18,8 @@
  */
 
 define('PATH_RESSOURCE_BUNDLE', PATH_RESSOURCE . 'bundle/');
-define('PATH_RESSOURCE_BUNDLE_JS', PATH_RESSOURCE_BUNDLE . 'js/');
 define('PATH_RESSOURCE_BUNDLE_CSS', PATH_RESSOURCE_BUNDLE . 'css/');
+define('PATH_RESSOURCE_BUNDLE_JS', PATH_RESSOURCE_BUNDLE . 'js/');
  
 /**
  * Provide some helper for file and directory manipulation.
@@ -28,81 +28,79 @@ define('PATH_RESSOURCE_BUNDLE_CSS', PATH_RESSOURCE_BUNDLE . 'css/');
  */
 class ResourceBundleUtil extends Util {
    
+   /**
+    * The css bundle generator
+    * @var CssBundleGenerator
+    */
+   private $cssGenerator;
+   
+   /**
+    * The js bundle generator
+    * @var JsBundleGenerator
+    */
+   private $jsGenerator;
+   
+   /**
+    * Construct a new ResourceBundleUtil.
+    */
    public function __construct() {
       // Clean the bundle folders
       util('File')->rmdir(PATH_RESSOURCE_BUNDLE);
       mkdir(PATH_RESSOURCE_BUNDLE);
       mkdir(PATH_RESSOURCE_BUNDLE_JS);
       mkdir(PATH_RESSOURCE_BUNDLE_CSS);
+      
+      $this->cssGenerator = new CssBundleGenerator();
+      $this->jsGenerator = new JsBundleGenerator();
    }
    
-   public function css($name, $files) {
-      if (isDevMode()) {
-         foreach($files as $file) {
-            $url;
-            if (isLibraryExists('less_css') && substr($file, -5) == '.less') {
-               $url = lessCssUrl($file);
-            } else {
-               $url = cssUrl($file);
-            }
-            
-            echo  '<link type="text/css" rel="stylesheet" href="' . $url . '" />';
-         }
-      } else {
-         $path = PATH_RESSOURCE_BUNDLE_CSS . str_replace('.', '/', $name) . '.css';
-         if (!file_exists($path)) {
-            // Create the bundle
-            echo "Create bundle $name <br/>";
-            $handle = fopen($path, 'w');
-            foreach($files as $file) {
-               $file = PATH_RESSOURCE_CSS . $file;
-               if (isLibraryExists('less_css') && substr($file, -5) == '.less') {
-                  $content = util('LessCss')->compile($file);
-               } else {
-                  $content = file_get_contents($file);
-               }
-               
-               fwrite($handle, $content);
-            }
-            fclose($handle);
-         }
-         
-         $url = resUrl('bundle/css/' . str_replace('.', '/', $name) . '.css');
-         echo '<link type="text/css" rel="stylesheet" href="' . $url . '" />';
-      }
+   /**
+    * Generic method to generate a bundle
+    * @param $bundle string
+    *    The bundle name
+    * @param $files string
+    *    The files in the bundle
+    * @param $generator BundleGenerator
+    *    The generator for the bundle.
+    */
+   private function bundle($bundle, $files, $generator) {
+      $generator->generate($bundle, $files);
+   }
+      
+   /**
+    * Generate a css bundle.
+    * @param $bundle string
+    *    The bundle name
+    * @param $files string
+    *    The files in the bundle
+    */
+   public function css($bundle, $files) {
+      $this->bundle($bundle, $files, $this->cssGenerator);
    }
    
-   public function js($name, $files) {
-      if (isDevMode()) { 
-         foreach($files as $file) {
-            echo '<script type="text/javascript" src="' . jsUrl($file) . '" ></script>';
-         }
-      } else {
-         $path = PATH_RESSOURCE_BUNDLE_JS . str_replace('.', '/', $name) . '.js';
-         if (!file_exists($path)) {
-            // Create the bundle
-            echo "Create bundle $name <br/>";
-            $handle = fopen($path, 'w');
-            foreach($files as $file) {
-               $file = PATH_RESSOURCE_JS . $file;
-               $content = file_get_contents($file);
-               
-               fwrite($handle, $content);
-            }
-            fclose($handle);
-         }
-         
-         $url = resUrl('bundle/js/' . str_replace('.', '/', $name) . '.js');
-         echo '<script type="text/javascript" src="' . $url . '" /></script>';
-      }
+   /**
+    * Generate a js bundle.
+    * @param $bundle string
+    *    The bundle name
+    * @param $files string
+    *    The files in the bundle
+    */
+   public function js($bundle, $files) {
+      $this->bundle($bundle, $files, $this->jsGenerator);
    }
    
 }
 
-function cssBundle($name, $files) {
-   util('ResourceBundle')->css($name, $files);
+/**
+ * @see ResourceBundleUtil#css
+ */
+function cssBundle($bundle, $files) {
+   util('ResourceBundle')->css($bundle, $files);
 }
 
-function jsBundle($name, $files) {
-   util('ResourceBundle')->js($name, $files); 
+/**
+ * @see ResourceBundleUtil#js
+ */
+function jsBundle($bundle, $files) {
+   util('ResourceBundle')->js($bundle, $files); 
 }
