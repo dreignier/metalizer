@@ -27,7 +27,7 @@ class FileUtil extends Util {
    /**
     * Check if the directory for a file path exists. If not, the directory is created.
     * @param $file string
-    *  A file path.
+    *    A file path.
     */
    public function checkDirecoty($file) {
       if (file_exists($file)) {
@@ -50,6 +50,26 @@ class FileUtil extends Util {
             }
          }
       }
+   }
+
+   /**
+    * Remove a directory and its content.
+    * @param $dir string
+    *    The directory.
+    */
+   public function rmdir($dir) {
+      $objects = scandir($dir);
+      foreach ($objects as $object) {
+         if ($object != "." && $object != "..") {
+            if (filetype($dir . "/" . $object) == "dir") {
+               $this->rmdir($dir . "/" . $object);
+            } else {
+               unlink($dir . "/" . $object);
+            }
+         }
+      }
+      reset($objects);
+      rmdir($dir);
    }
 
 }
