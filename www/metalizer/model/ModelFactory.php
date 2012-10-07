@@ -43,10 +43,10 @@ class ModelFactory extends MetalizerObject {
    private $instances = array();
 
    /**
-    * Subclasses ModelClassHandler objects
+    * Subclasses ModelFactory objects
     * @var array
     */
-   private $subClassesHandlers = array();
+   private $subFactories = array();
 
    /**
     * Represent the level difference between the handled class and Model.
@@ -65,13 +65,16 @@ class ModelFactory extends MetalizerObject {
 
       $this->class = $class;
 
-      // Determine the table, the level, and register to superior handlers
+      // Determine the table, the level
       while (get_parent_class($class) != 'Model') {
          $class = get_parent_class($class);
-         model($class)->registerSubClassHandler($this);
          $this->level += 1;
       }
       $this->table = strtolower($class);
+		
+		if ($class != $this->$class) {
+			model(get_parent_class($class))->registerSubFactory($this);
+		}
    }
 
    /**
@@ -88,7 +91,12 @@ class ModelFactory extends MetalizerObject {
     */
    public function dispense() {
       $model = $this->newInstance();
-      $model->setModel(R()->dispense($this->table));
+		
+		$bean = R()->dispense($this->table);
+		$bean->getModel()->metalizer_level = $this->level;
+		$bean->getModel()->metalizer_class = $this->class;
+		
+      $model->setModel($bean);
       $model->initialize();
 
       return $model;
@@ -100,8 +108,6 @@ class ModelFactory extends MetalizerObject {
     * 	The model object to store.
     */
    public function store($model) {
-      $model->getModel()->metalizer_level = $this->level;
-
       $id = R()->store($model->getModel());
       $this->instances[$id] = $model;
    }
@@ -118,6 +124,7 @@ class ModelFactory extends MetalizerObject {
 
    /**
     * Same as findById.
+	 * @see ModelFactory#findById
     */
    public function load($id) {
       return $this->findById($id);
@@ -131,9 +138,9 @@ class ModelFactory extends MetalizerObject {
     * 	The model object with the given id. Or null.
     */
    public function findById($id) {
-      if (isset($this->instances[$id])) {
-         return $this->instances[$id];
-      }
+      if ($instance = $this->findInstance($id)) {
+         return $instance;
+		}
 
       $bean = R()->load($this->table, $id);
 
@@ -179,9 +186,9 @@ class ModelFactory extends MetalizerObject {
          return null;
       }
 
-      if (isset($this->instances[$bean->id])) {
-         return $this->instances[$bean->id];
-      }
+      if ($instance = model($bean->class)->findInstance($id)) {
+         return $instance;
+		}
 
       $model = $this->loadInstance($bean);
 
@@ -271,19 +278,14 @@ class ModelFactory extends MetalizerObject {
          }
       }
 
-      $beans;
-      if ($where) {
-         $beans = R()->find($this->table, $where . $extra, $params);
-      } else {
-         $beans = R()->findAll($this->table, $extra, $params);
-      }
+      $beans = R()->find($this->table, $where . $extra, $params);
 
       foreach ($beans as $bean) {
          $id = $bean->id;
          $model;
 
-         if (isset($this->instances[$id])) {
-            $model = $this->instances[$id];
+         if ($instance = model($bean->class)->findInstance($id, false)) {
+            $model = $instance;
          } else {
             $model = $this->loadInstance($bean);
          }
@@ -298,26 +300,89 @@ class ModelFactory extends MetalizerObject {
       return $result;
    }
 
+	/**
+	 * Convert a model bean in a Model object.
+	 * @param $bean RedBean_OODBBean
+	 * 	The bean for the model
+	 * @return Model
+	 * 	The model object for the given bean.
+	 */
+	public function loadModel($bean) {
+		if ($instance = model($bean->class)->findInstance($bean->id, false)) {
+			return $instance;
+		} else {
+			return $this->loadInstance($bean);
+		}
+	}
+
+	/**
+	 * Convert an array of model bean in a array of Model objects.
+	 * @param $beans array[RedBean_OODBBean]
+	 * 	The beans for models
+	 * @return array[Model]
+	 * 	The Model objects for the given model beans.
+	 */
+   public function loadModels($beans) {
+		$result = array();
+		foreach($beans as $key => $bean) {
+			$result[$key] = $this->loadModel($bean);
+		}
+		return $result;
+   } 
+
    /**
     * Make a new instance for this factory.
+	 * @return Model
+	 * 	A new model instance.
     */
    private function newInstance() {
       $class = $this->class;
-      $model = new $class();
-      return $model;
+      return new $class();
    }
+	
+	/**
+	 * Try to find an instance in this factory and subfactories.
+	 * @param $id int
+	 * 	The id of an instance
+	 * @param $deeper bool
+	 * 	If true, the factory will call subfactories for the instance.
+	 * @return Model
+	 * 	The model instance, or null.
+	 */
+	private function findInstance($id, $deeper = true) {
+		if (isset($this->instances[$id])) {
+			return $this->instances[$id];
+		}
+		
+		if ($deeper) {
+			foreach($this->$subFactories as $factory) {
+				$result = $factory->findInstance($id);
+				if ($result) {
+					return $result;
+				}
+			}
+		}
+		
+		return null;
+	}
 
    /**
     * Create a new instance for this factory with a bean.
     * @param $bean RedBean_OODBBean
     * 	The bean for the new instance
+	 * @return Model
+	 * 	A new Model created with $bean
     */
    private function loadInstance($bean) {
-      $model = $this->newInstance();
-      $model->setModel($bean);
-      $this->instances[$model->getId()] = $model;
-
-      return $model;
+   	if ($bean->class == $this->class) {
+	      $model = $this->newInstance();
+	      $model->setModel($bean);
+	      $this->instances[$model->getId()] = $model;
+	
+      	return $model;
+		} else {
+			return model($bean->class)->loadInstance($bean);
+		}
    }
 
    /**
@@ -325,8 +390,8 @@ class ModelFactory extends MetalizerObject {
     * @param ModelClassHandler $handler
     * 	A ModelClassHandler
     */
-   protected function registerSubClassHandler($handler) {
-      $this->subClassesHandlers[] = $handler;
+   protected function registerSubFactory($factory) {
+      $this->subFactories[] = $factory;
    }
 
 }
