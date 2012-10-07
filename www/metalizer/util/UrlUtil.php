@@ -24,16 +24,32 @@
  */
 class UrlUtil extends Util {
    
+   /**
+    * The random parameter used for resources url.
+    * @var int
+    */
    private $randomParam;
    
    public function __construct() {
       $this->randomParam = rand(10000, 99999);
    }
    
+   /**
+    * @param $url string
+    *    An url.
+    * @return string
+    *    $url with the url.root configuration value before.
+    */
    private function url($url) {
       return config('url.root') . $url;
    }
    
+   /**
+    * @param $url string
+    *    An url.
+    * @return string
+    *    $url with the random parameter in production mode. In development mode, this method return $url.s
+    */
    private function resourceUrl($url) {
       if (isDevMode()) {
          return $url . '?_=' . $this->getRandomParam();
@@ -42,47 +58,96 @@ class UrlUtil extends Util {
       }
    }
    
+   /**
+    * @return int
+    *    The random parameter used for resources url.
+    */
    public function getRandomParam() {
       return $this->randomParam;
    }
    
+   /**
+    * @param $url string
+    *    An url.
+    * @return string
+    *    A site url.
+    */
    public function site($url) {
       return $this->url(config('url.site.base') . $url);
    }
    
+   /**
+    * @param $url string
+    *    An url.
+    * @return string
+    *    A css url.
+    */
    public function css($url) {
       return $this->resourceUrl($this->url(PATH_RESSOURCE_CSS . $url)); 
    }
    
+   /**
+    * @param $url string
+    *    An url.
+    * @return string
+    *    A js url.
+    */
    public function js($url) {
       return $this->resourceUrl($this->url(PATH_RESSOURCE_JS . $url));
    }
    
+   /**
+    * @param $url string
+    *    An url.
+    * @return string
+    *    A image url.
+    */
    public function img($url) {
       return $this->resourceUrl($this->url(PATH_RESSOURCE_IMG . $url));
    }
    
+   /**
+    * @param $url string
+    *    An url.
+    * @return string
+    *    A resource url.
+    */
    public function res($url) {
       return $this->resourceUrl($this->url(PATH_RESSOURCE . $url));
    }
 } 
 
+/**
+ * @see UrlUtil#site
+ */
 function siteUrl($url) {
    return Util('Url')->site($url);
 }
 
+/**
+ * @see UrlUtil#css
+ */
 function cssUrl($url) {
    return Util('Url')->css($url);
 }
 
+/**
+ * @see UrlUtil#js
+ */
 function jsUrl($url) {
    return Util('Url')->js($url);
 }
 
+/**
+ * @see UrlUtil#img
+ */
 function imgUrl($url) {
    return Util('Url')->img($url);
 }
 
+/**
+ * @see UrlUtil#res
+ */
 function resUrl($url) {
    return Util('Url')->res($url);
 }

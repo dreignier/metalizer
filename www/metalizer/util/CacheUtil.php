@@ -29,6 +29,14 @@
  */
 class CacheUtil extends Util {
 
+   public function __construct() {
+      // If cache is disabled, we clear the cache folder.
+      if (!$this->isEnabled()) {
+         util('File')->rmdir(PATH_CACHE);
+         mkdir(PATH_CACHE);
+      }
+   }
+
    /**
     * Get the path for a file.
     * @param $name string
@@ -37,7 +45,15 @@ class CacheUtil extends Util {
     * 	The path to the file.
     */
    private function getFilePath($name) {
-      return str_replace('.', '/', PATH_CACHE . $name);
+      return PATH_CACHE . str_replace('.', '/', $name);
+   }
+   
+   /**
+    * @return bool
+    *    true is cache is enabled, false otherwise.
+    */
+   public function isEnabled() {
+      return (config('cache.enabled') && !isDevMode());
    }
 
    /**
@@ -48,17 +64,13 @@ class CacheUtil extends Util {
     * 	The value. Must be serializable.
     */
    public function put($name, $value) {
-      if (isDevMode()) {
+      if (!$this->isEnabled()) {
          return;
       }
 
       $file = $this->getFilePath($name);
 
       util('File')->checkDirecoty($file);
-
-      if (is_a($value, 'MetalizerObject')) {
-         $value->sleep();
-      }
 
       $value = serialize($value);
       file_put_contents($file, $value);
@@ -71,11 +83,11 @@ class CacheUtil extends Util {
     * 	true if the value is in the cache, false otherwise.
     */
    public function exists($name) {
-      $file = $this->getFilePath($name);
-
-      if (isDevMode()) {
+      if (!$this->isEnabled()) {
          return false;
       }
+      
+      $file = $this->getFilePath($name);
 
       return file_exists($file);
    }
@@ -88,22 +100,18 @@ class CacheUtil extends Util {
     * 	The value, or null if the value is not in the cache.
     */
    public function get($name) {
-      if (isDevMode()) {
+      if (!$this->isEnabled()) {
          return null;
       }
 
       if (!$this->exists($name)) {
-         $this->logWarning("There's no value with the name '$name' in the cache");
+         $this->log()->warning("There's no value with the name '$name' in the cache");
          return null;
       }
 
       $file = $this->getFilePath($name);
       $result = file_get_contents($file);
       $result = unserialize($result);
-
-      if (is_a($result, 'MetalizerObject')) {
-         $result->wakeUp();
-      }
 
       return $result;
    }
@@ -114,8 +122,12 @@ class CacheUtil extends Util {
     * 	The name of a value. It can be a subname of a value.
     */
    public function clean($name) {
+      if (!$this->isEnabled()) {
+         return;
+      }
+      
       $file = $this->getFilePath($name);
-
+      
       if ($this->exists($name)) {
          unlink($file);
          return;
@@ -127,7 +139,7 @@ class CacheUtil extends Util {
          return;
       }
 
-      $this->logWarning("A clean for '$name' is called, but there's nothing to clean here");
+      $this->log()->warning("A clean for '$name' is called, but there's nothing to clean here");
    }
 
 }
