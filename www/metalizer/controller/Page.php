@@ -24,6 +24,14 @@
  *
  */
 class Page extends Controller {
+   
+   private $contentType = 'text/html';
+
+   /**
+    * The template name to display at the end.
+    * @var string
+    */
+   private $template = null;
 
    /**
     * The webscripts indexed by region.
@@ -43,18 +51,46 @@ class Page extends Controller {
    }
 
    /**
-    * Display a template, using the page webscripts.
+    * Set the template used by the page. 
     * @param $template string
-    * 	 The template name without the '.php' extension. The template file must exists in the application template folder.
-    */
+    *     The template name without the '.php' extension. The template file must exists in the application template folder.
+    */    
    public function template($template) {
-      $template = new Template($template, $this->data);
+      $this->template = $template;
+   }
 
-      foreach ($this->components as $region => $webscript) {
-         $template->component($region, $webscript);
+   /**
+    * Display the template, using the page webscripts.
+    */
+   public function display() {
+      if ($this->template) {
+         $template = new Template($this->template, $this->data);
+   
+         foreach ($this->components as $region => $webscript) {
+            $template->component($region, $webscript);
+         }
+   
+         $template->display();
       }
-
-      $template->display();
+   }
+   
+   /**
+    * Set the content type of the page.
+    * This method must be called _BEFORE_ any output.
+    * @param $contentType string
+    *    The new content type for the page.
+    */
+   protected function setContentType($contentType) {
+      $this->contentType = $contentType;
+      Util('Header')->set('Content-Type', $contentType);
+   }
+   
+   /**
+    * @return string
+    *    The content type of the page.
+    */
+   public function getContentType() {
+      return $this->contentType;
    }
 
 }

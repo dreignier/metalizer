@@ -130,11 +130,16 @@ class PageResolver extends MetalizerObject {
 
 	/**
 	 * Execute the page of the resolver with the method and parameters.
+    * @return Page
+    *    The page object.
 	 */
 	public function run() {
 		$class = $this->page;
 		$page = new $class();
 		call_user_func_array(array($page, $this->method), $this->params);
+      $page->display();
+      
+      return $page;
 	}
-
-}
+   
+}   
