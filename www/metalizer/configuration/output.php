@@ -4,7 +4,7 @@
  * The tidy php extension must be activated ! 
  * @var bool
  */
-$config['output.clean'] = $config['metalizer.mode'] == MODE_DEVELOPMENT;
+$config['output.clean'] = true;
 
 /**
  * The configuration for tidy. It will be given to Tidy it output.clean is true.
