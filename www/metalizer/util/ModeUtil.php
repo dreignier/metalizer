@@ -21,12 +21,12 @@ define('MODE_DEVELOPMENT', 'development');
 define('MODE_PRODUCTION', 'production');
 
 /**
- * Provide an easy way to check the current mode of the applicatioN.
+ * Provide an easy way to check the current mode of the application.
  * @author David Reignier
  *
  */
 class ModeUtil extends Util {
-
+   
    /**
     * Get the application mode. It's the 'metalizer.mode' configuration value.
     * @return string
@@ -35,6 +35,7 @@ class ModeUtil extends Util {
    public function getMode() {
       return config('metalizer.mode');
    }
+   
 }
 
 /**
