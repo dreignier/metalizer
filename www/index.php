@@ -36,6 +36,7 @@ define('PATH_METALIZER_UTIL', PATH_METALIZER . 'util/');
 define('PATH_METALIZER_VIEW', PATH_METALIZER . 'view/');
 define('PATH_METALIZER_CONFIGURATION', PATH_METALIZER . 'configuration/');
 define('PATH_METALIZER_EXTERNAL', PATH_METALIZER . 'external/');
+define('PATH_METALIZER_LIBRARY', PATH_METALIZER . 'library/');
 
 define('PATH_APPLICATION', PATH_ROOT . 'application/');
 define('PATH_APPLICATION_PAGE', PATH_APPLICATION . 'page/');
@@ -44,6 +45,12 @@ define('PATH_APPLICATION_UTIL', PATH_APPLICATION . 'util/');
 define('PATH_APPLICATION_TEMPLATE', PATH_APPLICATION . 'template/');
 define('PATH_APPLICATION_CHROME', PATH_APPLICATION . 'chrome/');
 define('PATH_APPLICATION_CONFIGURATION', PATH_APPLICATION . 'configuration/');
+define('PATH_APPLICATION_LIBRARY', PATH_APPLICATION . 'library/');
+
+define('PATH_RESSOURCE', 'resource/');
+define('PATH_RESSOURCE_CSS', PATH_RESSOURCE . 'css/');
+define('PATH_RESSOURCE_JS', PATH_RESSOURCE . 'js/');
+define('PATH_RESSOURCE_IMG', PATH_RESSOURCE . 'img/');
 
 define('PATH_CACHE', PATH_ROOT . '../cache/');
 define('PATH_LOG', PATH_ROOT . '../log/');
@@ -53,8 +60,7 @@ define('PATH_DATA', PATH_ROOT . '../data/');
 
 require PATH_METALIZER . 'initialize.php';
 
-// TODO Put this in a conf file
-error_reporting(-1);
+error_reporting(config('error.reporting'));
 
 try {
    // *** Resolve the page, the method and the parameters ***
@@ -63,11 +69,24 @@ try {
 
    // Let's go !
    ob_start();
-   $resolver->run();
-   ob_end_flush();
+   $page = $resolver->run();
+   
+   if (config('output.clean') && extension_loaded('tidy') && $page->getContentType() == 'text/html') {
+      $html = ob_get_clean();
+      $tidy = new tidy();
+      $tidy->parseString($html, config('output.clean.configuration'), 'utf8');
+      $tidy->cleanRepair();
+      echo $tidy;
+   } else {
+      ob_end_flush();   
+   }
 } catch (Exception $exception) {
    header("HTTP/1.1 " . (is_a($exception, 'HttpException') ? $exception->getCode() : 500));
    ob_end_clean();
+
+   logError('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());
+   logError($exception->getFile() . '(' . $exception->getLine() . ')');
+   logError($exception->getTraceAsString());
 
    if (class_exists('Error') && is_a('Error', 'Page')) {
       $page = new Error();
@@ -77,10 +96,6 @@ try {
       echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
       echo $exception->getFile() . '(' . $exception->getLine() . ')';
       echo str_replace('#', '<br/>#', $exception->getTraceAsString());
-
-      logError('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());
-      logError($exception->getFile() . '(' . $exception->getLine() . ')');
-      logError($exception->getTraceAsString());
    }
 }
 
