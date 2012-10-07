@@ -17,7 +17,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-define('MANAGER_MANAGER_CACHE_FILE', PATH_CACHE . 'managers');
+define('MANAGER_MANAGER_CACHE_FILE', PATH_CACHE . 'metalizer/managers');
 
 /**
  * The manager of all managers in the application.
@@ -45,14 +45,8 @@ class ManagerManager extends Manager {
     * Finalize the ManagerManager. Must be called at the end of the application. The ManagerManager put itself in sleep mode and in a cache file.
     */
    static public function terminate() {
-      if (!isDevMode()) {
-         ManagerManager::$instance->sleep();
-         file_put_contents(MANAGER_MANAGER_CACHE_FILE, serialize(ManagerManager::$instance));
-      } else {
-         if (file_exists(MANAGER_MANAGER_CACHE_FILE)) {
-            unlink(MANAGER_MANAGER_CACHE_FILE);
-         }
-      }
+      ManagerManager::$instance->sleep();
+      cache()->put('metalizer.managers', ManagerManager::$instance);
    }
 
    /**
