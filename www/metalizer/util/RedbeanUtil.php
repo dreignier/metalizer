@@ -92,5 +92,5 @@ class RedbeanUtil_DynamicToStatic extends MetalizerObject {
  * @see RedbeanUtil#get
  */
 function R() {
-   return Util('Redbean')->get();
+   return util('Redbean')->get();
 }
