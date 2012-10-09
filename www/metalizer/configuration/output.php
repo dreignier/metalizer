@@ -16,5 +16,10 @@ $config['output.clean.configuration'] = array(
    'output-xhtml' => true,
    'wrap' => 500,
    'tab-size' => 3,
-   'indent-spaces' => 3
+   'indent-spaces' => 3,
+   'new-blocklevel-tags' => 'article,header,footer,nav,section,',
+   'new-inline-tags' => 'video,audio,canvas,ruby,rt,rp',
+   'sort-attributes' => 'alpha',
+   'doctype' => '<!DOCTYPE HTML>',
+   'vertical-space' => false,
 );

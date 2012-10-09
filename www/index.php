@@ -73,10 +73,19 @@ try {
    
    if (config('output.clean') && extension_loaded('tidy') && $page->getContentType() == 'text/html') {
       $html = ob_get_clean();
+      
+      $configuration = config('output.clean.configuration');
       $tidy = new tidy();
-      $tidy->parseString($html, config('output.clean.configuration'), 'utf8');
+      $tidy->parseString($html, $configuration, 'utf8');
       $tidy->cleanRepair();
-      echo $tidy;
+      $html = $tidy->html()->value;
+      
+      // Fix a tidy bug with DOCTYPE
+      if ($configuration['doctype'] && substr($html, 0, 9) != '<!DOCTYPE') {
+         $html = $configuration['doctype'] . "\n$html";
+      }
+      
+      echo $html;
    } else {
       ob_end_flush();   
    }
