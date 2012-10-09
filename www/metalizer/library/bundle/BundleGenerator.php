@@ -32,13 +32,6 @@ abstract class BundleGenerator extends MetalizerObject {
    abstract public function html($url);
    
    /**
-    * Resolve the url for a file in a bundle.
-    * @param $file string
-    *    The file name in the bundle.
-    */
-   abstract public function resolveFileUrl($file);
-   
-   /**
     * Resolve the path for a file in a bundle.
     * @param $file string
     *    The file name in the bundle.
@@ -60,24 +53,45 @@ abstract class BundleGenerator extends MetalizerObject {
    abstract public function resolveBundleUrl($bundle);
    
    /**
+    * Convert a file path to an url to the file.
+    * @param $path string
+    *    A path to a file.
+    * @return string
+    *    The url to the given file.
+    */
+   abstract public function filePathToUrl($path);
+   
+   /**
     * Read the content of a file.
     * @param $file string
     *    The complete path to a file.
     */
    abstract public function readFile($file);
+
+   /**
+    * We keep files to avoid adding them more than one.
+    */   
+   private $files = array();
+   
+   /**
+    * Minify the given file. Do nothing by default.
+    */
+   public function minify($file) {
+      
+   }
    
    /**
     * Generate the bundle. It call devMode or prodMode according to the isDevMode() value.
     * @param $bundle string
     *    The name of the bundle.
-    * @param $files array[string]
-    *    Files in the bundle.
+    * @param $patterns array[string]
+    *    Files in the bundle. Can be a glob pattern.
     */
-   public function generate($bundle, $files) {
+   public function generate($bundle, $patterns) {
       if (isDevMode()) {
-         $this->devMode($files);
+         $this->devMode($patterns);
       } else {
-         $this->prodMode($bundle, $files);
+         $this->prodMode($bundle, $patterns);
       }
    }
    
@@ -86,30 +100,41 @@ abstract class BundleGenerator extends MetalizerObject {
     * @param $files array[string]
     *    Files in the bundle.
     */
-   public function devMode($files) {
-      foreach($files as $file) {
-         $this->html($this->resolveFileUrl($file));
+   public function devMode($patterns) {
+      foreach($patterns as $pattern) {
+         foreach(glob($this->resolveFilePath($pattern)) as $file) {
+            if (!in_array($file, $this->files)) {
+               $this->html($this->filePathToUrl($file));
+               $this->files[] = $file;   
+            }
+         }
       }
    }
    
    /**
-    * Generate a bundle in produciton mode.
+    * Generate a bundle in production mode.
     * @param $bundle string
     *    The name of the bundle.
-    * @param $files array[string]
-    *    Files in the bundle.
+    * @param $patterns array[string]
+    *    Files in the bundle. Can be a glob pattern.
     */
-   public function prodMode($bundle, $files) {
+   public function prodMode($bundle, $patterns) {
       $path = $this->resolveBundlePath($bundle);
       if (!file_exists($path)) {
          $handle = fopen($path, 'w');
          
-         foreach($files as $file) {
-            $file = $this->resolveFilePath($file);
-            fwrite($handle, $this->readFile($file));
+         foreach($patterns as $pattern) {
+            foreach(glob($this->resolveFilePath($pattern)) as $file) {
+               if (!in_array($file, $this->files)) {
+                  fwrite($handle, $this->readFile($file));
+                  $this->files[] = $file;   
+               }
+            }
          }
          
          fclose($handle);
+         
+         $this->minify($path);
       }
       
       $this->html($this->resolveBundleUrl($bundle));

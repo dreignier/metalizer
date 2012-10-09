@@ -55,4 +55,11 @@ class CssBundleGenerator extends BundleGenerator {
          return file_get_contents($file);
       }
    }
+   
+   public function filePathToUrl($path) {
+      return $this->resolveFileUrl(substr($path, strlen(PATH_RESSOURCE_CSS)));
+   }
+   
+   public function minify($file) {
+   }
 }      

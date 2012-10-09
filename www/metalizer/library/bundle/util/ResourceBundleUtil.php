@@ -27,19 +27,7 @@ define('PATH_RESSOURCE_BUNDLE_JS', PATH_RESSOURCE_BUNDLE . 'js/');
  *
  */
 class ResourceBundleUtil extends Util {
-   
-   /**
-    * The css bundle generator
-    * @var CssBundleGenerator
-    */
-   private $cssGenerator;
-   
-   /**
-    * The js bundle generator
-    * @var JsBundleGenerator
-    */
-   private $jsGenerator;
-   
+
    /**
     * Construct a new ResourceBundleUtil.
     */
@@ -49,9 +37,6 @@ class ResourceBundleUtil extends Util {
       mkdir(PATH_RESSOURCE_BUNDLE);
       mkdir(PATH_RESSOURCE_BUNDLE_JS);
       mkdir(PATH_RESSOURCE_BUNDLE_CSS);
-      
-      $this->cssGenerator = new CssBundleGenerator();
-      $this->jsGenerator = new JsBundleGenerator();
    }
    
    /**
@@ -74,8 +59,14 @@ class ResourceBundleUtil extends Util {
     * @param $files string
     *    The files in the bundle
     */
-   public function css($bundle, $files) {
-      $this->bundle($bundle, $files, $this->cssGenerator);
+   public function css($bundle) {
+      $files = config("bundle.main.css");
+      
+      if (!$files) {
+         throw new BundleException("Can't find '$bundle' css bundle configuration");
+      }
+      
+      $this->bundle($bundle, $files, new CssBundleGenerator());
    }
    
    /**
@@ -85,8 +76,14 @@ class ResourceBundleUtil extends Util {
     * @param $files string
     *    The files in the bundle
     */
-   public function js($bundle, $files) {
-      $this->bundle($bundle, $files, $this->jsGenerator);
+   public function js($bundle) {
+      $files = config("bundle.main.js");
+      
+      if (!$files) {
+         throw new BundleException("Can't find '$bundle' js bundle configuration");
+      }
+      
+      $this->bundle($bundle, config("bundle.main.js"), new JsBundleGenerator());
    }
    
 }
@@ -94,13 +91,13 @@ class ResourceBundleUtil extends Util {
 /**
  * @see ResourceBundleUtil#css
  */
-function cssBundle($bundle, $files) {
-   util('ResourceBundle')->css($bundle, $files);
+function cssBundle($bundle) {
+   util('ResourceBundle')->css($bundle);
 }
 
 /**
  * @see ResourceBundleUtil#js
  */
-function jsBundle($bundle, $files) {
-   util('ResourceBundle')->js($bundle, $files); 
+function jsBundle($bundle) {
+   util('ResourceBundle')->js($bundle); 
 }

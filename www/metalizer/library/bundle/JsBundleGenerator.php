@@ -41,10 +41,19 @@ class JsBundleGenerator extends BundleGenerator {
    }
    
    public function resolveBundleUrl($bundle) {
-      return resUrl('bundle/css/' . str_replace('.', '/', $bundle) . '.js');
+      return resUrl('bundle/js/' . str_replace('.', '/', $bundle) . '.js');
    }
    
    public function readFile($file) {
       return file_get_contents($file);
+   }
+   
+   public function minify($file) {
+      require_once getLibraryPath('bundle') . 'external/jsmin.php';
+      file_put_contents($file, JSMin::minify(file_get_contents($file)));
+   }
+   
+   public function filePathToUrl($path) {
+      return $this->resolveFileUrl(substr($path, strlen(PATH_RESSOURCE_JS)));
    }
 }      
