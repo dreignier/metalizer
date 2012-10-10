@@ -47,10 +47,10 @@ define('PATH_APPLICATION_CHROME', PATH_APPLICATION . 'chrome/');
 define('PATH_APPLICATION_CONFIGURATION', PATH_APPLICATION . 'configuration/');
 define('PATH_APPLICATION_LIBRARY', PATH_APPLICATION . 'library/');
 
-define('PATH_RESSOURCE', 'resource/');
-define('PATH_RESSOURCE_CSS', PATH_RESSOURCE . 'css/');
-define('PATH_RESSOURCE_JS', PATH_RESSOURCE . 'js/');
-define('PATH_RESSOURCE_IMG', PATH_RESSOURCE . 'img/');
+define('PATH_RESOURCE', 'resource/');
+define('PATH_RESOURCE_CSS', PATH_RESOURCE . 'css/');
+define('PATH_RESOURCE_JS', PATH_RESOURCE . 'js/');
+define('PATH_RESOURCE_IMG', PATH_RESOURCE . 'img/');
 
 define('PATH_CACHE', PATH_ROOT . '../cache/');
 define('PATH_LOG', PATH_ROOT . '../log/');

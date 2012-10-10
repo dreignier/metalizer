@@ -18,21 +18,10 @@
  */
 
 /**
+ * Can generate 
  * @author David Reignier
+ *
  */
-class LessCssPage extends Page {
-
-   /**
-    * Compile "on the fly" a less file.
-    * Don't use this in production mode. But it's fine in development mode.
-    */
-   public function compile($file) {
-      $this->setContentType('text/css');
-      if (file_exists($file)) {
-         echo Util('LessCss')->compile($file);
-      } else {
-         echo "/* Resource not found : $file */";
-      }
-   }
-
-}   
+class ImageSpriteUtil extends Util {
+      
+}  

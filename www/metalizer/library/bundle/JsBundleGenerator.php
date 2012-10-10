@@ -24,36 +24,17 @@
  */
 class JsBundleGenerator extends BundleGenerator {
    
+   public function __construct() {
+      parent::__construct('js');
+   }
+   
    public function html($url) {
       echo '<script type="text/javascript" src="' . $url . '" /></script>';
    }
    
-   public function resolveFileUrl($file) {
-      return jsUrl($file);
-   }
-   
-   public function resolveFilePath($file) {
-      return PATH_RESSOURCE_JS. $file;
-   }
-   
-   public function resolveBundlePath($bundle) {
-      return PATH_RESSOURCE_BUNDLE_JS . str_replace('.', '/', $bundle) . '.js';
-   }
-   
-   public function resolveBundleUrl($bundle) {
-      return resUrl('bundle/js/' . str_replace('.', '/', $bundle) . '.js');
-   }
-   
-   public function readFile($file) {
-      return file_get_contents($file);
-   }
-   
-   public function minify($file) {
+   public function finalize($path) {
       require_once getLibraryPath('bundle') . 'external/jsmin.php';
-      file_put_contents($file, JSMin::minify(file_get_contents($file)));
+      file_put_contents($path, JSMin::minify(file_get_contents($path)));
    }
    
-   public function filePathToUrl($path) {
-      return $this->resolveFileUrl(substr($path, strlen(PATH_RESSOURCE_JS)));
-   }
 }      

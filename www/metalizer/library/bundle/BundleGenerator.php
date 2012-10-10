@@ -24,120 +24,84 @@
  */
 abstract class BundleGenerator extends MetalizerObject {
 
-   /**
-    * Generate the html code for a file specified by its url.
-    * @param $url string
-    *    A valid url.
-    */
+   abstract public function finalize($bundlePath);
+   
    abstract public function html($url);
-   
-   /**
-    * Resolve the path for a file in a bundle.
-    * @param $file string
-    *    The file name in the bundle.
-    */
-   abstract public function resolveFilePath($file);
-   
-   /**
-    * Resolve the path to the final file for a bundle.
-    * @param $bundle string
-    *    The name of the bundle.
-    */
-   abstract public function resolveBundlePath($bundle);
-   
-   /**
-    * Resolve the url to the final file for a bundle.
-    * @param $bundle string
-    *    The name of the bundle.
-    */
-   abstract public function resolveBundleUrl($bundle);
-   
-   /**
-    * Convert a file path to an url to the file.
-    * @param $path string
-    *    A path to a file.
-    * @return string
-    *    The url to the given file.
-    */
-   abstract public function filePathToUrl($path);
-   
-   /**
-    * Read the content of a file.
-    * @param $file string
-    *    The complete path to a file.
-    */
-   abstract public function readFile($file);
 
-   /**
-    * We keep files to avoid adding them more than one.
-    */   
    private $files = array();
-   
-   /**
-    * Minify the given file. Do nothing by default.
-    */
-   public function minify($file) {
-      
+   private $processor;
+   private $extension;
+
+   public function __construct($extension, $processor = 'default') {
+      $this->extension = $extension;
+      $this->processor = $processor;
    }
    
-   /**
-    * Generate the bundle. It call devMode or prodMode according to the isDevMode() value.
-    * @param $bundle string
-    *    The name of the bundle.
-    * @param $patterns array[string]
-    *    Files in the bundle. Can be a glob pattern.
-    */
+   protected function findProcessor($pattern) {
+      $colonPos = strpos($pattern, ':');
+      if ($colonPos !== false) {
+         $processor = substr($pattern, 0, $colonPos);
+      } else {
+         $processor = $this->processor;
+      }
+      
+      $class = config("bundle.processor.$processor");
+      
+      if (!is_subclass_of($class, "BundleFileProcessor")) {
+         throw new BundleException("$processor is not a valid file processor");
+      }
+      
+      return new $class($processor);
+   }
+   
+   protected function path($bundle) {
+      return PATH_RESOURCE_BUNDLE . "$bundle.$this->extension";
+   }
+   
    public function generate($bundle, $patterns) {
       if (isDevMode()) {
-         $this->devMode($patterns);
+         $this->devGenerate($bundle, $patterns);
       } else {
-         $this->prodMode($bundle, $patterns);
+         $this->prodGenerate($bundle, $patterns);
       }
    }
    
-   /**
-    * Generate a bundle in development mode.
-    * @param $files array[string]
-    *    Files in the bundle.
-    */
-   public function devMode($patterns) {
-      foreach($patterns as $pattern) {
-         foreach(glob($this->resolveFilePath($pattern)) as $file) {
-            if (!in_array($file, $this->files)) {
-               $this->html($this->filePathToUrl($file));
-               $this->files[] = $file;   
+   public function devGenerate($bundle, $patterns) {
+      foreach ($patterns as $pattern) {
+         $processor = $this->findProcessor($pattern);
+         $pattern = str_replace($processor->getName() . ':', '', $pattern);
+         foreach (glob($processor->path($pattern)) as $path) {
+            if (!in_array($path, $this->files)) {
+               $this->html($processor->url($path));
+               $this->files[] = $path;
             }
          }
       }
    }
    
-   /**
-    * Generate a bundle in production mode.
-    * @param $bundle string
-    *    The name of the bundle.
-    * @param $patterns array[string]
-    *    Files in the bundle. Can be a glob pattern.
-    */
-   public function prodMode($bundle, $patterns) {
-      $path = $this->resolveBundlePath($bundle);
-      if (!file_exists($path)) {
-         $handle = fopen($path, 'w');
-         
-         foreach($patterns as $pattern) {
-            foreach(glob($this->resolveFilePath($pattern)) as $file) {
-               if (!in_array($file, $this->files)) {
-                  fwrite($handle, $this->readFile($file));
-                  $this->files[] = $file;   
+   public function prodGenerate($bundle, $patterns) {
+      $bundlePath = $this->path($bundle);
+      
+      if (!file_exists($bundlePath)) {
+         util('File')->checkDirecoty($bundlePath);
+         $handle = fopen($bundlePath, 'w');
+         foreach ($patterns as $pattern) {
+            $processor = $this->findProcessor($pattern);
+            $pattern = str_replace($processor->getName() . ':', '', $pattern);
+            foreach (glob($processor->path($pattern)) as $path) {
+               if (!in_array($path, $this->files)) {
+                  $content = $processor->read($path);
+                  fwrite($handle, $content);
+                  $this->files[] = $path;
                }
             }
          }
-         
          fclose($handle);
          
-         $this->minify($path);
+         $this->finalize($bundlePath);
       }
       
-      $this->html($this->resolveBundleUrl($bundle));
+      $this->html(resUrl($this->path($bundle), false));
    }
 
 }      

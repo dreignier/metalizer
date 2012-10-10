@@ -53,7 +53,7 @@ class FileUtil extends Util {
    }
 
    /**
-    * Remove a directory and its content.
+    * Remove a directory and its content, definitively.
     * @param $dir string
     *    The directory.
     */

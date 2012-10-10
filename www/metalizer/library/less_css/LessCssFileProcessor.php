@@ -16,23 +16,20 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-
+ 
 /**
+ * The less css file processor for the bundle library.
  * @author David Reignier
+ *
  */
-class LessCssPage extends Page {
-
-   /**
-    * Compile "on the fly" a less file.
-    * Don't use this in production mode. But it's fine in development mode.
-    */
-   public function compile($file) {
-      $this->setContentType('text/css');
-      if (file_exists($file)) {
-         echo Util('LessCss')->compile($file);
-      } else {
-         echo "/* Resource not found : $file */";
-      }
+class LessCssFileProcessor extends DefaultFileProcessor {
+   
+   public function url($path) {
+      return lessCssUrl($path);
    }
-
+   
+   public function read($path) {
+      return Util('LessCss')->compile($path);
+   }
+   
 }   

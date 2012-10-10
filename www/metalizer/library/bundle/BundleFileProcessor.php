@@ -16,23 +16,28 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-
+ 
 /**
+ * A FileProcessor can be used by a BundleGenerator to handle bundle files.
  * @author David Reignier
+ *
  */
-class LessCssPage extends Page {
-
-   /**
-    * Compile "on the fly" a less file.
-    * Don't use this in production mode. But it's fine in development mode.
-    */
-   public function compile($file) {
-      $this->setContentType('text/css');
-      if (file_exists($file)) {
-         echo Util('LessCss')->compile($file);
-      } else {
-         echo "/* Resource not found : $file */";
-      }
+abstract class BundleFileProcessor extends MetalizerObject {
+   
+   private $name;
+   
+   public function __construct($name) {
+      $this->name = $name;
    }
-
+   
+   public function getName() {
+      return $this->name;
+   }
+   
+   abstract public function path($pattern);
+   
+   abstract public function url($path);
+   
+   abstract public function read($path);
+   
 }   

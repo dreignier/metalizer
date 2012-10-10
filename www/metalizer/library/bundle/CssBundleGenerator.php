@@ -24,55 +24,28 @@
  */
 class CssBundleGenerator extends BundleGenerator {
    
+   public function __construct() {
+      parent::__construct('css');
+   }
+   
    public function html($url) {
       echo  '<link type="text/css" rel="stylesheet" href="' . $url . '" />';
    }
    
-   public function resolveFileUrl($file) {
-      if (isLibraryExists('less_css') && substr($file, -5) == '.less') {
-         return lessCssUrl($file);
-      } else {
-         return cssUrl($file);
-      }
-   }
-   
-   public function resolveFilePath($file) {
-      return PATH_RESSOURCE_CSS . $file;
-   }
-   
-   public function resolveBundlePath($bundle) {
-      return PATH_RESSOURCE_BUNDLE_CSS . str_replace('.', '/', $bundle) . '.css';
-   }
-   
-   public function resolveBundleUrl($bundle) {
-      return resUrl('bundle/css/' . str_replace('.', '/', $bundle) . '.css');
-   }
-   
-   public function readFile($file) {
-      if (isLibraryExists('less_css') && substr($file, -5) == '.less') {
-         return util('LessCss')->compile($file);
-      } else {
-         return file_get_contents($file);
-      }
-   }
-   
-   public function filePathToUrl($path) {
-      return $this->resolveFileUrl(substr($path, strlen(PATH_RESSOURCE_CSS)));
-   }
-   
-   public function minify($file) {
-      $css = file_get_contents($file);
+   public function finalize($path) {
+      $css = file_get_contents($path);
       
       // Simple CSS Minifier from http://www.lateralcode.com/css-minifier/
-      $css = preg_replace( '#\s+#', ' ', $css );
-      $css = preg_replace( '#/\*.*?\*/#s', '', $css );
-      $css = str_replace( '; ', ';', $css );
-      $css = str_replace( ': ', ':', $css );
-      $css = str_replace( ' {', '{', $css );
-      $css = str_replace( '{ ', '{', $css );
-      $css = str_replace( ', ', ',', $css );
-      $css = str_replace( '} ', '}', $css );
-      $css = str_replace( ';}', '}', $css );
-      file_put_contents($file, $css);
+      $css = preg_replace('#\s+#', ' ', $css);
+      $css = preg_replace('#/\*.*?\*/#s', '', $css);
+      $css = str_replace('; ', ';', $css);
+      $css = str_replace(': ', ':', $css);
+      $css = str_replace(' {', '{', $css);
+      $css = str_replace('{ ', '{', $css);
+      $css = str_replace(', ', ',', $css);
+      $css = str_replace('} ', '}', $css);
+      $css = str_replace(';}', '}', $css);
+      
+      file_put_contents($path, $css);
    }
 }      

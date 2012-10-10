@@ -17,9 +17,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-define('PATH_RESSOURCE_BUNDLE', PATH_RESSOURCE . 'bundle/');
-define('PATH_RESSOURCE_BUNDLE_CSS', PATH_RESSOURCE_BUNDLE . 'css/');
-define('PATH_RESSOURCE_BUNDLE_JS', PATH_RESSOURCE_BUNDLE . 'js/');
+define('PATH_RESOURCE_BUNDLE', PATH_RESOURCE . 'prod/');
  
 /**
  * Provide some helper for file and directory manipulation.
@@ -32,11 +30,9 @@ class ResourceBundleUtil extends Util {
     * Construct a new ResourceBundleUtil.
     */
    public function __construct() {
-      // Clean the bundle folders
-      util('File')->rmdir(PATH_RESSOURCE_BUNDLE);
-      mkdir(PATH_RESSOURCE_BUNDLE);
-      mkdir(PATH_RESSOURCE_BUNDLE_JS);
-      mkdir(PATH_RESSOURCE_BUNDLE_CSS);
+      // Clean the resource bundle folders
+      util('File')->rmdir(PATH_RESOURCE_BUNDLE);
+      mkdir(PATH_RESOURCE_BUNDLE);
    }
    
    /**
@@ -60,7 +56,7 @@ class ResourceBundleUtil extends Util {
     *    The files in the bundle
     */
    public function css($bundle) {
-      $files = config("bundle.main.css");
+      $files = config("bundle.$bundle.css");
       
       if (!$files) {
          throw new BundleException("Can't find '$bundle' css bundle configuration");
@@ -77,13 +73,13 @@ class ResourceBundleUtil extends Util {
     *    The files in the bundle
     */
    public function js($bundle) {
-      $files = config("bundle.main.js");
+      $files = config("bundle.$bundle.js");
       
       if (!$files) {
          throw new BundleException("Can't find '$bundle' js bundle configuration");
       }
       
-      $this->bundle($bundle, config("bundle.main.js"), new JsBundleGenerator());
+      $this->bundle($bundle, $files, new JsBundleGenerator());
    }
    
 }

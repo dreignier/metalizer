@@ -51,11 +51,7 @@ class UrlUtil extends Util {
     *    $url with the random parameter in production mode. In development mode, this method return $url.s
     */
    private function resourceUrl($url) {
-      if (isDevMode()) {
-         return $url . '?_=' . $this->getRandomParam();
-      } else {
-         return $url;
-      }
+      return $url . '?_=' . $this->getRandomParam();
    }
    
    /**
@@ -83,7 +79,7 @@ class UrlUtil extends Util {
     *    A css url.
     */
    public function css($url) {
-      return $this->resourceUrl($this->url(PATH_RESSOURCE_CSS . $url)); 
+      return $this->resourceUrl($this->url(PATH_RESOURCE_CSS . $url)); 
    }
    
    /**
@@ -93,7 +89,7 @@ class UrlUtil extends Util {
     *    A js url.
     */
    public function js($url) {
-      return $this->resourceUrl($this->url(PATH_RESSOURCE_JS . $url));
+      return $this->resourceUrl($this->url(PATH_RESOURCE_JS . $url));
    }
    
    /**
@@ -103,17 +99,19 @@ class UrlUtil extends Util {
     *    A image url.
     */
    public function img($url) {
-      return $this->resourceUrl($this->url(PATH_RESSOURCE_IMG . $url));
+      return $this->resourceUrl($this->url(PATH_RESOURCE_IMG . $url));
    }
    
    /**
     * @param $url string
     *    An url.
+    * @param $prefix bool
+    *    If true, the url is prefixed with the resource path.
     * @return string
     *    A resource url.
     */
-   public function res($url) {
-      return $this->resourceUrl($this->url(PATH_RESSOURCE . $url));
+   public function res($url, $prefix = true) {
+      return $this->resourceUrl($this->url(($prefix ? PATH_RESOURCE : '') . $url));
    }
 } 
 
@@ -148,6 +146,6 @@ function imgUrl($url) {
 /**
  * @see UrlUtil#res
  */
-function resUrl($url) {
-   return Util('Url')->res($url);
+function resUrl($url, $prefix = true) {
+   return Util('Url')->res($url, $prefix);
 }
