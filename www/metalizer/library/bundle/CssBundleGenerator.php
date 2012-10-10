@@ -61,5 +61,18 @@ class CssBundleGenerator extends BundleGenerator {
    }
    
    public function minify($file) {
+      $css = file_get_contents($file);
+      
+      // Simple CSS Minifier from http://www.lateralcode.com/css-minifier/
+      $css = preg_replace( '#\s+#', ' ', $css );
+      $css = preg_replace( '#/\*.*?\*/#s', '', $css );
+      $css = str_replace( '; ', ';', $css );
+      $css = str_replace( ': ', ':', $css );
+      $css = str_replace( ' {', '{', $css );
+      $css = str_replace( '{ ', '{', $css );
+      $css = str_replace( ', ', ',', $css );
+      $css = str_replace( '} ', '}', $css );
+      $css = str_replace( ';}', '}', $css );
+      file_put_contents($file, $css);
    }
 }      
