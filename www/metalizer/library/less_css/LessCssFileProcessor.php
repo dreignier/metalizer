@@ -24,10 +24,16 @@
  */
 class LessCssFileProcessor extends DefaultFileProcessor {
    
+   /**
+    * @see BundleFileProcessor#url
+    */
    public function url($path) {
       return lessCssUrl($path);
    }
    
+   /**
+    * @see BundleFileProcessor#read
+    */
    public function read($path) {
       return Util('LessCss')->compile($path);
    }

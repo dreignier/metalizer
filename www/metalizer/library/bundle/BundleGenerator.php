@@ -24,19 +24,56 @@
  */
 abstract class BundleGenerator extends MetalizerObject {
 
+   /**
+    * Called only in production. The bundle generator can process the bundle file a last time.
+    * @param $bundlePath string
+    *    The path to a bundle file.
+    */
    abstract public function finalize($bundlePath);
    
+   /**
+    * Must generate the good html code (with echo) for an url.
+    * @param $url string
+    *    A valid url.
+    */
    abstract public function html($url);
 
+   /**
+    * We must keep the handled file to avoid double handling on a file.
+    * @var array[string]
+    */
    private $files = array();
+   
+   /**
+    * The default processor for the bundle.
+    * It must be a valid processor, eg the configuration value "bundle.processor.<processor>" must be a valid BundleFileProcessor subclass.
+    * @var string
+    */
    private $processor;
+   
+   /**
+    * The file extension for the bundle file.
+    * @var string
+    */
    private $extension;
 
+   /**
+    * Construct a new BundleGenerator
+    * @param $extension string
+    *    The file extension for the bundle file. Without the dot.
+    * @param $processor string
+    *    The default processor for the bundle. Optional. 'default' by default.
+    */
    public function __construct($extension, $processor = 'default') {
       $this->extension = $extension;
       $this->processor = $processor;
    }
    
+   /**
+    * Find the processor in a pattern. If a pattern is like '<processor>:<pattern>', then the processor will be <processor>.
+    * @param $pattern string
+    *    A pattern. 
+    */
    protected function findProcessor($pattern) {
       $colonPos = strpos($pattern, ':');
       if ($colonPos !== false) {
@@ -54,10 +91,23 @@ abstract class BundleGenerator extends MetalizerObject {
       return new $class($processor);
    }
    
+   /**
+    * @param $bundle string
+    *    A bundle name.
+    * @return string
+    *    The path to the final file for the given bundle.
+    */
    protected function path($bundle) {
       return PATH_RESOURCE_BUNDLE . "$bundle.$this->extension";
    }
    
+   /**
+    * Generate a bundle.
+    * @param $bundle string
+    *    The bundle name. Used for the final bundle file in production.
+    * @param $patterns array[string]
+    *    All the patterns for the bundle.
+    */
    public function generate($bundle, $patterns) {
       if (isDevMode()) {
          $this->devGenerate($bundle, $patterns);
@@ -66,7 +116,14 @@ abstract class BundleGenerator extends MetalizerObject {
       }
    }
    
-   public function devGenerate($bundle, $patterns) {
+   /**
+    * Generate in development mode.
+    * @param $bundle string
+    *    The bundle name. Used for the final bundle file in production.
+    * @param $patterns array[string]
+    *    All the patterns for the bundle.
+    */
+   protected function devGenerate($bundle, $patterns) {
       foreach ($patterns as $pattern) {
          $processor = $this->findProcessor($pattern);
          $pattern = str_replace($processor->getName() . ':', '', $pattern);
@@ -79,7 +136,14 @@ abstract class BundleGenerator extends MetalizerObject {
       }
    }
    
-   public function prodGenerate($bundle, $patterns) {
+   /**
+    * Generate in production mode.
+    * @param $bundle string
+    *    The bundle name. Used for the final bundle file in production.
+    * @param $patterns array[string]
+    *    All the patterns for the bundle.
+    */
+   protected function prodGenerate($bundle, $patterns) {
       $bundlePath = $this->path($bundle);
       
       if (!file_exists($bundlePath)) {

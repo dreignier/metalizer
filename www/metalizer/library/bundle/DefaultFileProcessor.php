@@ -24,14 +24,23 @@
  */
 class DefaultFileProcessor extends BundleFileProcessor {
    
+   /**
+    * @see BundleFileProcessor#path
+    */
    public function path($pattern) {
       return PATH_RESOURCE . $pattern;
    }
    
+   /**
+    * @see BundleFileProcessor#url
+    */
    public function url($path) {
       return resUrl($path, false);
    }
    
+   /**
+    * @see BundleFileProcessor#read
+    */
    public function read($path) {
       return file_get_contents($path);
    }

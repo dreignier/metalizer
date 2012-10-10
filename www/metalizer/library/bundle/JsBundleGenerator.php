@@ -24,14 +24,23 @@
  */
 class JsBundleGenerator extends BundleGenerator {
    
+   /**
+    * Construct a new JsBundleGenerator
+    */
    public function __construct() {
       parent::__construct('js');
    }
    
+  /**
+    * @see BundleGenerator#html
+    */
    public function html($url) {
       echo '<script type="text/javascript" src="' . $url . '" /></script>';
    }
    
+  /**
+    * @see BundleGenerator#finalize
+    */
    public function finalize($path) {
       require_once getLibraryPath('bundle') . 'external/jsmin.php';
       file_put_contents($path, JSMin::minify(file_get_contents($path)));

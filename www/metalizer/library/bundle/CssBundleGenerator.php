@@ -24,14 +24,23 @@
  */
 class CssBundleGenerator extends BundleGenerator {
    
+   /**
+    * Construct a new CssBundleGenerator.
+    */
    public function __construct() {
       parent::__construct('css');
    }
    
+   /**
+    * @see BundleGenerator#html
+    */
    public function html($url) {
       echo  '<link type="text/css" rel="stylesheet" href="' . $url . '" />';
    }
    
+   /**
+    * @see BundleGenerator#finalize
+    */
    public function finalize($path) {
       $css = file_get_contents($path);
       

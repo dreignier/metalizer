@@ -24,20 +24,52 @@
  */
 abstract class BundleFileProcessor extends MetalizerObject {
    
+   /**
+    * The name of the bundle
+    * @var string
+    */
    private $name;
    
+   /**
+    * Construct a new BundleFileProcessor
+    * @param $name string
+    *    The name of the bundle
+    */
    public function __construct($name) {
       $this->name = $name;
    }
    
+   /**
+    * @return string
+    *    The name of the bundle
+    */
    public function getName() {
       return $this->name;
    }
    
+   /**
+    * @param $pattern string
+    *    A glob pattern
+    * @return string
+    *    The good path for the given pattern.
+    */
    abstract public function path($pattern);
    
+   /**
+    * @param $path string
+    *    A path to a file
+    * @return string
+    *    The good url for the given file.
+    */
    abstract public function url($path);
    
+   /**
+    * Called only in production. Read the content of a file. 
+    * @param $path string
+    *    A path to a file
+    * @return string
+    *    The content of the given file.
+    */
    abstract public function read($path);
    
 }   
