@@ -70,7 +70,7 @@ class CacheUtil extends Util {
 
       $file = $this->getFilePath($name);
 
-      util('File')->checkDirecoty($file);
+      util('File')->checkDirectory($file);
 
       $value = serialize($value);
       file_put_contents($file, $value);
@@ -150,5 +150,5 @@ class CacheUtil extends Util {
  * 	The CacheUtil.
  */
 function cache() {
-   return Util('Cache');
+   return util('Cache');
 }

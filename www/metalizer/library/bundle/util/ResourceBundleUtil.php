@@ -17,7 +17,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-define('PATH_RESOURCE_BUNDLE', PATH_RESOURCE . 'prod/');
+define('PATH_RESOURCE_BUNDLE', PATH_RESOURCE . 'gen/');
  
 /**
  * Provide some helper for file and directory manipulation.

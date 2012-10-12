@@ -119,14 +119,14 @@ class LogUtil extends Util {
  * @see LogUtil#log
  */
 function _log($caller, $message, $level) {
-   Util('Log')->_log($caller, $message, $level);
+   util('Log')->_log($caller, $message, $level);
 }
 
 /**
  * @see LogUtil#isLogEnabled
  */
 function isLogEnabled($caller, $level) {
-   return Util('Log')->isLogEnabled($caller, $level);
+   return util('Log')->isLogEnabled($caller, $level);
 }
 
 /**

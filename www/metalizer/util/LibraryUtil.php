@@ -58,9 +58,9 @@ class LibraryUtil extends Util {
 }
 
 function getLibraryPath($name) {
-   return Util('Library')->getPath($name);
+   return util('Library')->getPath($name);
 }
 
 function isLibraryExists($name) {
-   return Util('Library')->exists($name);
+   return util('Library')->exists($name);
 }

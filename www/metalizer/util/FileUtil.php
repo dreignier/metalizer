@@ -29,7 +29,7 @@ class FileUtil extends Util {
     * @param $file string
     *    A file path.
     */
-   public function checkDirecoty($file) {
+   public function checkDirectory($file) {
       if (file_exists($file)) {
          return;
       }
@@ -73,5 +73,32 @@ class FileUtil extends Util {
          rmdir($dir);
       }
    }
-
+   
+   /**
+    * Same as php glob, but defaults flags are not the same and there's an extra parameter.
+    * @todo handle the ** joker
+    * @param $pattern string
+    *    The pattern for glob
+    * @param $onlyFile blool
+    *    If true, only file are returned. Optional. True by default.
+    * @param $flags int
+    *    Optional. Default : GLOB_MARK | GLOB_BRACE
+    *    GLOB_ONLYFILE is a metalizer flag. 
+    */
+   public function glob($pattern, $onlyFile = true, $flags = null) {
+      if ($flags === null) {
+         $flags = GLOB_MARK + GLOB_BRACE;
+      }
+      
+      $glob = glob($pattern, $flags);
+      
+      $result = array();
+      foreach ($glob as $value) {
+         if (!$onlyFile || !is_dir($value)) {
+            $result[$value] = str_replace('\\', '/', $value);
+         }
+      }
+      
+      return $result;
+   }
 }

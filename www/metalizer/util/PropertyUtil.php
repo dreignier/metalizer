@@ -103,5 +103,5 @@ class PropertyUtil extends Util {
  *  The PropertyUtil.
  */
 function property() {
-   return Util('Property');
+   return util('Property');
 }

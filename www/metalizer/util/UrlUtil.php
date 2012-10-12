@@ -48,10 +48,10 @@ class UrlUtil extends Util {
     * @param $url string
     *    An url.
     * @return string
-    *    $url with the random parameter in production mode. In development mode, this method return $url.s
+    *    $url with the random parameter in production mode. In development mode, this method return $url.
     */
-   private function resourceUrl($url) {
-      return $url . '?_=' . $this->getRandomParam();
+   public function randomParamUrl($url) {
+      return $url . (strpos($url, '?') !== false ? '&' : '?') . '_=' . $this->getRandomParam();
    }
    
    /**
@@ -79,7 +79,7 @@ class UrlUtil extends Util {
     *    A css url.
     */
    public function css($url) {
-      return $this->resourceUrl($this->url(PATH_RESOURCE_CSS . $url)); 
+      return $this->randomParamUrl($this->url(PATH_RESOURCE_CSS . $url)); 
    }
    
    /**
@@ -89,7 +89,7 @@ class UrlUtil extends Util {
     *    A js url.
     */
    public function js($url) {
-      return $this->resourceUrl($this->url(PATH_RESOURCE_JS . $url));
+      return $this->randomParamUrl($this->url(PATH_RESOURCE_JS . $url));
    }
    
    /**
@@ -99,7 +99,7 @@ class UrlUtil extends Util {
     *    A image url.
     */
    public function img($url) {
-      return $this->resourceUrl($this->url(PATH_RESOURCE_IMG . $url));
+      return $this->randomParamUrl($this->url(PATH_RESOURCE_IMG . $url));
    }
    
    /**
@@ -111,7 +111,7 @@ class UrlUtil extends Util {
     *    A resource url.
     */
    public function res($url, $prefix = true) {
-      return $this->resourceUrl($this->url(($prefix ? PATH_RESOURCE : '') . $url));
+      return $this->randomParamUrl($this->url(($prefix ? PATH_RESOURCE : '') . $url));
    }
 } 
 
@@ -119,33 +119,40 @@ class UrlUtil extends Util {
  * @see UrlUtil#site
  */
 function siteUrl($url) {
-   return Util('Url')->site($url);
+   return util('Url')->site($url);
 }
 
 /**
  * @see UrlUtil#css
  */
 function cssUrl($url) {
-   return Util('Url')->css($url);
+   return util('Url')->css($url);
 }
 
 /**
  * @see UrlUtil#js
  */
 function jsUrl($url) {
-   return Util('Url')->js($url);
+   return util('Url')->js($url);
 }
 
 /**
  * @see UrlUtil#img
  */
 function imgUrl($url) {
-   return Util('Url')->img($url);
+   return util('Url')->img($url);
 }
 
 /**
  * @see UrlUtil#res
  */
 function resUrl($url, $prefix = true) {
-   return Util('Url')->res($url, $prefix);
+   return util('Url')->res($url, $prefix);
+}
+
+/**
+ * @see UrlUtil#randomParamUrl
+ */
+function randomParamUrl($url) {
+   return util('Url')->randomParamUrl($url);
 }

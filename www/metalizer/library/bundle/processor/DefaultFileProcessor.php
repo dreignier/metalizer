@@ -45,4 +45,11 @@ class DefaultFileProcessor extends BundleFileProcessor {
       return file_get_contents($path);
    }
    
+   /**
+    * @see BundleFileProcessor#read
+    */
+   public function initialize($pattern) {
+      
+   }
+   
 }   

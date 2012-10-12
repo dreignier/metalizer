@@ -22,20 +22,28 @@
  * @author David Reignier
  *
  */
-class LessCssFileProcessor extends DefaultFileProcessor {
+class ImageSpriteFileProcessor extends DefaultFileProcessor {
+   
+   /**
+    * @see BundleFileProcessor#path
+    */
+   public function path($pattern) {
+      return PATH_RESOURCE_BUNDLE . $pattern;
+   }
    
    /**
     * @see BundleFileProcessor#url
     */
    public function url($path) {
-      return lessCssUrl($path);
+      return resUrl($path, false);
    }
    
    /**
     * @see BundleFileProcessor#read
     */
-   public function read($path) {
-      return Util('LessCss')->compile($path);
+   public function initialize($pattern) {
+      $pattern = str_replace('*', '_star_', $pattern);
+      util('ImageSprite')->sprite($pattern, $pattern);
    }
-   
+ 
 }   

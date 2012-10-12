@@ -82,7 +82,7 @@ class Page extends Controller {
     */
    protected function setContentType($contentType) {
       $this->contentType = $contentType;
-      Util('Header')->set('Content-Type', $contentType);
+      util('Header')->set('Content-Type', $contentType);
    }
    
    /**

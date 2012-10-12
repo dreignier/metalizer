@@ -28,7 +28,7 @@ if (file_exists($finalFile)) {
 }
 
 // *** Finalize utils ***
-Util('Property')->finalize();
+util('Property')->finalize();
 
 // *** Terminate all managers ***
 ManagerManager::terminate();

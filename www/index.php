@@ -20,7 +20,7 @@
 /**
  * Index file of the application. All pages are start here.
  */
-
+ 
 // *** Contants defines ***
 
 define('PATH_ROOT', './');
@@ -61,17 +61,18 @@ define('PATH_DATA', PATH_ROOT . '../data/');
 require PATH_METALIZER . 'initialize.php';
 
 error_reporting(config('error.reporting'));
+set_time_limit(config('php.time_limit'));
 
 try {
    // *** Resolve the page, the method and the parameters ***
-   $pathInfo = trim(@Util('Server')->get('PATH_INFO'));
+	$pathInfo = trim(@util('Server')->get('PATH_INFO'));
    $resolver = new PageResolver($pathInfo);
 
    // Let's go !
    ob_start();
    $page = $resolver->run();
    
-   if (config('output.clean') && extension_loaded('tidy') && $page->getContentType() == 'text/html') {
+   if (config('output.clean') && extension_loaded('tidy') && class_exists('tidy') && $page->getContentType() == 'text/html') {
       $html = ob_get_clean();
       
       $configuration = config('output.clean.configuration');

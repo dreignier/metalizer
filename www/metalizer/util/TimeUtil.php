@@ -45,5 +45,5 @@ class TimeUtil extends Util {
  * @see TimeUtil#now
  */
 function now() {
-	return Util('Time')->now();
+	return util('Time')->now();
 }

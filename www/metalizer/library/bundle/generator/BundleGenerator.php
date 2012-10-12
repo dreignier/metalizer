@@ -72,7 +72,9 @@ abstract class BundleGenerator extends MetalizerObject {
    /**
     * Find the processor in a pattern. If a pattern is like '<processor>:<pattern>', then the processor will be <processor>.
     * @param $pattern string
-    *    A pattern. 
+    *    A pattern.
+    * @return BundleFileProcessor
+    *    The processor for the given pattern. 
     */
    protected function findProcessor($pattern) {
       $colonPos = strpos($pattern, ':');
@@ -127,7 +129,8 @@ abstract class BundleGenerator extends MetalizerObject {
       foreach ($patterns as $pattern) {
          $processor = $this->findProcessor($pattern);
          $pattern = str_replace($processor->getName() . ':', '', $pattern);
-         foreach (glob($processor->path($pattern)) as $path) {
+         $processor->initialize($pattern);
+         foreach (util('File')->glob($processor->path($pattern)) as $path) {
             if (!in_array($path, $this->files)) {
                $this->html($processor->url($path));
                $this->files[] = $path;
@@ -147,12 +150,13 @@ abstract class BundleGenerator extends MetalizerObject {
       $bundlePath = $this->path($bundle);
       
       if (!file_exists($bundlePath)) {
-         util('File')->checkDirecoty($bundlePath);
+         util('File')->checkDirectory($bundlePath);
          $handle = fopen($bundlePath, 'w');
          foreach ($patterns as $pattern) {
             $processor = $this->findProcessor($pattern);
             $pattern = str_replace($processor->getName() . ':', '', $pattern);
-            foreach (glob($processor->path($pattern)) as $path) {
+            $processor->initialize($pattern);
+            foreach (util('File')->glob($processor->path($pattern)) as $path) {
                if (!in_array($path, $this->files)) {
                   $content = $processor->read($path);
                   fwrite($handle, $content);

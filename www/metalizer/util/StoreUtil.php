@@ -44,7 +44,7 @@ class StoreUtil extends Util {
 	public function store($name, $value) {
 		$file = $this->getFilePath($name);
 		$this->cache[$file] = $value;
-		util('File')->checkDirecoty($file);
+		util('File')->checkDirectory($file);
 		file_put_contents($file, serialize($value));
 	}
 	
@@ -116,5 +116,5 @@ class StoreUtil extends Util {
  * 	The StoreUtil
  */
 function store() {
-	return Util('Store');
+	return util('Store');
 }

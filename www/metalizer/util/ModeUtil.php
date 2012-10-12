@@ -43,5 +43,5 @@ class ModeUtil extends Util {
  * 	true if the current application mode is MODE_DEVELOPMENT. False otherwise.
  */
 function isDevMode() {
-   return Util('Mode')->getMode() == MODE_DEVELOPMENT;
+   return util('Mode')->getMode() == MODE_DEVELOPMENT;
 }

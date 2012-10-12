@@ -72,4 +72,11 @@ abstract class BundleFileProcessor extends MetalizerObject {
     */
    abstract public function read($path);
    
+   /**
+    * Initialize a pattern before the bundle creation.
+    * @param $pattern string
+    *    A glob pattern
+    */
+   abstract public function initialize($pattern);
+   
 }   

@@ -30,6 +30,8 @@ class UtilManager extends Manager {
     */
    public function __construct() {
       parent::__construct('Util');
+      
+      // NOTE : We can't use FileUtil here.
 
       // Require all files in util for non-object functions.
       foreach (glob(PATH_METALIZER_UTIL . '*.php') as $file) {
