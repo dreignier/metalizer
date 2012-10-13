@@ -82,8 +82,19 @@ class PageResolver extends MetalizerObject {
 		}
 
 		if (!$this->page) {
-			throw new PageNotFoundException();
+			throw new NotFoundException();
 		}
+      
+      // Handle the http method
+      if (is_array($this->page)) {
+         $method = getRequestMethod();
+         
+         if (isset($this->page[$method])) {
+            $this->page = $this->page[$method];
+         } else {
+            throw new MethodNotAllowedException();
+         }
+      }
 
 		$separatorPos = strpos($this->page, ':');
 		if ($separatorPos !== false) {
@@ -103,24 +114,24 @@ class PageResolver extends MetalizerObject {
 		}
 
 		if (!$this->page || !$this->method) {
-			throw new PageNotFoundException();
+			throw new InternalErrorException();
 		}
 
 		if (!class_exists($this->page) || !is_subclass_of($this->page, 'Page')) {
-			throw new PageNotFoundException("$page is not a valid Page class");
+			throw new InternalErrorException("$this->page is not a valid Page class");
 		}
 
 		// Check if all is ok
 		$reflectionClass = new ReflectionClass($this->page);
 
 		if (!$reflectionClass -> hasMethod($this->method)) {
-			throw new NotImplementedException("Page found but not implemented");
+			throw new InternalErrorException("There's no '$this->method' in the page '$this->page'");
 		}
 
 		$reflectionMethod = $reflectionClass -> getMethod($this->method);
 
 		if (!$reflectionMethod -> isPublic() || $reflectionMethod -> isStatic() || $reflectionMethod -> isAbstract()) {
-			throw new NotImplementedException("The method '$method' in the $page class is not valid");
+			throw new InternalErrorException("The method '$method' in the $page class is not valid");
 		}
 
 		if ($reflectionMethod -> getNumberOfRequiredParameters() > sizeof($this->params)) {
