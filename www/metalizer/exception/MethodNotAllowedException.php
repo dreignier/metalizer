@@ -18,14 +18,14 @@
  */
 
 /**
- * Represent a 404 error.
+ * Represent a 500 error.
  * @author David Reignier
  *
  */
-class PageNotFoundException extends HttpException {
+class MethodNotAllowedException extends HttpException {
 
-	public function __construct($message = null) {
-		parent::__construct(404, $message ? $message : 'Page not found');
-	}
+   public function __construct($message = null) {
+      parent::__construct(405, $message ? $message : 'Method not allowed');
+   }
 
 };
