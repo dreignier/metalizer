@@ -51,6 +51,7 @@ define('PATH_RESOURCE', 'resource/');
 define('PATH_RESOURCE_CSS', PATH_RESOURCE . 'css/');
 define('PATH_RESOURCE_JS', PATH_RESOURCE . 'js/');
 define('PATH_RESOURCE_IMG', PATH_RESOURCE . 'img/');
+define('PATH_RESOURCE_GEN', PATH_RESOURCE . 'gen/');
 
 define('PATH_CACHE', PATH_ROOT . '../cache/');
 define('PATH_LOG', PATH_ROOT . '../log/');
