@@ -45,7 +45,8 @@ class ClassLoader extends MetalizerObject {
     * Load a class.
     * @param $class string
     * 	The class name.
-    * @return mixed Nothing if the class is loaded correctly, false otherwise.
+    * @return mixed 
+    *    Nothing if the class is loaded correctly, false otherwise.
     */
    public function load($class) {
       if (isset($this->files[$class])) {
@@ -68,6 +69,8 @@ class ClassLoader extends MetalizerObject {
     * Initialize the class loader. The class loader should use its cache or create it.
     */
    public function initialize() {
+      // Reminder : We can't use the cache util here.
+      
       if (file_exists(CLASS_LOADER_CACHE_FILE)) {
          $files = unserialize(file_get_contents(CLASS_LOADER_CACHE_FILE));
       } else {
