@@ -50,6 +50,19 @@ class ServerUtil extends Util {
    public function getRequestMethod() {
       return $this->get('REQUEST_METHOD');
    }
+   
+   /**
+    * Get the request body.
+    * @return string
+    *    The request body as string.
+    */
+   public function getRequestBody() {
+      return file_get_contents('php://input');
+   }
+   
+   public function getRequestContentType() {
+      return $this->get('CONTENT_TYPE');
+   }
 
 }
 
@@ -60,3 +73,12 @@ function getIp() {
 function getRequestMethod() {
    return util('Server')->getRequestMethod();
 }
+
+function getRequestBody() {
+   return util('Server')->getRequestBody();
+}
+
+function getRequestContentType() {
+   return util('Server')->getRequestContentType();
+}
+
