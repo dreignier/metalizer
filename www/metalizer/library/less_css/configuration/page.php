@@ -1,2 +1,2 @@
 <?php
-$config['page.patterns']['/less/([^\?]*)(.*)'] = 'LessCssPage:compile';
+$config['page.patterns']['/less/([^\?]*).*'] = 'LessCssPage:compile';
