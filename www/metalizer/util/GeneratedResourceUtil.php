@@ -18,31 +18,19 @@
  */
 
 /**
- * Metalizer initialization file.
+ * Handle the generated resources directory.
+ * @author David Reignier
+ *
  */
-
-// *** Classloader initialization ***
-
-require_once PATH_METALIZER_CORE . 'ClassLoader.php';
-classLoader()->initialize();
-
-// *** Non-object functions ***
-// We need to require some files for non object functions
-
-require_once PATH_METALIZER_MANAGER . 'UtilManager.php';
-
-// *** ManagerManager initialization ***
-ManagerManager::initialize();
-
-// *** Util initialization ***
-// Create the UtilManager if it doesn't exist
-manager('Util');
-
-// Initialize the generated resources util if it doesn't exist.
-util('GeneratedResource');
-
-// *** Application initialization ***
-$initFile = PATH_APPLICATION . 'initialize.php';
-if (file_exists($initFile)) {
-	require_once $initFile;
+class GeneratedResourceUtil extends Util {
+   
+   /**
+    * Clean the generated resources directory.
+    */
+   public function __construct() {
+      util('File')->rmdir(PATH_RESOURCE_GEN);
+      @mkdir(PATH_RESOURCE_GEN);
+   }
+   
 }
+

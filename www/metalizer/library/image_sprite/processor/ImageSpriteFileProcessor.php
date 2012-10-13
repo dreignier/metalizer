@@ -28,7 +28,7 @@ class ImageSpriteFileProcessor extends DefaultFileProcessor {
     * @see BundleFileProcessor#path
     */
    public function path($pattern) {
-      return PATH_RESOURCE_BUNDLE . $pattern;
+      return PATH_RESOURCE_GEN . $pattern;
    }
    
    /**

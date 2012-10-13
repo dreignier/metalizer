@@ -100,7 +100,7 @@ abstract class BundleGenerator extends MetalizerObject {
     *    The path to the final file for the given bundle.
     */
    protected function path($bundle) {
-      return PATH_RESOURCE_BUNDLE . "$bundle.$this->extension";
+      return PATH_RESOURCE_GEN . "$bundle.$this->extension";
    }
    
    /**

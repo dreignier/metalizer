@@ -18,7 +18,7 @@
  */
 
 define('SPRITE_FOLDER', 'sprite/');
-define('PATH_SPRITE', PATH_RESOURCE_BUNDLE . SPRITE_FOLDER);
+define('PATH_SPRITE', PATH_RESOURCE_GEN . SPRITE_FOLDER);
  
 /**
  * Can generate an image sprite and the associated css file.
@@ -113,7 +113,7 @@ class ImageSpriteUtil extends Util {
 			}
 		}
 		
-		$sprite = PATH_RESOURCE_BUNDLE . $sprite;
+		$sprite = PATH_RESOURCE_GEN . $sprite;
       util('File')->checkDirectory($sprite);
       file_put_contents($sprite, $css);
 	}
@@ -175,7 +175,7 @@ class ImageSpriteUtil extends Util {
 			imagepng($this->images[$x], $spritePath);
 		}
       
-      $sprite = PATH_RESOURCE_BUNDLE . $sprite;
+      $sprite = PATH_RESOURCE_GEN . $sprite;
       util('File')->checkDirectory($sprite);
       file_put_contents($sprite, $css);
    }

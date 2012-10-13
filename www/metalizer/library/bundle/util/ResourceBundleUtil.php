@@ -17,8 +17,6 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-define('PATH_RESOURCE_BUNDLE', PATH_RESOURCE . 'gen/');
- 
 /**
  * Provide some helper for file and directory manipulation.
  * @author David Reignier
@@ -30,9 +28,7 @@ class ResourceBundleUtil extends Util {
     * Construct a new ResourceBundleUtil.
     */
    public function __construct() {
-      // Clean the resource bundle folders
-      util('File')->rmdir(PATH_RESOURCE_BUNDLE);
-      mkdir(PATH_RESOURCE_BUNDLE);
+      
    }
    
    /**
