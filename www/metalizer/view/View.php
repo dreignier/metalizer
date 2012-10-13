@@ -57,8 +57,14 @@ class View extends MetalizerObject {
       foreach ($this->data as $__key__ => $__value__) {
          $$__key__ = $__value__;
       }
-
-      include $this->file . '.php';
+      
+      $file = $this->file;
+      
+      if (substr($file, -4) != '.php') {
+         $file = "$file.php";
+      } 
+      
+      include $file;
    }
 
 }

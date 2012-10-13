@@ -40,7 +40,7 @@ class Template extends View {
     * @return Template
     */
    public function __construct($name, $data = array()) {
-      parent::__construct(PATH_APPLICATION_TEMPLATE . $name, $data);
+      parent::__construct(getTemplatePath($name), $data);
       $this->components = array();
    }
 
