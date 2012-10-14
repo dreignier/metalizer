@@ -57,7 +57,7 @@ class PageResolver extends MetalizerObject {
 		$this->pathInfo = $pathInfo;
 		
 		if ($this->log()->isInfoEnabled()) {
-			$this->log()->info(getIp() . ":$pathInfo");
+			$this->log()->info(getIp() . ":" . getRequestMethod() . ":$pathInfo");
 		}
 		
 		$this->page = null;

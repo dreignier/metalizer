@@ -33,4 +33,3 @@ class GeneratedResourceUtil extends Util {
    }
    
 }
-
