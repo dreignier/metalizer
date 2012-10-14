@@ -24,8 +24,37 @@
  */
 class HeaderUtil extends Util {
    
+   /**
+    * Set a header with the syntax "$header: $value"
+    * @param $header string
+    *    The header name
+    * @param $value string
+    *    The header value.
+    */
    public function set($header, $value) {
       header("$header: $value");
    }
    
+   /**
+    * Set the http response code.
+    * @param $code int
+    *    An http response code.
+    */
+   public function setHttpResponseCode($code) {
+      header("HTTP/1.1 $code");
+   }
+   
+   /**
+    * Redirect to an url.
+    * @param $url string
+    *    An url.
+    */
+   public function redirect($url) {
+      $this->set('Location', $url);
+   }
+   
+}
+
+function redirect($url) {
+   util('Header')->redirect($url);
 }
