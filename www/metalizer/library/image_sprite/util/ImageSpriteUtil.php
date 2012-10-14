@@ -71,7 +71,7 @@ class ImageSpriteUtil extends Util {
 	private function getCssClass($file) {
 		$file = substr($file, 0, -4);
 		$file = substr($file, strlen(PATH_RESOURCE));
-		$file = preg_replace('#[/\.]#', '_', $file);
+		$file = preg_replace('#[/\.]#', '-', $file);
 		return $file;
 	}
 	
@@ -101,7 +101,7 @@ class ImageSpriteUtil extends Util {
 	private function devSprite($sprite, $pattern) {
 		$css = '';
 		
-		// Find files an generate CSS
+		// Find files and generate CSS
 		foreach (util('File')->glob($pattern) as $file) {
 			if (array_key_exists(substr($file, -3), $this->extensions)) {
 				list($x, $y) = getimagesize($file);
@@ -157,7 +157,7 @@ class ImageSpriteUtil extends Util {
 		// Gather images
 		foreach ($this->files as $x => $files) {
 			$y = 0;
-			$spritePath = PATH_SPRITE . "sprite_$x.png";
+			$spritePath = PATH_SPRITE . "sprite-$x.png";
 			foreach ($files as $file) {
 				$height = $this->filesHeights[$file];
 				$image = call_user_func($this->extensions[substr($file, -3)], $file);
