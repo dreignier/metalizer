@@ -92,7 +92,7 @@ try {
       ob_end_flush();   
    }
 } catch (Exception $exception) {
-   header("HTTP/1.1 " . (is_a($exception, 'HttpException') ? $exception->getCode() : 500));
+   util('header')->setHttpResponseCode((is_a($exception, 'HttpException') ? $exception->getCode() : 500));
    ob_end_clean();
 
    logError('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());
