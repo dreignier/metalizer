@@ -205,6 +205,9 @@ var i18n = (function() {
          } else {
             echo ", ";
          }
+         $key = str_replace("'", "\\'", $key);
+         $value = str_replace("'", "\\'", $value);
+         
          echo "'$key' : '$value'\n";       
       }
 ?>

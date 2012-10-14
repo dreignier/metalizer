@@ -125,7 +125,7 @@ class I18NUtil extends Util {
     */
    public function i18n($key, $_ = null) {
       if ($this->i18n === null) {
-         throw new I18NException('No language loaded');
+         $this->load(config('lang.default'));
       }
 
       if (isset($this->i18n[$key])) {
