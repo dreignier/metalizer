@@ -41,6 +41,9 @@ class UrlUtil extends Util {
     *    $url with the url.root configuration value before.
     */
    private function url($url) {
+      if (substr($url, 0, 1) == '/') {
+         $url = substr($url, 1);
+      }
       return config('url.root') . $url;
    }
    
@@ -69,6 +72,10 @@ class UrlUtil extends Util {
     *    A site url.
     */
    public function site($url) {
+      if (substr($url, 0, 1) != '/') {
+         $url = "/$url";
+      }
+      
       return $this->url(config('url.site.base') . $url);
    }
    
