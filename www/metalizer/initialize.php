@@ -20,11 +20,13 @@
 /**
  * Metalizer initialization file.
  */
-
+ 
 // *** Classloader initialization ***
 
 require_once PATH_METALIZER_CORE . 'ClassLoader.php';
 classLoader()->initialize();
+
+session_start();
 
 // *** Non-object functions ***
 // We need to require some files for non object functions
