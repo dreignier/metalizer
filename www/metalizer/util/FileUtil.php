@@ -60,17 +60,19 @@ class FileUtil extends Util {
    public function rmdir($dir) {
       if (is_dir($dir)) {
          $objects = @scandir($dir);
-         foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
-               if (filetype($dir . "/" . $object) == "dir") {
-                  $this->rmdir($dir . "/" . $object);
-               } else {
-                  unlink($dir . "/" . $object);
+         if (is_array($objects)) {
+            foreach ($objects as $object) {
+               if ($object != "." && $object != "..") {
+                  if (@filetype($dir . "/" . $object) == "dir") {
+                     $this->rmdir($dir . "/" . $object);
+                  } else {
+                     @unlink($dir . "/" . $object);
+                  }
                }
             }
-         }
-         reset($objects);
-         rmdir($dir);
+         }   
+         @reset($objects);
+         @rmdir($dir);
       }
    }
    
