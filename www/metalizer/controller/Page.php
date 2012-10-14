@@ -76,12 +76,22 @@ class Page extends Controller {
    
    /**
     * Set the content type of the page.
+    * This function must be called before any output !
     * @param $contentType string
     *    The new content type for the page.
     */
    protected function setContentType($contentType) {
       $this->contentType = $contentType;
       util('Header')->set('Content-Type', $this->contentType);
+   }
+   
+   /**
+    * Set the http response code.
+    * @param $code int
+    *    A http response code. 
+    */
+   protected function setCode($code) {
+      util('header')->setHttpResponseCode($code);   
    }
    
    /**
