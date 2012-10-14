@@ -18,13 +18,16 @@
  */
 
 /**
- * Provide easy way to access to ModelClassHandler objects.
+ * Provide easy way to access to ModelFactory objects.
  */
 class ModelUtil extends Util {
 
    /**
-    * Get a ModelClassHandler with its name.
-    * @return ModelClassHandler
+    * Get a ModelFactory with its name.
+    * @param $name string
+    *    The name of a model class.
+    * @return ModelFactory
+    *    The model factory for the given class.
     */
    public function get($name) {
       return manager('ModelFactory')->get($name);
@@ -34,7 +37,7 @@ class ModelUtil extends Util {
 
 /**
  * @see ModelUtil#get
- * @return ModelClassHandler
+ * @return ModelFactory
  */
 function model($name) {
    return util('Model')->get($name);

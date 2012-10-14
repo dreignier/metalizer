@@ -71,21 +71,21 @@ class Model extends MetalizerObject {
     * Store or update the current model in the database.
     */
    public function store() {
-      $this->getClassHandler()->store($this);
+      $this->getFactory()->store($this);
    }
 
    /**
     * Detele the current model in the database and caches.
     */
    public function trash() {
-      $this->getClassHandler()->trash($this);
+      $this->getFactory()->trash($this);
    }
 
    /**
     * @return ModelFactory
     * 	The factory for this model.
     */
-   public function getClassHandler() {
+   public function getFactory() {
       return model($this->getClass());
    }
 

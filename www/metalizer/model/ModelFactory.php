@@ -65,15 +65,15 @@ class ModelFactory extends MetalizerObject {
 
       $this->class = $class;
 
-      // Determine the table, the level
+      // Determine the table and the level
       while (get_parent_class($class) != 'Model') {
          $class = get_parent_class($class);
          $this->level += 1;
       }
       $this->table = strtolower($class);
 		
-		if ($class != $this->$class) {
-			model(get_parent_class($class))->registerSubFactory($this);
+		if ($class != $this->class) {
+			model($class)->registerSubFactory($this);
 		}
    }
 
@@ -93,8 +93,8 @@ class ModelFactory extends MetalizerObject {
       $model = $this->newInstance();
 		
 		$bean = R()->dispense($this->table);
-		$bean->getModel()->metalizer_level = $this->level;
-		$bean->getModel()->metalizer_class = $this->class;
+		$bean->metalizerLevel = $this->level;
+		$bean->metalizerClass = $this->class;
 		
       $model->setModel($bean);
       $model->initialize();
@@ -144,7 +144,7 @@ class ModelFactory extends MetalizerObject {
 
       $bean = R()->load($this->table, $id);
 
-      if (!$bean->id || $bean->metalizer_level > $this->level) {
+      if (!$bean->id || $bean->metalizerLevel > $this->level) {
          return null;
       }
 
@@ -178,15 +178,15 @@ class ModelFactory extends MetalizerObject {
     * 	The model corresponding to the query. Or null.
     */
    public function findOne($where, $params = array()) {
-      $where = "($where) AND metalizer_level >= $this->level";
+      $where = "($where) AND metalizerLevel >= $this->level";
 
       $bean = R()->findOne($this->table, $where, $params);
 
-      if (!$bean->id) {
+      if (!$bean || !$bean->id) {
          return null;
       }
 
-      if ($instance = model($bean->class)->findInstance($id)) {
+      if ($instance = model($bean->metalizerClass)->findInstance($bean->id)) {
          return $instance;
 		}
 
@@ -249,7 +249,7 @@ class ModelFactory extends MetalizerObject {
       if ($where) {
          $where = "($where) AND ";
       }
-      $where .= " metalizer_level >= $this->level";
+      $where .= " metalizerLevel >= $this->level";
 
       $useNamedParam = !sizeof($params);
       if ($useNamedParam) {
@@ -355,7 +355,7 @@ class ModelFactory extends MetalizerObject {
 		}
 		
 		if ($deeper) {
-			foreach($this->$subFactories as $factory) {
+			foreach($this->subFactories as $factory) {
 				$result = $factory->findInstance($id);
 				if ($result) {
 					return $result;
@@ -374,14 +374,14 @@ class ModelFactory extends MetalizerObject {
 	 * 	A new Model created with $bean
     */
    private function loadInstance($bean) {
-   	if ($bean->class == $this->class) {
+   	if ($bean->metalizerClass == $this->class) {
 	      $model = $this->newInstance();
 	      $model->setModel($bean);
 	      $this->instances[$model->getId()] = $model;
 	
       	return $model;
 		} else {
-			return model($bean->class)->loadInstance($bean);
+			return model($bean->metalizerClass)->loadInstance($bean);
 		}
    }
 
