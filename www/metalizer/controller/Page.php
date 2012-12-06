@@ -38,6 +38,12 @@ class Page extends Controller {
     * @var array[Webscript]
     */
    private $components = array();
+   
+   /**
+    * If cleanOutput is false, there's no output clean. 
+    * @var bool
+    */
+   private $cleanOutput = true;
 
    /**
     * Add a webscript to the future view.
@@ -82,6 +88,9 @@ class Page extends Controller {
     */
    protected function setContentType($contentType) {
       $this->contentType = $contentType;
+      if ($contentType != 'text/html') {
+         $this->noOutputClean();
+      }
       util('Header')->set('Content-Type', $this->contentType);
    }
    
@@ -100,6 +109,21 @@ class Page extends Controller {
     */
    public function getContentType() {
       return $this->contentType;
+   }
+   
+   /**
+    * Disable the output clean.
+    */
+   public function noOutputClean() {
+      $this->cleanOutput = false;
+   }
+   
+   /**
+    * @return bool
+    *    True if the output must be cleaned. False otherwise.
+    */
+   public function cleanOutput() {
+      return $this->cleanOutput;
    }
 
 }
