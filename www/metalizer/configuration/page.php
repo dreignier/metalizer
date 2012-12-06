@@ -6,6 +6,12 @@
 $config['page.home'] = 'Home';
 
 /**
+ * The error page.
+ * @var string
+ */
+$config['page.error'] = '';
+
+/**
  * The default page method
  * @var string
  */
