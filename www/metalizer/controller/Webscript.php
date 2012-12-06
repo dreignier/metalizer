@@ -45,18 +45,27 @@ class Webscript extends Controller {
    /**
     * Display the webscript. Each webscript use a specific view file with this syntax (webscript class to lower case) . 'view.php'.
     * The file is searched is the webscript folder.
+    * @param $chrome string
+    *    Optional. If provided, the webscript will use the chrome to display itself.
     */
-   public function display() {
-      $view = new WebscriptView($this, $this->data);
-      $view->display();
+   public function display($chrome = null) {
+      if ($chrome) {
+         $chrome = new Chrome($this, $chrome, $this->data);
+         $chrome->display();  
+      } else {
+         $view = new WebscriptView($this, $this->data);
+         $view->display();   
+      }
    }
 
    /**
     * This method is called when the webscript must display itself. By default it does nothing.
     * Subclass should override this method.
+    * @return bool
+    *    If execute return a real false (and not just a falsy value), the webscript will not be displayed. 
     */
    public function execute() {
-
+      return true;
    }
 
    /**
