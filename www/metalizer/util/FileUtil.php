@@ -103,4 +103,9 @@ class FileUtil extends Util {
       
       return $result;
    }
+   
+   public function extension($file) {
+      $point = strrpos($file, '.');
+      return $point === false ? '' : substr($file, $point + 1);
+   }
 }

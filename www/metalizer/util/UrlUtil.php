@@ -54,7 +54,11 @@ class UrlUtil extends Util {
     *    $url with the random parameter in production mode. In development mode, this method return $url.
     */
    public function randomParamUrl($url) {
-      return $url . (strpos($url, '?') !== false ? '&' : '?') . '_=' . $this->getRandomParam();
+      if (!isDevMode()) {
+         return $url . (strpos($url, '?') !== false ? '&' : '?') . '_=' . $this->getRandomParam();   
+      } else {
+         return $url;
+      }
    }
    
    /**
@@ -120,6 +124,16 @@ class UrlUtil extends Util {
    public function res($url, $prefix = true) {
       return $this->randomParamUrl($this->url(($prefix ? PATH_RESOURCE : '') . $url));
    }
+   
+   /**
+    * @param $url string
+    *    An url
+    * @return string
+    *    A public data url
+    */
+   public function data($url) {
+      return $this->randomParamUrl($this->url($url));
+   }
 } 
 
 /**
@@ -155,6 +169,13 @@ function imgUrl($url) {
  */
 function resUrl($url, $prefix = true) {
    return util('Url')->res($url, $prefix);
+}
+
+/**
+ * @see UrlUtil#data
+ */
+function dataUrl($url) {
+   return util('Url')->data($url);
 }
 
 /**
