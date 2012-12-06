@@ -131,6 +131,10 @@ abstract class BundleGenerator extends MetalizerObject {
          $pattern = str_replace($processor->getName() . ':', '', $pattern);
          $processor->initialize($pattern);
          foreach (util('File')->glob($processor->path($pattern)) as $path) {
+            if (!$processor->isValid($path)) {
+               continue;
+            }
+            
             if (!in_array($path, $this->files)) {
                $this->html($processor->url($path));
                $this->files[] = $path;
@@ -157,6 +161,10 @@ abstract class BundleGenerator extends MetalizerObject {
             $pattern = str_replace($processor->getName() . ':', '', $pattern);
             $processor->initialize($pattern);
             foreach (util('File')->glob($processor->path($pattern)) as $path) {
+               if (!$processor->isValid($path)) {
+                  continue;
+               }
+               
                if (!in_array($path, $this->files)) {
                   $content = $processor->read($path);
                   fwrite($handle, $content);

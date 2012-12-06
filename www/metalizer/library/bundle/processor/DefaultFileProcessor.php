@@ -42,14 +42,25 @@ class DefaultFileProcessor extends BundleFileProcessor {
     * @see BundleFileProcessor#read
     */
    public function read($path) {
-      return file_get_contents($path);
+      $extensionPos = strrpos($path, '.');
+      $minified = substr($path, 0, $extensionPos) . '.min' . substr($path, $extensionPos);
+      
+      return file_exists($minified) ? file_get_contents($minified) : file_get_contents($path);
    }
    
    /**
-    * @see BundleFileProcessor#read
+    * @see BundleFileProcessor#initialize
     */
    public function initialize($pattern) {
       
+   }
+   
+   public function isValid($path) {
+      if (isDevMode()) {
+         return strpos($path, '.min.') === false;
+      }
+      
+      return true;
    }
    
 }   

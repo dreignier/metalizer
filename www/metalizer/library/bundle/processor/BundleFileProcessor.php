@@ -48,6 +48,14 @@ abstract class BundleFileProcessor extends MetalizerObject {
    }
    
    /**
+    * @param $path string
+    *    A path to a file
+    * @return boolean
+    *    <code>true</code> if the given file is valid for the current bundle, <code>false</code> otherwise.
+    */
+   abstract public function isValid($path);
+   
+   /**
     * @param $pattern string
     *    A glob pattern
     * @return string

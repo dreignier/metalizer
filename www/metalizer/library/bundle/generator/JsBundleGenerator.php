@@ -43,7 +43,14 @@ class JsBundleGenerator extends BundleGenerator {
     */
    public function finalize($path) {
       require_once getLibraryPath('bundle') . 'external/jsmin.php';
-      file_put_contents($path, JSMin::minify(file_get_contents($path)));
+      
+      $content = file_get_contents($path);
+      $content = JSMin::minify($content);
+      
+      // Fix a JSMin bug with the '+ ++' sequence (like in this.id="ui-id"+ ++n)
+      $content = str_replace('+++', '+ ++', $content);
+      
+      file_put_contents($path, $content);
    }
    
 }      
