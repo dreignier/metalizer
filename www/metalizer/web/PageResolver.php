@@ -74,7 +74,7 @@ class PageResolver extends MetalizerObject {
 						$this->log()->trace("Page name : $name");
 					}
 					
-					break;
+					break; // The first matching pattern must be the used one. So don't remove that.
 				}
 			}
 		} else {
