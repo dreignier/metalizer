@@ -57,6 +57,8 @@ define('PATH_CACHE', PATH_ROOT . '../cache/');
 define('PATH_LOG', PATH_ROOT . '../log/');
 define('PATH_DATA', PATH_ROOT . '../data/');
 
+define('PATH_PUBLIC_DATA', 'data/');
+
 // *** Metalizer initialization ***
 
 require PATH_METALIZER . 'initialize.php';
@@ -67,30 +69,30 @@ set_time_limit(config('php.time_limit'));
 try {
    // *** Resolve the page, the method and the parameters ***
 	$pathInfo = trim(@util('Server')->get('PATH_INFO'));
+   $chainer = new FilterChainer($pathInfo);
+   $pathInfo = $chainer->run();
    $resolver = new PageResolver($pathInfo);
 
    // Let's go !
    ob_start();
    $page = $resolver->run();
    
-   if (config('output.clean') && extension_loaded('tidy') && class_exists('tidy') && $page->getContentType() == 'text/html') {
-      $html = ob_get_clean();
-      
+   $output = ob_get_clean();
+   
+   if (config('output.clean') && extension_loaded('tidy') && class_exists('tidy') && $page->cleanOutput()) {
       $configuration = config('output.clean.configuration');
       $tidy = new tidy();
-      $tidy->parseString($html, $configuration, 'utf8');
+      $tidy->parseString($output, $configuration, 'utf8');
       $tidy->cleanRepair();
-      $html = $tidy->html()->value;
+      $output = $tidy->html()->value;
       
       // Fix a tidy bug with DOCTYPE
-      if ($configuration['doctype'] && substr($html, 0, 9) != '<!DOCTYPE') {
-         $html = $configuration['doctype'] . "\n$html";
+      if ($configuration['doctype'] && substr($output, 0, 9) != '<!DOCTYPE') {
+         $output = $configuration['doctype'] . "\n$output";
       }
-      
-      echo $html;
-   } else {
-      ob_end_flush();   
    }
+   
+   echo $output;
 } catch (Exception $exception) {
    util('header')->setHttpResponseCode((is_a($exception, 'HttpException') ? $exception->getCode() : 500));
    ob_end_clean();
@@ -99,7 +101,7 @@ try {
    logError($exception->getFile() . '(' . $exception->getLine() . ')');
    logError($exception->getTraceAsString());
 
-   if (class_exists('Error') && is_a('Error', 'Page')) {
+   if (config('page.error') && class_exists(config('page.error')) && is_a(config('page.error'), 'Page')) {
       $page = new Error();
       call_user_func_array(array($page, config('page.default_method')));
    } else {
