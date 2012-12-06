@@ -43,15 +43,22 @@ class ModelFactory extends MetalizerObject {
    private $instances = array();
 
    /**
-    * Subclasses ModelFactory objects
-    * @var array
+    * Alive subclasses ModelFactory objects
+    * @var array[ModelFactory]
     */
    private $subFactories = array();
-
+   
    /**
-    * Represent the level difference between the handled class and Model.
+    * All known subclasses of the handled class.
+    * @var array[String]
     */
-   private $level = 1;
+   private $subClasses = array();
+   
+   /**
+    * <code>true</code> if $subClasses has changed since the last save, <code>false</code> otherwise.
+    * @var boolean
+    */
+   private $subClassesChanged = false;
 
    /**
     * Construct a new ModelClassHandler
@@ -60,30 +67,36 @@ class ModelFactory extends MetalizerObject {
     */
    public function __construct($class) {
       if (!is_subclass_of($class, 'Model')) {
-         throw new InternalErrorException("$class is not a class or a subclass of Model");
+         throw new InternalErrorException("$class is not a of Model");
       }
 
       $this->class = $class;
-
-      // Determine the table and the level
+      
+      if ($subClasses = store()->load("metalizer.model.subclasses_$this->class")) {
+         $this->subClasses = $subClasses;
+      }
+            
+      // Determine the table
       while (get_parent_class($class) != 'Model') {
          $class = get_parent_class($class);
-         $this->level += 1;
+         model($class)->registerSubFactory($this);
+         model($class)->registerSubClass($this->class);
       }
+      
       $this->table = strtolower($class);
-		
-		if ($class != $this->class) {
-			model($class)->registerSubFactory($this);
-		}
    }
 
    /**
     * Cache and clear instances.
+    * Save the subclasses.
     */
    public function onSleep() {
       $this->instances = array();
+      
+      store()->store("metalizer.model.subclasses_$this->class", $this->subClasses);
+      $this->subClassesChanged = false;
    }
-
+   
    /**
     * Create a new model object.
     * @return Model
@@ -93,7 +106,6 @@ class ModelFactory extends MetalizerObject {
       $model = $this->newInstance();
 		
 		$bean = R()->dispense($this->table);
-		$bean->metalizerLevel = $this->level;
 		$bean->metalizerClass = $this->class;
       
       $model->setModel($bean);
@@ -124,7 +136,7 @@ class ModelFactory extends MetalizerObject {
    }
 
    /**
-    * Same as findById.
+    * Alias of findById.
 	 * @see ModelFactory#findById
     */
    public function load($id) {
@@ -145,7 +157,7 @@ class ModelFactory extends MetalizerObject {
 
       $bean = R()->load($this->table, $id);
 
-      if (!$bean->id || $bean->metalizerLevel > $this->level) {
+      if (!$bean->id || !($bean->metalizerClass == $this->class || is_subclass_of($bean->metalizerClass, $this->class))) {
          return null;
       }
 
@@ -169,6 +181,10 @@ class ModelFactory extends MetalizerObject {
       return $this->find(null, array(), $orderBy, $offset, $limit);
    }
 
+   private function generateSubclassesSqlPart() {
+      return '("' . implode('","', array_merge($this->subClasses, array($this->class))) . '")';
+   }
+
    /**
     * Find one object for this factory.
     * @param $where string
@@ -179,7 +195,7 @@ class ModelFactory extends MetalizerObject {
     * 	The model corresponding to the query. Or null.
     */
    public function findOne($where, $params = array()) {
-      $where = "($where) AND metalizerLevel >= $this->level";
+      $where = "($where) AND metalizerClass IN " . $this->generateSubclassesSqlPart();
 
       $bean = R()->findOne($this->table, $where, $params);
 
@@ -247,10 +263,8 @@ class ModelFactory extends MetalizerObject {
       $result = array();
       $extra = '';
 
-      if ($where) {
-         $where = "($where) AND ";
-      }
-      $where .= " metalizerLevel >= $this->level";
+      $where = $where ? "($where) AND " : '';
+      $where .= " metalizerClass IN " . $this->generateSubclassesSqlPart();
 
       $useNamedParam = !sizeof($params);
       if ($useNamedParam) {
@@ -299,6 +313,19 @@ class ModelFactory extends MetalizerObject {
       }
 
       return $result;
+   }
+
+   public function countBy($property, $value) {
+      return $this->count("$property = ?", array($value));
+   }
+
+   public function count($where = null, $params = array()) {
+      if ($where) {
+         $where = "($where) AND ";
+      }
+      $where .= " metalizerClass IN " . $this->generateSubclassesSqlPart();
+      
+      return R()->count($this->table, "$where", $params);
    }
 
 	/**
@@ -386,12 +413,24 @@ class ModelFactory extends MetalizerObject {
    }
 
    /**
-    * Register a ModelClassHandler as a subclass handler for this ModelClassHandler.
-    * @param ModelClassHandler $handler
-    * 	A ModelClassHandler
+    * Register a ModelFactory as a subclass handler for this ModelFactory.
+    * @param ModelFactory $handler
+    * 	A ModelFactory
     */
    protected function registerSubFactory($factory) {
       $this->subFactories[] = $factory;
+   }
+   
+   /**
+    * Register a subclass for this ModelFactory.
+    * @param string $class
+    *    A subclass of Model.
+    */
+   protected function registerSubClass($class) {
+      if (!in_array($class, $this->subClasses)) {
+         $this->subClasses[] = $class;
+         $this->subClassesChanged = true;
+      }
    }
 
 }
