@@ -22,13 +22,22 @@
  * @author David Reignier
  *
  */
-class Model extends MetalizerObject {
+abstract class Model extends MetalizerObject {
 
    /**
     * The redbean bean used by the model.
     * @var RedBean_OODBBean
     */
    protected $model;
+   
+   public function __construct() {
+      list(, $caller) = debug_backtrace(false);
+      
+      if (!isset($caller['class']) || !($caller['class'] == 'ModelFactory' ||is_subclass_of($caller['class'], 'ModelFactory'))) {
+         $class = $this->getClass();
+         throw new ModelException("You can't construct a new model, you must use model('$class')->dispense();");
+      }
+   }
    
    /**
     * Called just after the constructor.
