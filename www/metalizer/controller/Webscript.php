@@ -86,5 +86,12 @@ class Webscript extends Controller {
    public function getFile($file) {
       return $this->folder . $file;
    }
+   
+   public function error($exception) {
+      // Default error handle
+      echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
+      echo $exception->getFile() . '(' . $exception->getLine() . ')';
+      echo str_replace('#', '<br/>#', $exception->getTraceAsString());
+   }
 
 }
