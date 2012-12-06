@@ -66,13 +66,13 @@ class Template extends View {
    	if (isset($this->components[$name])) {
 	      $class = $this->components[$name];
          
+         $webscript = new $class($this->data);
          try {
-   	      $webscript = new $class($this->data);
             if ($webscript->execute() !== false) {
                $webscript->display($chrome);   
             }
          } catch (Exception $exception) {
-            
+            $webscript->error($exception);
          }
 		}
    }
