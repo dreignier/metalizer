@@ -59,6 +59,11 @@ define('PATH_DATA', PATH_ROOT . '../data/');
 
 define('PATH_PUBLIC_DATA', 'data/');
 
+// Use for pure debug only
+function debug($message) {
+   echo $message . '<br/>';
+}
+
 // *** Metalizer initialization ***
 
 require PATH_METALIZER . 'initialize.php';
