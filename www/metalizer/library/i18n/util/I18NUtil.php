@@ -136,6 +136,17 @@ class I18NUtil extends Util {
          return '$' . $key . '$';
       }
    }
+   
+   /**
+    * Test if a key exists.
+    * @param $key string
+    *    An i18n key
+    * @return bool
+    *    True if the key exists, false otherwise.
+    */
+   public function has($key) {
+      return isset($this->i18[$key]);
+   }
 
    /**
     * @return string
