@@ -30,7 +30,7 @@ class BaseUser extends Model {
     *    A valid email.
     */
    public function setEmail($email) {
-      $this->model->email = $email;
+      $this->set('email', $email);
    }
    
    /**
@@ -39,7 +39,7 @@ class BaseUser extends Model {
     *    A clear password.
     */
    public function setPassword($password) {
-      $this->model->password = crypt($password);
+      $this->set('password', crypt($password));
    }
    
    /**
@@ -48,7 +48,7 @@ class BaseUser extends Model {
     *    A login.
     */
    public function setLogin($login) {
-      $this->model->login = $login;
+      $this->set('login', $login);
    }
    
    /**
@@ -56,7 +56,7 @@ class BaseUser extends Model {
     *    The email of the user.
     */
    public function getEmail() {
-      return $this->model->email;
+      return $this->get('email');
    }
  
    /**
@@ -64,16 +64,16 @@ class BaseUser extends Model {
     *    The login of the user
     */
    public function getLogin() {
-      return $this->model->login;
+      return $this->get('login');
    }
    
    /**
     * @param $password string
     *    A clear password.
     * @return bool
-    *    true if the given clear password is the password of this user. false otherwise.
+    *    true if the given clear password is the password of this user, false otherwise.
     */
    public function challengePassword($password) {
-      return crypt($password, $this->model->password) == $this->model->password; 
+      return crypt($password, $this->model->password) == $this->get('password');
    }
 } 

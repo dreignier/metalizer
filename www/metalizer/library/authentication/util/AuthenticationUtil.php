@@ -66,9 +66,8 @@ class AuthenticationUtil extends Util {
     * Login a user.
     * @param $user BaseUser
     *    A base user.
-    * @param 
     */
-   public function login($user, $cookie = false) {
+   public function login($user) {
       $this->currentUser = $user;
       session()->set(AUTHENTICATION_SESSION_NAME, $user->getLogin());
    }
@@ -83,7 +82,7 @@ class AuthenticationUtil extends Util {
    
    /**
     * Get the current user.
-    * @return mixed
+    * @return BaseUser
     *    The current BaseUser if the current user is authenticated. null otherwise.
     */
    public function getCurrentUser() {
@@ -106,9 +105,28 @@ class AuthenticationUtil extends Util {
       $this->currentUser = $user;
       return $user;
    }
+   
+   /**
+    * Check if the current user is authenticated.
+    * @throws UnauthorizedException
+    *    If the user is not authenticated
+    */
+   public function mustBeAuthenticated() {
+      if (!$this->getCurrentuser()) {
+         throw new UnauthorizedException();
+      }
+   }
 
 }
 
+/**
+ * @see AuthenticationUtil#getCurrentUser
+ * @return BaseUser
+ */
 function getCurrentUser() {
    return util('Authentication')->getCurrentUser();
+}
+
+function mustBeAuthenticated() {
+   util('Authentication')->mustBeAuthenticated();
 }
