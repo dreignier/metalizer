@@ -29,13 +29,22 @@ class Model extends MetalizerObject {
     * @var RedBean_OODBBean
     */
    protected $model;
-
+   
    /**
-    * Called right after the construction of a new model. It does nothing.
-    * Subclasses should override this method.
+    * Called just after the constructor.
+    * Should be override by subclasses.
     */
    public function initialize() {
-
+      
+   }
+   
+   /**
+    * @return bool
+    *    true if the model is already stored in the database, false otherwise.
+    *    Note that a stored object can still be out of date in the database.
+    */
+   public function isStored() {
+      return $this->getid() != 0;
    }
 
    /**
@@ -75,7 +84,7 @@ class Model extends MetalizerObject {
    }
 
    /**
-    * Detele the current model in the database and caches.
+    * Delete the current model in the database and caches.
     */
    public function trash() {
       $this->getFactory()->trash($this);
@@ -88,5 +97,59 @@ class Model extends MetalizerObject {
    public function getFactory() {
       return model($this->getClass());
    }
-
+   
+   /**
+    * A generic setter for models classes.
+    * If the current model got a method called 'validate$name', the method is called to validate the given value.
+    * @param $name string
+    *    The name of the field to set
+    * @param $value mixed
+    *    The new value of the field
+    */
+   protected function set($name, $value) {
+      $reflection = new ReflectionClass($this->getClass());
+      $method = 'validate' . ucfirst($name);
+      if ($reflection->hasMethod($method)) {
+         if (!call_user_func(array($this, $method), $value)) {
+            throw new ModelValidationException($name, $value);
+         }
+      }
+      
+      $this->model->$name = $value;
+   }
+   
+   /**
+    * A generic getter for models classes.
+    * @param $name string
+    *    The name of the field to get
+    * @return mixed
+    *    The value of the wanted file.
+    */
+   protected function get($name) {
+      return $this->model->$name;
+   }
+   
+   /**
+    * Try to validate the model. Validate is called when the model must store itself in the database.
+    * @return bool
+    *    Always true
+    * @throws ModelException
+    *    If the model is not valid.
+    */
+   public function validate() {
+      $reflection = new ReflectionClass($this->getClass());
+      
+      foreach ($reflection->getMethods() as $method) {
+         if (substr($method->name, 0, 8) == 'validate' && strlen($method->name) > 8) {
+            $name = lcfirst(substr($method->name, 8));
+            $value = $this->get($name);
+            if (!call_user_func(array($this, $method->name), $value)) {
+               throw new ModelValidationException($name, $value);
+            }
+         }
+      } 
+      
+      return true;
+   }
+   
 }

@@ -95,10 +95,10 @@ class ModelFactory extends MetalizerObject {
 		$bean = R()->dispense($this->table);
 		$bean->metalizerLevel = $this->level;
 		$bean->metalizerClass = $this->class;
-		
+      
       $model->setModel($bean);
       $model->initialize();
-
+      
       return $model;
    }
 
@@ -108,6 +108,7 @@ class ModelFactory extends MetalizerObject {
     * 	The model object to store.
     */
    public function store($model) {
+      $model->validate();
       $id = R()->store($model->getModel());
       $this->instances[$id] = $model;
    }
@@ -282,8 +283,8 @@ class ModelFactory extends MetalizerObject {
 
       foreach ($beans as $bean) {
          $id = $bean->id;
+         
          $model;
-
          if ($instance = model($bean->class)->findInstance($id, false)) {
             $model = $instance;
          } else {
@@ -356,9 +357,8 @@ class ModelFactory extends MetalizerObject {
 		
 		if ($deeper) {
 			foreach($this->subFactories as $factory) {
-				$result = $factory->findInstance($id);
-				if ($result) {
-					return $result;
+				if ($result = $factory->findInstance($id)) {
+				  return $result;   
 				}
 			}
 		}
