@@ -73,7 +73,7 @@ class AuthenticationUtil extends Util {
    }
    
    /**
-    * Logout the current user. Do nothing is their's no current user.
+    * Logout the current user. Do nothing if there's no current user.
     */
    public function logout() {
       session()->clean(AUTHENTICATION_SESSION_NAME);
