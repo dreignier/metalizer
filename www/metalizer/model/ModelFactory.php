@@ -76,7 +76,7 @@ class ModelFactory extends MetalizerObject {
          $this->subClasses = $subClasses;
       }
             
-      // Determine the table
+      // Determine the table and call super factories.
       while (get_parent_class($class) != 'Model') {
          $class = get_parent_class($class);
          model($class)->registerSubFactory($this);
@@ -266,12 +266,14 @@ class ModelFactory extends MetalizerObject {
       $where = $where ? "($where) AND " : '';
       $where .= " metalizerClass IN " . $this->generateSubclassesSqlPart();
 
+      // Do we use named parameters or anonymous parameters ?
       $useNamedParam = !sizeof($params);
       if ($useNamedParam) {
          $paramsKeys = array_keys($params);
          $useNamedParam = !is_integer($paramsKeys[0]);
       }
 
+      // Handle order by
       if ($orderBy) {
          $extra .= ' ORDER BY ' . ($useNamedParam ? ':orderby' : '?');
          if ($useNamedParam) {
@@ -281,6 +283,7 @@ class ModelFactory extends MetalizerObject {
          }
       }
 
+      // Handle limit and offset
       if ($limit) {
          if ($useNamedParam) {
             $extra .= ' LIMIT :offset, :limit';
@@ -373,7 +376,7 @@ class ModelFactory extends MetalizerObject {
 	 * @param $id int
 	 * 	The id of an instance
 	 * @param $deeper bool
-	 * 	If true, the factory will call subfactories for the instance.
+	 * 	If true, the factory will search in subfactories for the instance.
 	 * @return Model
 	 * 	The model instance, or null.
 	 */
@@ -384,7 +387,7 @@ class ModelFactory extends MetalizerObject {
 		
 		if ($deeper) {
 			foreach($this->subFactories as $factory) {
-				if ($result = $factory->findInstance($id)) {
+				if ($result = $factory->findInstance($id, false)) {
 				  return $result;   
 				}
 			}
