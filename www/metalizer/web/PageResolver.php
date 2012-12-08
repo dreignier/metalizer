@@ -114,30 +114,7 @@ class PageResolver extends MetalizerObject {
 			$this->log()->trace("Page parameters : " . implode(' / ', $this->params));
 		}
 
-		if (!$this->page || !$this->method) {
-			throw new InternalErrorException();
-		}
-
-		if (!class_exists($this->page) || !is_subclass_of($this->page, 'Page')) {
-			throw new InternalErrorException("$this->page is not a valid Page class");
-		}
-
-		// Check if all is ok
-		$reflectionClass = new ReflectionClass($this->page);
-
-		if (!$reflectionClass -> hasMethod($this->method)) {
-			throw new InternalErrorException("There's no '$this->method' in the page '$this->page'");
-		}
-
-		$reflectionMethod = $reflectionClass -> getMethod($this->method);
-
-		if (!$reflectionMethod -> isPublic() || $reflectionMethod -> isStatic() || $reflectionMethod -> isAbstract()) {
-			throw new InternalErrorException("The method '$method' in the $page class is not valid");
-		}
-
-		if ($reflectionMethod -> getNumberOfRequiredParameters() > sizeof($this->params)) {
-			throw new InternalErrorException("Method '$this->method' found in the $this->page class but require " . $reflectionMethod -> getNumberOfRequiredParameters() . " parameters (" . sizeof($this->params) . " given)");
-		}
+		util('Page')->check($this->page, $this->method, $this->params);
 	}
 
 	/**
@@ -146,12 +123,7 @@ class PageResolver extends MetalizerObject {
     *    The page object.
 	 */
 	public function run() {
-		$class = $this->page;
-		$page = new $class();
-		call_user_func_array(array($page, $this->method), $this->params);
-      $page->display();
-      
-      return $page;
+		return util('Page')->run($this->page, $this->method, $this->params);
 	}
    
 }   
