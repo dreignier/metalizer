@@ -37,14 +37,14 @@ class UtilManager extends Manager {
       foreach (glob(PATH_METALIZER_UTIL . '*.php') as $file) {
          require_once $file;
       }
-
-      // Don't forget the application util folder
-      foreach (glob(PATH_APPLICATION_UTIL . '*.php') as $file) {
-         require_once $file;
-      }
       
       // Require all metalizer libraries util folders
       foreach (glob(PATH_METALIZER_LIBRARY . '*/util/*.php') as $file) {
+         require_once $file;
+      }
+
+      // Don't forget the application util folder
+      foreach (glob(PATH_APPLICATION_UTIL . '*.php') as $file) {
          require_once $file;
       }
       
