@@ -26,6 +26,7 @@
 require_once PATH_METALIZER_CORE . 'ClassLoader.php';
 classLoader()->initialize();
 
+// *** Start session ***
 session_start();
 
 // *** Non-object functions ***
