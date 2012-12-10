@@ -31,9 +31,11 @@ class FilterChainer extends MetalizerObject {
    
    public function run() {
       foreach (config('filter.patterns') as $pattern => $filter) {
-         $filter = new $filter();
-         if ($temp = $filter->execute($this->path)) {
-            $this->path = $temp;
+         if (preg_match($pattern, $this->path)) {
+            $filter = new $filter();
+            if ($temp = $filter->execute($this->path)) {
+               $this->path = $temp;
+            }
          }
       }
 
