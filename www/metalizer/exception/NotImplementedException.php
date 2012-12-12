@@ -18,7 +18,7 @@
  */
 
 /**
- * Represent a 501 error.
+ * Represent a 501 http error.
  * @author David Reignier
  *
  */

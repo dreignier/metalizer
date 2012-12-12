@@ -18,7 +18,7 @@
  */
 
 /**
- * Handle logs for a MetalizerObject
+ * Handle logs for a MetalizerObject. Logger use the LoggerUtil class for messages.
  * @author David Reignier
  *
  */

@@ -19,7 +19,7 @@
 
 /**
  * @author David Reignier
- *
+ * The authentication filter just call mustBeAuthenticated.
  */
 class AuthenticationFilter extends MetalizerObject {
 

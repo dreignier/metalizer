@@ -18,7 +18,7 @@
  */
 
 /**
- * Represent a 500 error.
+ * Represent a 400 http error.
  * @author David Reignier
  *
  */

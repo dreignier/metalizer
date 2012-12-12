@@ -18,7 +18,7 @@
  */
 
 /**
- * Super class of all controllers of metalizer.
+ * Super class of all controllers of metalizer. A controller just hold a array of data.
  *
  * @author David Reignier
  *

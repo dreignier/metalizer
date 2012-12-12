@@ -25,13 +25,6 @@
 class ResourceBundleUtil extends Util {
 
    /**
-    * Construct a new ResourceBundleUtil.
-    */
-   public function __construct() {
-      
-   }
-   
-   /**
     * Generic method to generate a bundle
     * @param $bundle string
     *    The bundle name

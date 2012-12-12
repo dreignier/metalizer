@@ -19,16 +19,30 @@
 
 /**
  * @author David Reignier
- *
+ * Call all filters in the application.
  */
 class FilterChainer extends MetalizerObject {
    
+   /**
+    * The current path.
+    * @var string
+    */
    private $path;
    
+   /**
+    * Construct a new FilterChainer
+    * @param $path string
+    *    The base path.
+    */
    public function __construct($path) {
       $this->path = $path;
    }
    
+   /**
+    * Run every filters. Each filter can modify the current path.
+    * @return string
+    *    The final path modified by filters.
+    */
    public function run() {
       foreach (config('filter.patterns') as $pattern => $filter) {
          if (preg_match($pattern, $this->path)) {

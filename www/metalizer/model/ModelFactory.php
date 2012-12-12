@@ -318,10 +318,28 @@ class ModelFactory extends MetalizerObject {
       return $result;
    }
 
+   /**
+    * Count objects by a property.
+    * @param $property string
+    *    The name of a property
+    * @param $value mixed
+    *    The value of the property for the query.
+    * @return integer
+    *    The count result.
+    */
    public function countBy($property, $value) {
       return $this->count("$property = ?", array($value));
    }
 
+   /**
+    * Count objects.
+    * @param $where string
+    *    The WHERE part of the query.
+    * @param $params array
+    *    The parameters for $where.
+    * @return integer
+    *    The count result.
+    */
    public function count($where = null, $params = array()) {
       if ($where) {
          $where = "($where) AND ";

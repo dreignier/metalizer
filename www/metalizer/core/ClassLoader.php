@@ -20,11 +20,13 @@
 // The class loader can't handle it's own dependencies.
 require_once PATH_METALIZER_CORE . 'MetalizerObject.php';
 
+// The cache file use by the ClassLoader
 define('CLASS_LOADER_CACHE_FILE', PATH_CACHE . 'classes');
 
 /**
  * Handle the autoload of all classes in the project. This class use a cache file. The cache file is <code>cache/classes</code>.
  * If a class can't be found in the cache, the ClassLoader just refresh the cache and try again.
+ * Must be initialized before any other classes (unless you want to use <code>require_once</code> for each class)
  * @author David Reignier
  */
 class ClassLoader extends MetalizerObject {
@@ -36,10 +38,11 @@ class ClassLoader extends MetalizerObject {
    private $files;
 
    /**
-    * ClassLoader is a Singleton.
-    * @var ClassLoader
+    * Construct a new ClassLoader.
     */
-   static private $instance = null;
+   private function __construct() {
+      $this->files = array();
+   }
 
    /**
     * Load a class.
@@ -54,6 +57,7 @@ class ClassLoader extends MetalizerObject {
          return;
       }
 
+      // We can't find the class, clear the cache and reload all files.
       $this->loadFiles();
 
       if (isset($this->files[$class])) {
@@ -81,25 +85,6 @@ class ClassLoader extends MetalizerObject {
    }
 
    /**
-    * Get the ClassLoader.
-    * @return ClassLoader
-    */
-   static public function instance() {
-      if (ClassLoader::$instance == null) {
-         ClassLoader::$instance = new ClassLoader();
-      }
-
-      return ClassLoader::$instance;
-   }
-
-   /**
-    * Construct a new ClassLoader.
-    */
-   private function __construct() {
-      $this->files = array();
-   }
-
-   /**
     * Load all files and create the ClassLoader cache.
     */
    private function loadFiles() {
@@ -118,7 +103,7 @@ class ClassLoader extends MetalizerObject {
       static $upperCases = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
       $dirHandle = opendir($directory);
-      while (($file = readdir($dirHandle))) {
+      while ($file = readdir($dirHandle)) {
          if ($file != '.' && $file != '..') {
             $fullFile = "$directory/$file";
             if (substr($file, -4) == '.php' && strpos($upperCases, substr($file, 0, 1)) !== false) {
@@ -144,6 +129,24 @@ class ClassLoader extends MetalizerObject {
 
       return null;
    }
+
+   /**
+    * Get the ClassLoader.
+    * @return ClassLoader
+    */
+   static public function instance() {
+      if (ClassLoader::$instance == null) {
+         ClassLoader::$instance = new ClassLoader();
+      }
+
+      return ClassLoader::$instance;
+   }
+
+   /**
+    * ClassLoader is a Singleton.
+    * @var ClassLoader
+    */
+   static private $instance = null;
 
 }
 

@@ -25,6 +25,9 @@
  */
 class Page extends Controller {
    
+   /**
+    * The content type of the page. <code>text/html</code> by default.
+    */
    private $contentType = 'text/html';
 
    /**
@@ -40,7 +43,7 @@ class Page extends Controller {
    private $components = array();
    
    /**
-    * If cleanOutput is false, there's no output clean. 
+    * If cleanOutput is false, there's no output clean.  You should set it to false if you render anything else than xhtml.
     * @var bool
     */
    private $cleanOutput = true;

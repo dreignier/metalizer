@@ -19,10 +19,17 @@
 
 /**
  * @author David Reignier
- *
+ * A filter can handle an URL and change it.
  */
 abstract class Filter extends MetalizerObject {
    
+   /**
+    * Called when the filter is triggered.
+    * @param $path string
+    *    The url
+    * @return string
+    *    Must return the new url or $path.
+    */
    abstract public function execute($path);
    
 }

@@ -127,6 +127,9 @@ function getCurrentUser() {
    return util('Authentication')->getCurrentUser();
 }
 
+/**
+ * @see AuthenticationUtil#mustBeAuthenticated
+ */
 function mustBeAuthenticated() {
    util('Authentication')->mustBeAuthenticated();
 }

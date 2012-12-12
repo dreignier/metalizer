@@ -194,7 +194,7 @@ var vsprintf = function(fmt, argv) {
  * @return string
  *    The i18n value. If the key doesn't exists, the result is '$' + key + $'. 
  */
-var i18n = (function() {
+(function() {
    var lang = {
 <?php 
       $first = true; 
@@ -213,7 +213,7 @@ var i18n = (function() {
 ?>
    };
    
-   return function(key, params) {
+   window.i18n = function(key, params) {
       if (lang[key]) {
          arguments[0] = lang[key];
          return sprintf.apply(null, arguments);

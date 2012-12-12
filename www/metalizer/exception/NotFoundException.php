@@ -18,7 +18,7 @@
  */
 
 /**
- * Represent a 404 error.
+ * Represent a 404 http error.
  * @author David Reignier
  *
  */
