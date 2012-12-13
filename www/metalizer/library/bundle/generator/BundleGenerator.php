@@ -46,7 +46,7 @@ abstract class BundleGenerator extends MetalizerObject {
    
    /**
     * The default processor for the bundle.
-    * It must be a valid processor, eg the configuration value "bundle.processor.<processor>" must be a valid BundleFileProcessor subclass.
+    * It must be a valid processor, eg. the configuration value "bundle.processor.<processor>" must be a valid BundleFileProcessor subclass.
     * @var string
     */
    private $processor;

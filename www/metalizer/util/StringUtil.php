@@ -44,14 +44,14 @@ class StringUtil extends Util {
     * @return string
     *    A random string
     */
-   public function randomString($length, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345789') {
+   public function random($length, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345789') {
       $result = '';
-      
-      while ($length > 0) {
-         $result .= 
-         --$length;         
+      $max = strlen($chars) - 1;
+      while ($length-- > 0) {
+         $result .=  substr($chars, mt_rand(0, $max), 1);
       }
       
+      return $result;
    }
       
 }
