@@ -22,7 +22,7 @@
  * @author David Reignier
  *
  */
-class Logger extends MetalizerObject {
+class Logger extends MetalizerObject implements RedBean_Logger {
 
    /**
     * The handled object
@@ -53,6 +53,22 @@ class Logger extends MetalizerObject {
          return "$logName $message";
       } else {
          return $message;
+      }
+   }
+
+   /**
+    * A default log function. Used by Redbean.
+    * We use the 'debug' level by default.
+    */
+   public function log() {
+      if (func_num_args() > 0) {
+         $message = '';
+         foreach (func_get_args() as $argument) {
+            if (is_string($argument)) {
+               $message .= $argument;
+            }
+         }
+         $this->debug($message);
       }
    }
 
