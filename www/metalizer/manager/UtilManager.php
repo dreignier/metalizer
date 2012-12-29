@@ -30,7 +30,10 @@ class UtilManager extends Manager {
     */
    public function __construct() {
       parent::__construct('Util');
-      
+      $this->requireUtils();
+   }
+   
+   private function requireUtils() {
       // NOTE : We can't use FileUtil here.
 
       // Require all files in util for non-object functions.
@@ -62,7 +65,14 @@ class UtilManager extends Manager {
       $name = strtolower($name);
       return parent::get($name);   
    }
-
+   
+   /**
+    * On wake up, we must require utils folders.
+    */
+   public function onWakeUp() {
+      $this->requireUtils();
+   }
+   
 }
 
 /**
