@@ -29,6 +29,9 @@ classLoader()->initialize();
 // *** Start session ***
 session_start();
 
+// *** Include external libraries ***
+require_once PATH_METALIZER_EXTERNAL . 'redbean/redbean.php';
+
 // *** Non-object functions ***
 // We need to require some files for non object functions
 
@@ -43,6 +46,16 @@ manager('Util');
 
 // Initialize the generated resources util if it doesn't exist.
 util('GeneratedResource');
+
+// *** Header handling ***
+// Set some header value
+foreach (config('header.default') as $header => $value) {
+   if ($value) {
+      util('Header')->set($header, $value);
+   } else {
+      util('Header')->remove($header);
+   }
+}
 
 // *** Application initialization ***
 $initFile = PATH_APPLICATION . 'initialize.php';
