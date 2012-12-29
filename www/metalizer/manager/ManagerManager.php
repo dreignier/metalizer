@@ -45,18 +45,7 @@ class ManagerManager extends Manager {
     * Finalize the ManagerManager. Must be called at the end of the application. The ManagerManager put itself in sleep mode and in a cache file.
     */
    static public function terminate() {
-      // Keep mode in mind
-      $devMode = isDevMode();
-
       ManagerManager::$instance->sleep();
-
-      // REMINDER : Everyone is sleeping now, we are on our own !
-      if (!$devMode) {
-         if (!is_dir(PATH_CACHE . 'metalizer')) {
-            mkdir(PATH_CACHE . 'metalizer');
-         }
-         file_put_contents(MANAGER_MANAGER_CACHE_FILE, serialize(ManagerManager::$instance));
-      }
    }
 
    /**
@@ -65,14 +54,7 @@ class ManagerManager extends Manager {
     */
    static public function initialize() {
       // REMINDER : We can't use utils here, because absolutely nothing is initialized
-
-      // Look for the cache file
-      if (file_exists(MANAGER_MANAGER_CACHE_FILE)) {
-         ManagerManager::$instance = unserialize(file_get_contents(MANAGER_MANAGER_CACHE_FILE));
-         ManagerManager::$instance->wakeUp();
-      } else {
-         ManagerManager::$instance = new ManagerManager();
-      }
+      ManagerManager::$instance = new ManagerManager();
    }
 
    /**

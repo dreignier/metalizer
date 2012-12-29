@@ -176,7 +176,6 @@ abstract class BundleGenerator extends MetalizerObject {
 
          $this->finalize($bundlePath);
       }
-
       $this->html(resUrl($this->path($bundle), false));
    }
 

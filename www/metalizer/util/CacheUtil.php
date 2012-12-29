@@ -24,8 +24,6 @@
  * Value names should be like 'foo.bar.some_stuff.my_value'.
  *
  * @author David Reignier
- *
- * @todo Clean the entire cache when it's needed
  */
 class CacheUtil extends Util {
 

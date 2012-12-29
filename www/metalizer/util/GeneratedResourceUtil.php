@@ -28,8 +28,10 @@ class GeneratedResourceUtil extends Util {
     * Clean the generated resources directory.
     */
    public function __construct() {
-      util('File')->rmdir(PATH_RESOURCE_GEN);
-      @mkdir(PATH_RESOURCE_GEN);
+      if (isDevMode()) {
+         util('File')->rmdir(PATH_RESOURCE_GEN);
+         @mkdir(PATH_RESOURCE_GEN);
+      }
    }
 
 }

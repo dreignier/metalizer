@@ -134,20 +134,23 @@ class RedbeanUtil_BeanCache extends MetalizerObject {
    private $cache = array();
 
    /**
-    * On sleep we clear the local cache.
+    * Save the hot cache in the cold cache
     */
    public function onSleep() {
-      $this->cache = array();
-   }
+      foreach ($this->cache as $type => $beans) {
+         foreach ($beans as $id => $bean) {
+            $bean->sleep();
+            cache()->put("metalizer.model.bean.$type.$id", $bean);
+         }
+      }
+   }   
 
    /**
     * Put or update a bean in the cache. The bean must be registered and valid.
     * @param $bean RedBean_OODBBean
     *    A bean.
-    * @param $cold boolean
-    *    If true, the bean is also put in the cold cache. Optional. true by default.
     */
-   public function put($bean, $cold = true) {
+   public function put($bean) {
       if (!$bean->id || !$bean->getMeta('type')) {
          return;
       }
@@ -160,10 +163,6 @@ class RedbeanUtil_BeanCache extends MetalizerObject {
       }
 
       $this->cache[$type][$id] = $bean;
-
-      if ($cold) {
-         cache()->put("metalizer.model.bean.$type.$id", $bean);
-      }
    }
 
    /**
@@ -183,7 +182,7 @@ class RedbeanUtil_BeanCache extends MetalizerObject {
 
       // Try the cold cache
       if ($bean = cache()->get("metalizer.model.bean.$type.$id")) {
-         $this->put($bean, false);
+         $this->put($bean);
          return $bean;
       }
 

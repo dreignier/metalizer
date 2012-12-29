@@ -31,7 +31,10 @@ class UrlUtil extends Util {
    private $randomParam;
 
    public function __construct() {
-      $this->randomParam = rand(10000, 99999);
+      if (!($this->randomParam = cache()->get('metalizer.random_param'))) {
+         $this->randomParam = rand(10000, 99999);
+         cache()->put('metalizer.random_param', $this->randomParam);
+      }
    }
 
    /**

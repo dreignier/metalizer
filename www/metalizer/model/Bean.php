@@ -47,6 +47,20 @@ class Bean extends RedBean_SimpleModel {
    }
 
    /**
+    * Call the model sleep method.
+    */
+   public function sleep() {
+      $this->getModel()->sleep();
+   }
+   
+   /**
+    * Call the model wakeUp method.
+    */
+   public function wakeUp() {
+      $this->getModel()->wakeUp();
+   }
+
+   /**
     * @return Model
     *    The Model of the current bean
     */

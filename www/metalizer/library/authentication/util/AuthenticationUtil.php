@@ -34,13 +34,6 @@ class AuthenticationUtil extends Util {
    private $currentUser = null;
 
    /**
-    * We must clean the current user.
-    */
-   public function onSleep() {
-      $this->currentUser = null;
-   }
-
-   /**
     * Do an authentication challenge.
     * @param $login string
     *    A login or an email.

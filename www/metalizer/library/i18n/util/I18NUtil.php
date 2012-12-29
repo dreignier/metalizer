@@ -19,7 +19,7 @@
 
 define('PATH_METALIZER_LANG', PATH_METALIZER . 'lang/');
 define('PATH_APPLICATION_LANG', PATH_APPLICATION . 'lang/');
-define('PATH_RESOURCE_JS_LANG', PATH_RESOURCE_GEN . 'js/lang/');
+define('PATH_RESOURCE_JS_LANG', PATH_RESOURCE_GEN . 'lang/');
 
 /**
  * Provide easy access to i18n functions.
@@ -46,12 +46,15 @@ class I18NUtil extends Util {
          // Generate all lang js files once for all.
          $page = new I18NJsPage();
          foreach (config('lang.languages') as $language) {
-            $this->load($language);
-            ob_start();
-            $page->generate($language, $this->getAll());
-            $page->display();
-            $content = ob_get_clean();
-            file_put_contents(PATH_RESOURCE_JS_LANG . "$language.js", $content);
+            $file = PATH_RESOURCE_JS_LANG . "$language.js";
+            if (!file_exists($file)) {
+               $this->load($language);
+               ob_start();
+               $page->generate($language, $this->getAll());
+               $page->display();
+               $content = ob_get_clean();
+               file_put_contents($file, $content);
+            }
          }
       }
    }
