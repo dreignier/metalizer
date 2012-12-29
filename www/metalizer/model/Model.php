@@ -28,23 +28,63 @@ abstract class Model extends MetalizerObject {
     * The redbean bean used by the model.
     * @var RedBean_OODBBean
     */
-   protected $model;
+   protected $bean;
+  
+   /**
+    * A local cache of fetched properties.
+    * @var array[Model]
+    */
+   protected $fetched = array();
    
    public function __construct() {
       list(, $caller) = debug_backtrace(false);
       
-      if (!isset($caller['class']) || !($caller['class'] == 'ModelFactory' ||is_subclass_of($caller['class'], 'ModelFactory'))) {
+      if (!isset($caller['class']) || !($caller['class'] == 'ModelFactory' || is_subclass_of($caller['class'], 'ModelFactory'))) {
          $class = $this->getClass();
          throw new ModelException("You can't construct a new model, you must use model('$class')->dispense();");
       }
    }
    
    /**
-    * Called just after the constructor.
-    * Should be override by subclasses.
+    * Called after a "load"
     */
-   public function initialize() {
-      
+   public function afterLoad() {
+
+   }
+
+   /**
+    * Called after a "dispense"
+    */
+   public function afterDispense() {
+
+   }
+
+   /**
+    * Called on a "store"
+    */
+   public function beforeUpdate() {
+   }
+
+   /**
+    * Called after a "store"
+    */
+   public function afterUpdate() {
+
+   }
+
+
+   /**
+    * Called on a "trash"
+    */
+   public function beforeDelete() {
+
+   }
+
+   /**
+    * Called after a "trash"
+    */
+   public function afterDelete() {
+
    }
    
    /**
@@ -53,27 +93,26 @@ abstract class Model extends MetalizerObject {
     *    Note that a stored object can still be out of date in the database.
     */
    public function isStored() {
-      return $this->getid() != 0;
+      return $this->getId() != 0;
    }
 
    /**
     * Get the redbean bean of this model.
-    * You'll need this method if you want to make a relation between two model object.
     * @return RedBean_OODBBean
     *	 The redbean of this model.
     */
-   public function getModel() {
-      return $this->model;
+   public function getBean() {
+      return $this->bean;
    }
 
    /**
     * Set the redbean bean of this model.
     * This method should _NOT_ be used by an other class than ModelFactory.
-    * @param $model RedBean_OODBBean
+    * @param $bean RedBean_OODBBean
     *		The new redbean bean for this model.
     */
-   public function setModel($model) {
-      $this->model = $model;
+   public function setBean($bean) {
+      $this->bean = $bean;
    }
 
    /**
@@ -82,7 +121,7 @@ abstract class Model extends MetalizerObject {
     * 	The current id of the model.
     */
    public function getId() {
-      return $this->model->id;
+      return $this->bean->id;
    }
 
    /**
@@ -124,7 +163,14 @@ abstract class Model extends MetalizerObject {
          }
       }
       
-      $this->model->$name = $value;
+      if (is_object($value) && is_a($value, 'Model')) {
+         $this->fetched[$name] = $value;
+         $value = $value->getBean();
+      }
+      
+      $this->bean->$name = $value;
+      
+      return $this;
    }
    
    /**
@@ -132,33 +178,36 @@ abstract class Model extends MetalizerObject {
     * @param $name string
     *    The name of the field to get
     * @return mixed
-    *    The value of the wanted file.
+    *    The value of the wanted field.
     */
    protected function get($name) {
-      return $this->model->$name;
+      return $this->bean->$name;
    }
    
    /**
-    * Try to validate the model. Validate is called when the model must store itself in the database.
-    * @return bool
-    *    Always true
-    * @throws ModelException
-    *    If the model is not valid.
+    * Fetch a member in the bean as a class.
+    * @param $class string
+    *    A model class.
     */
-   public function validate() {
-      $reflection = new ReflectionClass($this->getClass());
+   protected function fetchAs($class, $name) {
+      if (!isset($this->fetched[$name])) {
+         // Get the table class
+         $table = model($class)->getTable();
+         $this->fetched[$name] = $this->wrap($this->bean->fetchAs($table)->$name); 
+      }
       
-      foreach ($reflection->getMethods() as $method) {
-         if (substr($method->name, 0, 8) == 'validate' && strlen($method->name) > 8) {
-            $name = lcfirst(substr($method->name, 8));
-            $value = $this->get($name);
-            if (!call_user_func(array($this, $method->name), $value)) {
-               throw new ModelValidationException($name, $value);
-            }
-         }
-      } 
-      
-      return true;
+      return $this->fetched[$name];
+   }
+   
+   /**
+    * Wrap a redbean in a Model, using the current Model factory.
+    * @param $bean RedBean_OODBBean
+    *    A redbean
+    * @return Model
+    *    The given bean boxed in a Model.
+    */
+   public function wrap($bean) {
+      return $this->getFactory()->wrap($bean);
    }
    
 }
