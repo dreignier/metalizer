@@ -16,10 +16,36 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-
+ 
 /**
  * Index file of the application. All pages are start here.
  */
+ 
+// *** Some very basic fonctions. For debug only ***
+
+function debug($message) {
+   if (is_object($message) && is_a($message, 'Exception')) {
+      echo 'Exception occured : (' . $message->getCode() . ') ' . $message->getMessage() . '<br/>';
+      echo $message->getFile() . '(' . $message->getLine() . ')';
+      echo str_replace('#', '<br/>#', $message->getTraceAsString());
+   } else {
+      echo $message . '<br/>';
+   }
+}
+
+
+function bench() {
+   static $last = null;
+   
+   if (!$last) {
+      $last = microtime();
+   } else {
+      $now = microtime();
+      debug("Bench : " . ($now - $last));
+      $last = $now;
+   }
+}
+bench();
  
 // *** Contants defines ***
 
@@ -56,13 +82,6 @@ define('PATH_RESOURCE_GEN', PATH_RESOURCE . 'gen/');
 define('PATH_CACHE', PATH_ROOT . '../cache/');
 define('PATH_LOG', PATH_ROOT . '../log/');
 define('PATH_DATA', PATH_ROOT . '../data/');
-
-define('PATH_PUBLIC_DATA', 'data/');
-
-// Use for pure debug only
-function debug($message) {
-   echo $message . '<br/>';
-}
 
 // *** Metalizer initialization ***
 
