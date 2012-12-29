@@ -69,7 +69,7 @@ class AuthenticationUtil extends Util {
     */
    public function login($user) {
       $this->currentUser = $user;
-      session()->set(AUTHENTICATION_SESSION_NAME, $user->getLogin());
+      session()->set(AUTHENTICATION_SESSION_NAME, $user->getId());
    }
    
    /**
@@ -90,13 +90,13 @@ class AuthenticationUtil extends Util {
          return $this->currentUser;
       }   
       
-      $login = session()->get(AUTHENTICATION_SESSION_NAME);
+      $id = session()->get(AUTHENTICATION_SESSION_NAME);
       
-      if (!$login) {
+      if (!$id) {
          return null;
       }
       
-      $user = model('BaseUser')->findOneBy('login', $login);
+      $user = model('BaseUser')->findById($id);
       
       if (!$user) {
          return null;
