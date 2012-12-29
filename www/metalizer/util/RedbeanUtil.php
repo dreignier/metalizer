@@ -139,8 +139,11 @@ class RedbeanUtil_BeanCache extends MetalizerObject {
    public function onSleep() {
       foreach ($this->cache as $type => $beans) {
          foreach ($beans as $id => $bean) {
-            $bean->sleep();
-            cache()->put("metalizer.model.bean.$type.$id", $bean);
+            // Don't cache a tainted bean.
+            if (!$bean->getMeta('tainted')) {
+               $bean->sleep();
+               cache()->put("metalizer.model.bean.$type.$id", $bean);
+            }
          }
       }
    }   
