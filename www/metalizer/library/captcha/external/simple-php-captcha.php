@@ -52,9 +52,9 @@ function captcha($config = array()) {
 	// Generate CAPTCHA code if not set by user
 	if( empty($captcha_config['code']) ) {
 		$captcha_config['code'] = '';
-		$length = rand($captcha_config['min_length'], $captcha_config['max_length']);
+		$length = mt_rand($captcha_config['min_length'], $captcha_config['max_length']);
 		while( strlen($captcha_config['code']) < $length ) {
-			$captcha_config['code'] .= substr($captcha_config['characters'], rand() % (strlen($captcha_config['characters'])), 1);
+			$captcha_config['code'] .= substr($captcha_config['characters'], mt_rand() % (strlen($captcha_config['characters'])), 1);
 		}
 	}
 
