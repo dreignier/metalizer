@@ -36,6 +36,15 @@ class HeaderUtil extends Util {
    }
    
    /**
+    * Remove a header
+    * @param $header string
+    *    Opttional. The header to remove. If missing, all headers are removed.
+    */
+   public function remove($header) {
+      $header ? header_remove($header) : header_remove();
+   }
+   
+   /**
     * Set the http response code.
     * @param $code int
     *    An http response code.
