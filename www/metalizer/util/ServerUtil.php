@@ -32,7 +32,7 @@ class ServerUtil extends Util {
     * 	$_SERVER[$key]
     */
    public function get($key) {
-      return $_SERVER[$key];
+      return isset($_SERVER[$key]) ? $_SERVER[$key] : null;
    }
 
    /**
