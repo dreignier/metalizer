@@ -26,7 +26,7 @@ define('MODE_PRODUCTION', 'production');
  *
  */
 class ModeUtil extends Util {
-   
+
    /**
     * Get the application mode. It's the 'metalizer.mode' configuration value.
     * @return string
@@ -35,7 +35,7 @@ class ModeUtil extends Util {
    public function getMode() {
       return config('metalizer.mode');
    }
-   
+
 }
 
 /**

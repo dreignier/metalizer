@@ -24,7 +24,7 @@
  *
  */
 class Page extends Controller {
-   
+
    /**
     * The content type of the page. <code>text/html</code> by default.
     */
@@ -41,7 +41,7 @@ class Page extends Controller {
     * @var array[Webscript]
     */
    private $components = array();
-   
+
    /**
     * If cleanOutput is false, there's no output clean.  You should set it to false if you render anything else than xhtml.
     * @var bool
@@ -60,10 +60,10 @@ class Page extends Controller {
    }
 
    /**
-    * Set the template used by the page. 
+    * Set the template used by the page.
     * @param $template string
     *     The template name without the '.php' extension. The template file must exists in the application template folder.
-    */    
+    */
    public function template($template) {
       $this->template = $template;
    }
@@ -74,15 +74,15 @@ class Page extends Controller {
    public function display() {
       if ($this->template) {
          $template = new Template($this->template, $this->data);
-   
+
          foreach ($this->components as $region => $webscript) {
             $template->component($region, $webscript);
          }
-   
+
          $template->display();
       }
    }
-   
+
    /**
     * Set the content type of the page.
     * This function must be called before any output !
@@ -96,16 +96,16 @@ class Page extends Controller {
       }
       util('Header')->set('Content-Type', $this->contentType);
    }
-   
+
    /**
     * Set the http response code.
     * @param $code int
-    *    A http response code. 
+    *    A http response code.
     */
    protected function setCode($code) {
-      util('header')->setHttpResponseCode($code);   
+      util('header')->setHttpResponseCode($code);
    }
-   
+
    /**
     * @return string
     *    The content type of the page.
@@ -113,14 +113,14 @@ class Page extends Controller {
    public function getContentType() {
       return $this->contentType;
    }
-   
+
    /**
     * Disable the output clean.
     */
    public function noOutputClean() {
       $this->cleanOutput = false;
    }
-   
+
    /**
     * @return bool
     *    True if the output must be cleaned. False otherwise.

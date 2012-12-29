@@ -23,28 +23,28 @@
  *
  */
 class TemplateUtil extends Util {
-      
+
    /**
     * All the templates of the project with their real path.
     * @var array[string]
     */
    private $templates = array();
-      
+
    public function __construct() {
       $paths = array(
-         PATH_METALIZER . 'template/*.php',
-         PATH_METALIZER_LIBRARY . '*/template/*.php',
-         PATH_APPLICATION_LIBRARY . '*/template/*.php',
-         PATH_APPLICATION . 'template/*.php',
+         PATH_METALIZER . 'template/*.php', 
+         PATH_METALIZER_LIBRARY . '*/template/*.php', 
+         PATH_APPLICATION_LIBRARY . '*/template/*.php', 
+         PATH_APPLICATION . 'template/*.php'
       );
-      
+
       foreach ($paths as $path) {
          foreach (util('File')->glob($path) as $file) {
             $this->templates[substr($file, strpos($file, '/template/') + 10, -4)] = $file;
-         }   
+         }
       }
    }
-      
+
    /**
     * Get the real path for a template.
     * @param $template string
@@ -53,10 +53,10 @@ class TemplateUtil extends Util {
     *    The path to the given template or null.
     */
    public function getPath($template) {
-      return isset($this->templates[$template]) ? 
-      $this->templates[$template] : null;
+      return isset($this->templates[$template]) ? $this->templates[$template] : null;
    }
-}  
+
+}
 
 function getTemplatePath($template) {
    return util('Template')->getPath($template);

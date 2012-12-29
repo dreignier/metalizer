@@ -23,16 +23,16 @@
  *
  */
 class HttpException extends MetalizerException {
-	
-	/**
-	 * Construct a new HttpException
-	 * @param $code int
-	 * 	The error code for the request
-	 * @param $message string
-	 * 	The exception message
-	 */
-	public function __construct($code, $message) {
-		parent::__construct($message, $code);
-	}
-	
+
+   /**
+    * Construct a new HttpException
+    * @param $code int
+    * 	The error code for the request
+    * @param $message string
+    * 	The exception message
+    */
+   public function __construct($code, $message) {
+      parent::__construct($message, $code);
+   }
+
 }

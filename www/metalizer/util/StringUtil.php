@@ -23,7 +23,7 @@
  *
  */
 class StringUtil extends Util {
- 
+
    /**
     * Escape html caracters in a string.
     * @param $string string
@@ -33,8 +33,8 @@ class StringUtil extends Util {
     */
    public function escapeHtml($string) {
       return htmlspecialchars($string);
-   } 
-   
+   }
+
    /**
     * Generate a random string
     * @param $length int
@@ -48,12 +48,12 @@ class StringUtil extends Util {
       $result = '';
       $max = strlen($chars) - 1;
       while ($length-- > 0) {
-         $result .=  substr($chars, mt_rand(0, $max), 1);
+         $result .= substr($chars, mt_rand(0, $max), 1);
       }
-      
+
       return $result;
    }
-      
+
 }
 
 function escapeHtml($string) {

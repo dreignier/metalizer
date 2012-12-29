@@ -29,15 +29,15 @@ class Bean extends RedBean_SimpleModel {
     * @var Model
     */
    private $model;
-   
+
    /**
     * @param $model Model
     *    The new model of the bean.
-    */ 
+    */
    public function setModel($model) {
       $this->model = $model;
    }
-   
+
    /**
     * Delegate the fetchAs method to the internal bean.
     * @see RedBean_OODBBean#fetchAs
@@ -45,7 +45,7 @@ class Bean extends RedBean_SimpleModel {
    public function fetchAs($type) {
       return $this->unbox()->fetchAs($type);
    }
-   
+
    /**
     * @return Model
     *    The Model of the current bean
@@ -85,7 +85,6 @@ class Bean extends RedBean_SimpleModel {
    public function after_update() {
       $this->getModel()->afterUpdate();
    }
-
 
    /**
     * Called before a "trash"

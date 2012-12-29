@@ -61,14 +61,14 @@ class LogUtil extends Util {
          if ($level !== null) {
             return $level;
          }
-         
+
          return config('log.level');
       }
 
       if (($level = config('log.level.root') !== null)) {
          return $level;
       }
-      
+
       return config('log.level');
    }
 
@@ -85,7 +85,7 @@ class LogUtil extends Util {
       if (!$this->isLogEnabled($caller, $level)) {
          return;
       }
-      
+
       $file = $this->getLogFile();
       $handle = fopen($file, 'a');
       $time = date('H:i:s');

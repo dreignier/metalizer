@@ -32,7 +32,7 @@ class UtilManager extends Manager {
       parent::__construct('Util');
       $this->requireUtils();
    }
-   
+
    private function requireUtils() {
       // NOTE : We can't use FileUtil here.
 
@@ -40,7 +40,7 @@ class UtilManager extends Manager {
       foreach (glob(PATH_METALIZER_UTIL . '*.php') as $file) {
          require_once $file;
       }
-      
+
       // Require all metalizer libraries util folders
       foreach (glob(PATH_METALIZER_LIBRARY . '*/util/*.php') as $file) {
          require_once $file;
@@ -50,29 +50,29 @@ class UtilManager extends Manager {
       foreach (glob(PATH_APPLICATION_UTIL . '*.php') as $file) {
          require_once $file;
       }
-      
+
       // Require all application libraries util folders
       foreach (glob(PATH_APPLICATION_LIBRARY . '*/util/*.php') as $file) {
          require_once $file;
       }
    }
-   
+
    /**
     * Override the Manager#get method.
     * For UtilManager, the $name is case insensitive.
     */
    public function get($name) {
       $name = strtolower($name);
-      return parent::get($name);   
+      return parent::get($name);
    }
-   
+
    /**
     * On wake up, we must require utils folders.
     */
    public function onWakeUp() {
       $this->requireUtils();
    }
-   
+
 }
 
 /**

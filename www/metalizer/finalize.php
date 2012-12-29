@@ -24,7 +24,7 @@
 // *** Application finalize ***
 $finalFile = PATH_APPLICATION . 'finalize.php';
 if (file_exists($finalFile)) {
-	require_once $finalFile;
+   require_once $finalFile;
 }
 
 // *** Finalize utils ***

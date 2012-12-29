@@ -18,7 +18,7 @@
  */
 
 define('AUTHENTICATION_SESSION_NAME', "authentication.user");
- 
+
 /**
  * Provide easy access to authentication functions. AuthenticationUtil use BaseUser to represent users.
  * If you want to extend the BaseUser behavior, just use a subclass.
@@ -26,7 +26,7 @@ define('AUTHENTICATION_SESSION_NAME', "authentication.user");
  *
  */
 class AuthenticationUtil extends Util {
-   
+
    /**
     * The current user
     * @var BaseUser
@@ -41,7 +41,7 @@ class AuthenticationUtil extends Util {
    }
 
    /**
-    * Do an authentication challenge. 
+    * Do an authentication challenge.
     * @param $login string
     *    A login or an email.
     * @param $password string
@@ -54,14 +54,14 @@ class AuthenticationUtil extends Util {
       if (!$user) {
          $user = model('BaseUser')->findOneBy('email', $login);
       }
-      
+
       if (!$user) {
          return null;
       }
-      
+
       return $user->challengePassword($password) ? $user : null;
    }
-   
+
    /**
     * Login a user.
     * @param $user BaseUser
@@ -71,7 +71,7 @@ class AuthenticationUtil extends Util {
       $this->currentUser = $user;
       session()->set(AUTHENTICATION_SESSION_NAME, $user->getId());
    }
-   
+
    /**
     * Logout the current user. Do nothing if there's no current user.
     */
@@ -79,7 +79,7 @@ class AuthenticationUtil extends Util {
       session()->clean(AUTHENTICATION_SESSION_NAME);
       $this->currentuser = null;
    }
-   
+
    /**
     * Get the current user.
     * @return BaseUser
@@ -88,24 +88,24 @@ class AuthenticationUtil extends Util {
    public function getCurrentUser() {
       if ($this->currentUser) {
          return $this->currentUser;
-      }   
-      
+      }
+
       $id = session()->get(AUTHENTICATION_SESSION_NAME);
-      
+
       if (!$id) {
          return null;
       }
-      
+
       $user = model('BaseUser')->findById($id);
-      
+
       if (!$user) {
          return null;
       }
-      
+
       $this->currentUser = $user;
       return $user;
    }
-   
+
    /**
     * Check if the current user is authenticated.
     * @throws UnauthorizedException

@@ -23,29 +23,43 @@
  *
  */
 class LibraryUtil extends Util {
-   
+
+   /**
+    * Keep a cache for libraries paths.
+    * @var array[string]
+    */
    private $cache = array();
-   
+
+   /**
+    * Get a library path
+    * @param $name string
+    *    A library name.
+    * @return string
+    *    The path to the library directory.
+    * @throws LibraryException
+    *    If the given library doesn't exist.
+    */
    public function getPath($name) {
       if (isset($this->cache[$name])) {
          return $this->cache[$name];
       }
-      
-      $paths = array(
-         PATH_APPLICATION_LIBRARY . "$name/",
-         PATH_METALIZER_LIBRARY . "$name/"
-      );
-      
-      foreach($paths as $path) {
+
+      $paths = array(PATH_APPLICATION_LIBRARY . "$name/", PATH_METALIZER_LIBRARY . "$name/");
+
+      foreach ($paths as $path) {
          if (is_dir($path)) {
             $this->cache[$name] = $path;
             return $path;
          }
-      }   
-      
+      }
+
       throw new LibraryException("Library not found : $name");
    }
-   
+
+   /**
+    * @return boolean
+    *    true if the given library exists, false otherwise.
+    */
    public function exists($name) {
       try {
          $this->getPath($name);
@@ -54,13 +68,19 @@ class LibraryUtil extends Util {
          return false;
       }
    }
-      
+
 }
 
+/**
+ * @see LibraryUtil#getPath
+ */
 function getLibraryPath($name) {
    return util('Library')->getPath($name);
 }
 
+/**
+ * @see LibraryUtil#exists
+ */
 function isLibraryExists($name) {
    return util('Library')->exists($name);
 }

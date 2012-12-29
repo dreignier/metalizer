@@ -23,13 +23,13 @@
  *
  */
 class ModelValidationException extends ModelException {
-   
+
    /**
     * The name of the field which is not valid.
     * @var string
     */
    protected $name;
-   
+
    /**
     * Construct a new ModelValidationException
     * @param $name string
@@ -39,9 +39,9 @@ class ModelValidationException extends ModelException {
       parent::__construct("$value is not a valid value for $name");
       $this->name = $name;
    }
-   
+
    public function getName() {
       return $this->name;
    }
-   
+
 }

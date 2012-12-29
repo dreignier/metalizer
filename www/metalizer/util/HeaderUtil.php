@@ -23,7 +23,7 @@
  *
  */
 class HeaderUtil extends Util {
-   
+
    /**
     * Set a header with the syntax "$header: $value"
     * @param $header string
@@ -34,7 +34,7 @@ class HeaderUtil extends Util {
    public function set($header, $value) {
       header("$header: $value");
    }
-   
+
    /**
     * Remove a header
     * @param $header string
@@ -43,7 +43,7 @@ class HeaderUtil extends Util {
    public function remove($header) {
       $header ? header_remove($header) : header_remove();
    }
-   
+
    /**
     * Set the http response code.
     * @param $code int
@@ -52,7 +52,7 @@ class HeaderUtil extends Util {
    public function setHttpResponseCode($code) {
       header("HTTP/1.1 $code");
    }
-   
+
    /**
     * Redirect to an url.
     * @param $url string
@@ -61,7 +61,7 @@ class HeaderUtil extends Util {
    public function redirect($url) {
       $this->set('Location', $url);
    }
-   
+
 }
 
 function redirect($url) {

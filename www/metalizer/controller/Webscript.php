@@ -51,10 +51,10 @@ class Webscript extends Controller {
    public function display($chrome = null) {
       if ($chrome) {
          $chrome = new Chrome($this, $chrome, $this->data);
-         $chrome->display();  
+         $chrome->display();
       } else {
          $view = new WebscriptView($this, $this->data);
-         $view->display();   
+         $view->display();
       }
    }
 
@@ -62,7 +62,7 @@ class Webscript extends Controller {
     * This method is called when the webscript must display itself. By default it does nothing.
     * Subclass should override this method.
     * @return bool
-    *    If execute return a real false (and not just a falsy value), the webscript will not be displayed. 
+    *    If execute return a real false (and not just a falsy value), the webscript will not be displayed.
     */
    public function execute() {
       return true;
@@ -86,7 +86,7 @@ class Webscript extends Controller {
    public function getFile($file) {
       return $this->folder . $file;
    }
-   
+
    public function error($exception) {
       // Default error handle
       echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';

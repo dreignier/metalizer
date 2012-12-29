@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
- 
+
 /**
  * A BundleGenerator car generate a resource bundle.
  * @author David Reignier
@@ -30,7 +30,7 @@ abstract class BundleGenerator extends MetalizerObject {
     *    The path to a bundle file.
     */
    abstract public function finalize($bundlePath);
-   
+
    /**
     * Must generate the good html code (with echo) for an url.
     * @param $url string
@@ -43,14 +43,14 @@ abstract class BundleGenerator extends MetalizerObject {
     * @var array[string]
     */
    private $files = array();
-   
+
    /**
     * The default processor for the bundle.
     * It must be a valid processor, eg. the configuration value "bundle.processor.<processor>" must be a valid BundleFileProcessor subclass.
     * @var string
     */
    private $processor;
-   
+
    /**
     * The file extension for the bundle file.
     * @var string
@@ -68,13 +68,13 @@ abstract class BundleGenerator extends MetalizerObject {
       $this->extension = $extension;
       $this->processor = $processor;
    }
-   
+
    /**
     * Find the processor in a pattern. If a pattern is like '<processor>:<pattern>', then the processor will be <processor>.
     * @param $pattern string
     *    A pattern.
     * @return BundleFileProcessor
-    *    The processor for the given pattern. 
+    *    The processor for the given pattern.
     */
    protected function findProcessor($pattern) {
       $colonPos = strpos($pattern, ':');
@@ -83,16 +83,16 @@ abstract class BundleGenerator extends MetalizerObject {
       } else {
          $processor = $this->processor;
       }
-      
+
       $class = config("bundle.processor.$processor");
-      
+
       if (!is_subclass_of($class, "BundleFileProcessor")) {
          throw new BundleException("$processor is not a valid file processor");
       }
-      
+
       return new $class($processor);
    }
-   
+
    /**
     * @param $bundle string
     *    A bundle name.
@@ -102,7 +102,7 @@ abstract class BundleGenerator extends MetalizerObject {
    protected function path($bundle) {
       return PATH_RESOURCE_GEN . "$bundle.$this->extension";
    }
-   
+
    /**
     * Generate a bundle.
     * @param $bundle string
@@ -117,7 +117,7 @@ abstract class BundleGenerator extends MetalizerObject {
          $this->prodGenerate($bundle, $patterns);
       }
    }
-   
+
    /**
     * Generate in development mode.
     * @param $bundle string
@@ -134,7 +134,7 @@ abstract class BundleGenerator extends MetalizerObject {
             if (!$processor->isValid($path)) {
                continue;
             }
-            
+
             if (!in_array($path, $this->files)) {
                $this->html($processor->url($path));
                $this->files[] = $path;
@@ -142,7 +142,7 @@ abstract class BundleGenerator extends MetalizerObject {
          }
       }
    }
-   
+
    /**
     * Generate in production mode.
     * @param $bundle string
@@ -152,7 +152,7 @@ abstract class BundleGenerator extends MetalizerObject {
     */
    protected function prodGenerate($bundle, $patterns) {
       $bundlePath = $this->path($bundle);
-      
+
       if (!file_exists($bundlePath)) {
          util('File')->checkDirectory($bundlePath);
          $handle = fopen($bundlePath, 'w');
@@ -164,7 +164,7 @@ abstract class BundleGenerator extends MetalizerObject {
                if (!$processor->isValid($path)) {
                   continue;
                }
-               
+
                if (!in_array($path, $this->files)) {
                   $content = $processor->read($path);
                   fwrite($handle, $content);
@@ -173,12 +173,11 @@ abstract class BundleGenerator extends MetalizerObject {
             }
          }
          fclose($handle);
-         
+
          $this->finalize($bundlePath);
       }
-      
+
       $this->html(resUrl($this->path($bundle), false));
    }
 
-}      
-   
+}

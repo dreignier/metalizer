@@ -16,34 +16,34 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
- 
+
 /**
  * Can generate a CSS bundle.
  * @author David Reignier
  *
  */
 class CssBundleGenerator extends BundleGenerator {
-   
+
    /**
     * Construct a new CssBundleGenerator.
     */
    public function __construct() {
       parent::__construct('css');
    }
-   
+
    /**
     * @see BundleGenerator#html
     */
    public function html($url) {
-      echo  '<link type="text/css" rel="stylesheet" href="' . $url . '" />';
+      echo '<link type="text/css" rel="stylesheet" href="' . $url . '" />';
    }
-   
+
    /**
     * @see BundleGenerator#finalize
     */
    public function finalize($path) {
       $css = file_get_contents($path);
-      
+
       // Simple CSS Minifier from http://www.lateralcode.com/css-minifier/
       $css = preg_replace('#\s+#', ' ', $css);
       $css = preg_replace('#/\*.*?\*/#s', '', $css);
@@ -54,7 +54,8 @@ class CssBundleGenerator extends BundleGenerator {
       $css = str_replace(', ', ',', $css);
       $css = str_replace('} ', '}', $css);
       $css = str_replace(';}', '}', $css);
-      
+
       file_put_contents($path, $css);
    }
-}      
+
+}

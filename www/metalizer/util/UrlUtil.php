@@ -23,17 +23,17 @@
  *
  */
 class UrlUtil extends Util {
-   
+
    /**
     * The random parameter used for resources url.
     * @var int
     */
    private $randomParam;
-   
+
    public function __construct() {
       $this->randomParam = rand(10000, 99999);
    }
-   
+
    /**
     * @param $url string
     *    An url.
@@ -46,7 +46,7 @@ class UrlUtil extends Util {
       }
       return config('url.root') . $url;
    }
-   
+
    /**
     * @param $url string
     *    An url.
@@ -55,12 +55,12 @@ class UrlUtil extends Util {
     */
    public function randomParamUrl($url) {
       if (!isDevMode()) {
-         return $url . (strpos($url, '?') !== false ? '&' : '?') . '_=' . $this->getRandomParam();   
+         return $url . (strpos($url, '?') !== false ? '&' : '?') . '_=' . $this->getRandomParam();
       } else {
          return $url;
       }
    }
-   
+
    /**
     * @return int
     *    The random parameter used for resources url.
@@ -68,7 +68,7 @@ class UrlUtil extends Util {
    public function getRandomParam() {
       return $this->randomParam;
    }
-   
+
    /**
     * @param $url string
     *    An url.
@@ -79,10 +79,10 @@ class UrlUtil extends Util {
       if (substr($url, 0, 1) != '/') {
          $url = "/$url";
       }
-      
+
       return $this->url(config('url.site.base') . $url);
    }
-   
+
    /**
     * @param $url string
     *    An url.
@@ -90,9 +90,9 @@ class UrlUtil extends Util {
     *    A css url.
     */
    public function css($url) {
-      return $this->randomParamUrl($this->url(PATH_RESOURCE_CSS . $url)); 
+      return $this->randomParamUrl($this->url(PATH_RESOURCE_CSS . $url));
    }
-   
+
    /**
     * @param $url string
     *    An url.
@@ -102,7 +102,7 @@ class UrlUtil extends Util {
    public function js($url) {
       return $this->randomParamUrl($this->url(PATH_RESOURCE_JS . $url));
    }
-   
+
    /**
     * @param $url string
     *    An url.
@@ -112,7 +112,7 @@ class UrlUtil extends Util {
    public function img($url) {
       return $this->randomParamUrl($this->url(PATH_RESOURCE_IMG . $url));
    }
-   
+
    /**
     * @param $url string
     *    An url.
@@ -124,7 +124,8 @@ class UrlUtil extends Util {
    public function res($url, $prefix = true) {
       return $this->randomParamUrl($this->url(($prefix ? PATH_RESOURCE : '') . $url));
    }
-} 
+
+}
 
 /**
  * @see UrlUtil#site

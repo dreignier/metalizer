@@ -23,92 +23,92 @@
  *
  */
 class StoreUtil extends Util {
-	
-	/**
-	 * The StoreUtil use a local cache.
-	 * @var array[mixed]
-	 */
-	private $cache = array();
-	
-	private function getFilePath($key) {
-		return PATH_DATA . str_replace('.', '/', $key);
-	}
- 	
-	/**
-	 * Store a value.
-	 * @param $name string
-	 * 	The name of the value.
-	 * @param $value mixed
-	 *  The name. Must be serializable.
-	 */
-	public function store($name, $value) {
-		$file = $this->getFilePath($name);
-		$this->cache[$file] = $value;
-		util('File')->checkDirectory($file);
-		file_put_contents($file, serialize($value));
-	}
-	
-	/**
-	 * Load a stored value.
-	 * @param $name string
-	 * 	The name of the value.
-	 * @return mixed
-	 * 	The value. Or null if no value with $name is found.
-	 */
-	public function load($name) {
-		if (!$this->exists($name)) {
-			return null;
-		}
-		
-		$file = $this->getFilePath($name);
-		
-		if (isset($this->cache[$file])) {
-			return $this->cache[$file];
-		}
-		
-		$result = unserialize(file_get_contents($file));
-		$this->cache[$file] = $result;
-		
-		return $result;
-	}
-	
-	/**
-	 * Delete a value or a folder of values.
-	 * @param $name string
-	 * 	The name of a value or a folder of values.
-	 */
-	public function delete($name) {
-		$file = $this->getFilePath($name);
 
-		unset($this->cache[$file]);
-		
-		if ($this->exists($name)) {
-			unlink($file);
-			return;
-		}
+   /**
+    * The StoreUtil use a local cache.
+    * @var array[mixed]
+    */
+   private $cache = array();
 
-		// Maybe it's a folder
-		if (is_dir($file)) {
-			rmdir($file);
-		}
-	}
-	
-	/**
-	 * @param $name string
-	 * 	The name of a value
-	 * @return bool
-	 * 	true if the value is in the store, false otherwise.
-	 */
-	public function exists($name) {
-		$file = $this->getFilePath($name);
-		
-		if (isset($this->cache[$file])) {
-			return true;
-		}
-		
-		return file_exists($file);
-	}
-	
+   private function getFilePath($key) {
+      return PATH_DATA . str_replace('.', '/', $key);
+   }
+
+   /**
+    * Store a value.
+    * @param $name string
+    * 	The name of the value.
+    * @param $value mixed
+    *  The name. Must be serializable.
+    */
+   public function store($name, $value) {
+      $file = $this->getFilePath($name);
+      $this->cache[$file] = $value;
+      util('File')->checkDirectory($file);
+      file_put_contents($file, serialize($value));
+   }
+
+   /**
+    * Load a stored value.
+    * @param $name string
+    * 	The name of the value.
+    * @return mixed
+    * 	The value. Or null if no value with $name is found.
+    */
+   public function load($name) {
+      if (!$this->exists($name)) {
+         return null;
+      }
+
+      $file = $this->getFilePath($name);
+
+      if (isset($this->cache[$file])) {
+         return $this->cache[$file];
+      }
+
+      $result = unserialize(file_get_contents($file));
+      $this->cache[$file] = $result;
+
+      return $result;
+   }
+
+   /**
+    * Delete a value or a folder of values.
+    * @param $name string
+    * 	The name of a value or a folder of values.
+    */
+   public function delete($name) {
+      $file = $this->getFilePath($name);
+
+      unset($this->cache[$file]);
+
+      if ($this->exists($name)) {
+         unlink($file);
+         return;
+      }
+
+      // Maybe it's a folder
+      if (is_dir($file)) {
+         rmdir($file);
+      }
+   }
+
+   /**
+    * @param $name string
+    * 	The name of a value
+    * @return bool
+    * 	true if the value is in the store, false otherwise.
+    */
+   public function exists($name) {
+      $file = $this->getFilePath($name);
+
+      if (isset($this->cache[$file])) {
+         return true;
+      }
+
+      return file_exists($file);
+   }
+
 }
 
 /**
@@ -116,5 +116,5 @@ class StoreUtil extends Util {
  * 	The StoreUtil
  */
 function store() {
-	return util('Store');
+   return util('Store');
 }

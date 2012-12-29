@@ -104,7 +104,7 @@ class ModelFactory extends MetalizerObject {
 
       $this->table = strtolower($class);
    }
-   
+
    /**
     * @return string
     *    The table of the factory
@@ -134,10 +134,10 @@ class ModelFactory extends MetalizerObject {
 
       $bean = R()->dispense($this->table);
       $bean->metalizerClass = $this->class;
-      
+
       $bean->setModel($model);
       $model->setBean($bean);
-      
+
       $model->afterDispense();
 
       return $model;
@@ -160,7 +160,7 @@ class ModelFactory extends MetalizerObject {
    public function trash($model) {
       R()->trash($model->getBean());
    }
-   
+
    /**
     * Called by a Model before a trash
     * @param $model Model

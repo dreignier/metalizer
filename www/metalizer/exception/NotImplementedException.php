@@ -24,8 +24,8 @@
  */
 class NotImplementedException extends HttpException {
 
-	public function __construct($message = null) {
-		parent::__construct(501, $message ? $message : 'Not implemented');
-	}
+   public function __construct($message = null) {
+      parent::__construct(501, $message ? $message : 'Not implemented');
+   }
 
 };

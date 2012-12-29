@@ -70,12 +70,12 @@ class FileUtil extends Util {
                   }
                }
             }
-         }   
+         }
          @reset($objects);
          @rmdir($dir);
       }
    }
-   
+
    /**
     * Same as php glob, but defaults flags are not the same and there's an extra parameter.
     * @todo handle the ** joker
@@ -85,27 +85,28 @@ class FileUtil extends Util {
     *    If true, only file are returned. Optional. True by default.
     * @param $flags int
     *    Optional. Default : GLOB_MARK | GLOB_BRACE
-    *    GLOB_ONLYFILE is a metalizer flag. 
+    *    GLOB_ONLYFILE is a metalizer flag.
     */
    public function glob($pattern, $onlyFile = true, $flags = null) {
       if ($flags === null) {
          $flags = GLOB_MARK + GLOB_BRACE;
       }
-      
+
       $glob = glob($pattern, $flags);
-      
+
       $result = array();
       foreach ($glob as $value) {
          if (!$onlyFile || !is_dir($value)) {
             $result[$value] = str_replace('\\', '/', $value);
          }
       }
-      
+
       return $result;
    }
-   
+
    public function extension($file) {
       $point = strrpos($file, '.');
       return $point === false ? '' : substr($file, $point + 1);
    }
+
 }

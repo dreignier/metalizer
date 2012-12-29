@@ -23,7 +23,7 @@
  *
  */
 class PageUtil extends Util {
-   
+
    /**
     * Check if a combinaison of a page, a method and arguments is valid.
     * @param $page string
@@ -49,23 +49,23 @@ class PageUtil extends Util {
       // Check if all is ok
       $reflectionClass = new ReflectionClass($page);
 
-      if (!$reflectionClass -> hasMethod($method)) {
+      if (!$reflectionClass->hasMethod($method)) {
          throw new InternalErrorException("There's no '$method' in the page '$page'");
       }
 
-      $reflectionMethod = $reflectionClass -> getMethod($method);
+      $reflectionMethod = $reflectionClass->getMethod($method);
 
-      if (!$reflectionMethod -> isPublic() || $reflectionMethod -> isStatic() || $reflectionMethod -> isAbstract()) {
+      if (!$reflectionMethod->isPublic() || $reflectionMethod->isStatic() || $reflectionMethod->isAbstract()) {
          throw new InternalErrorException("The method '$method' in the $page class is not valid");
       }
 
-      if ($reflectionMethod -> getNumberOfRequiredParameters() > sizeof($args)) {
-         throw new InternalErrorException("Method '$method' found in the $page class but require " . $reflectionMethod -> getNumberOfRequiredParameters() . " parameters (" . sizeof($args) . " given)");
+      if ($reflectionMethod->getNumberOfRequiredParameters() > sizeof($args)) {
+         throw new InternalErrorException("Method '$method' found in the $page class but require " . $reflectionMethod->getNumberOfRequiredParameters() . " parameters (" . sizeof($args) . " given)");
       }
-      
+
       return true;
    }
-   
+
    /**
     * Run a method page with arguments.
     * @param $page string
@@ -85,12 +85,12 @@ class PageUtil extends Util {
          $args = $_;
       } else if ($_) {
          $args = array_slice(func_get_args(), 2);
-      } 
-      
+      }
+
       $this->check($page, $method, $args);
       return $this->runWithoutCheck($page, $method, $args);
    }
-   
+
    /**
     * Same as PageUtil#run but  PageUtil#check is not called.
     * @param $page string
@@ -104,8 +104,8 @@ class PageUtil extends Util {
       $page = new $page();
       call_user_func_array(array($page, $method), $args);
       $page->display();
-      
+
       return $page;
    }
-   
-}   
+
+}

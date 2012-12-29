@@ -24,72 +24,72 @@
  */
 class PageResolver extends MetalizerObject {
 
-	/**
-	 * The pathInfo
-	 * @var string
-	 */
-	private $pathInfo;
+   /**
+    * The pathInfo
+    * @var string
+    */
+   private $pathInfo;
 
-	/**
-	 * The page to use
-	 * @var string
-	 */
-	private $page;
+   /**
+    * The page to use
+    * @var string
+    */
+   private $page;
 
-	/**
-	 * The method to use
-	 * @var string
-	 */
-	private $method;
-	
-	/**
-	 * Params for the method
-	 * @var array[string]
-	 */
-	private $params;
+   /**
+    * The method to use
+    * @var string
+    */
+   private $method;
 
-	/**
-	 * Construct a new PageResolver. All test are done.
-	 * @param $pathInfo string
-	 * 	The path info to use.
-	 */
-	public function __construct($pathInfo) {
-		$this->pathInfo = $pathInfo;
-		
-		if ($this->log()->isInfoEnabled()) {
-			$this->log()->info(getIp() . ":" . getRequestMethod() . ":$pathInfo");
-		}
-		
-		$this->page = null;
-		$this->method = config('page.default_method');
-		$this->params = array();
-		
-		if ($pathInfo && $pathInfo != '/') {
-			foreach (config('page.patterns') as $pattern => $name) {
-				if (preg_match("@^$pattern$@", $pathInfo, $this->params)) {
-					$this->page = $name;
-					
-					if ($this->log()->isTraceEnabled()) {
-						$this->log()->trace("Page pattern : $pattern");
-						$this->log()->trace("Page name : $name");
-					}
-					
+   /**
+    * Params for the method
+    * @var array[string]
+    */
+   private $params;
+
+   /**
+    * Construct a new PageResolver. All test are done.
+    * @param $pathInfo string
+    * 	The path info to use.
+    */
+   public function __construct($pathInfo) {
+      $this->pathInfo = $pathInfo;
+
+      if ($this->log()->isInfoEnabled()) {
+         $this->log()->info(getIp() . ":" . getRequestMethod() . ":$pathInfo");
+      }
+
+      $this->page = null;
+      $this->method = config('page.default_method');
+      $this->params = array();
+
+      if ($pathInfo && $pathInfo != '/') {
+         foreach (config('page.patterns') as $pattern => $name) {
+            if (preg_match("@^$pattern$@", $pathInfo, $this->params)) {
+               $this->page = $name;
+
+               if ($this->log()->isTraceEnabled()) {
+                  $this->log()->trace("Page pattern : $pattern");
+                  $this->log()->trace("Page name : $name");
+               }
+
                // The first matching pattern must be the used one. So don't remove that.
-					break; 
-				}
-			}
-		} else {
-			$this->page = config('page.home');
-		}
+               break;
+            }
+         }
+      } else {
+         $this->page = config('page.home');
+      }
 
-		if (!$this->page) {
-			throw new NotFoundException();
-		}
-      
+      if (!$this->page) {
+         throw new NotFoundException();
+      }
+
       // Handle the http method
       if (is_array($this->page)) {
          $method = getRequestMethod();
-         
+
          if (isset($this->page[$method])) {
             $this->page = $this->page[$method];
          } else {
@@ -97,33 +97,33 @@ class PageResolver extends MetalizerObject {
          }
       }
 
-		$separatorPos = strpos($this->page, ':');
-		if ($separatorPos !== false) {
-			$splittedPage = explode(":", $this->page);
-			$this->page = $splittedPage[0];
-			$this->method = $splittedPage[1];
-		}
-		
-		if (sizeof($this->params)) {
-			$this->params = array_slice($this->params, 1);
-		}
-		
-		if ($this->log()->isTraceEnabled()) {
-			$this->log()->trace("Page class : $this->page");
-			$this->log()->trace("Page method : $this->method");
-			$this->log()->trace("Page parameters : " . implode(' / ', $this->params));
-		}
+      $separatorPos = strpos($this->page, ':');
+      if ($separatorPos !== false) {
+         $splittedPage = explode(":", $this->page);
+         $this->page = $splittedPage[0];
+         $this->method = $splittedPage[1];
+      }
 
-		util('Page')->check($this->page, $this->method, $this->params);
-	}
+      if (sizeof($this->params)) {
+         $this->params = array_slice($this->params, 1);
+      }
 
-	/**
-	 * Execute the page of the resolver with the method and parameters.
+      if ($this->log()->isTraceEnabled()) {
+         $this->log()->trace("Page class : $this->page");
+         $this->log()->trace("Page method : $this->method");
+         $this->log()->trace("Page parameters : " . implode(' / ', $this->params));
+      }
+
+      util('Page')->check($this->page, $this->method, $this->params);
+   }
+
+   /**
+    * Execute the page of the resolver with the method and parameters.
     * @return Page
     *    The page object.
-	 */
-	public function run() {
-		return util('Page')->run($this->page, $this->method, $this->params);
-	}
-   
-}   
+    */
+   public function run() {
+      return util('Page')->run($this->page, $this->method, $this->params);
+   }
+
+}

@@ -31,7 +31,7 @@ class ManagerManager extends Manager {
     * @var ManagerManager
     */
    static private $instance;
-   
+
    /**
     * Construct a new ManagerManager. Because of php, we can't set this constructor in private.
     * _DO NOT USE IT_
@@ -40,16 +40,16 @@ class ManagerManager extends Manager {
    public function __construct() {
       parent::__construct('Manager');
    }
-   
+
    /**
     * Finalize the ManagerManager. Must be called at the end of the application. The ManagerManager put itself in sleep mode and in a cache file.
     */
    static public function terminate() {
       // Keep mode in mind
       $devMode = isDevMode();
-      
+
       ManagerManager::$instance->sleep();
-      
+
       // REMINDER : Everyone is sleeping now, we are on our own !
       if (!$devMode) {
          if (!is_dir(PATH_CACHE . 'metalizer')) {

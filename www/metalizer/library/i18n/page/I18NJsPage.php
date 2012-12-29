@@ -28,13 +28,13 @@ class I18NJsPage extends Page {
    public function index($language) {
       $this->setContentType('text/javascript');
       util('I18N')->load($language);
-      $this->generate($language, util('I18N')->getAll()); 
+      $this->generate($language, util('I18N')->getAll());
    }
-   
+
    public function generate($language, $langs) {
       $this->data('language', $language);
       $this->data('langs', $langs);
       $this->template('i18n.lang.js');
    }
-   
+
 }

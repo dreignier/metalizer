@@ -16,28 +16,28 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
- 
+
 /**
  * The less css file processor for the bundle library.
  * @author David Reignier
  *
  */
 class ImageSpriteFileProcessor extends DefaultFileProcessor {
-   
+
    /**
     * @see BundleFileProcessor#path
     */
    public function path($pattern) {
       return PATH_RESOURCE_GEN . $pattern;
    }
-   
+
    /**
     * @see BundleFileProcessor#url
     */
    public function url($path) {
       return resUrl($path, false);
    }
-   
+
    /**
     * @see BundleFileProcessor#read
     */
@@ -45,5 +45,5 @@ class ImageSpriteFileProcessor extends DefaultFileProcessor {
       $pattern = str_replace('*', '_star_', $pattern);
       util('ImageSprite')->sprite($pattern, $pattern);
    }
- 
-}   
+
+}

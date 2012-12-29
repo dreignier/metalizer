@@ -146,4 +146,5 @@ class MetalizerObject {
 
       return $this->logger;
    }
+
 }

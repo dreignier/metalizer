@@ -22,12 +22,12 @@
  *
  */
 class GetUtil extends Util {
-   
+
    public function get($key) {
       return $_GET[$key];
    }
-   
-}  
+
+}
 
 function get($key) {
    return util('Get')->get($key);

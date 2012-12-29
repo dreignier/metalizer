@@ -42,7 +42,7 @@ class ServerUtil extends Util {
    public function getIp() {
       return $this->get('REMOTE_ADDR');
    }
-   
+
    /**
     * @return string
     *    The current request method.
@@ -50,7 +50,7 @@ class ServerUtil extends Util {
    public function getRequestMethod() {
       return $this->get('REQUEST_METHOD');
    }
-   
+
    /**
     * Get the request body.
     * @return string
@@ -59,7 +59,7 @@ class ServerUtil extends Util {
    public function getRequestBody() {
       return file_get_contents('php://input');
    }
-   
+
    public function getRequestContentType() {
       return $this->get('CONTENT_TYPE');
    }
@@ -81,4 +81,3 @@ function getRequestBody() {
 function getRequestContentType() {
    return util('Server')->getRequestContentType();
 }
-

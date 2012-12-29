@@ -22,13 +22,13 @@
  * Call all filters in the application.
  */
 class FilterChainer extends MetalizerObject {
-   
+
    /**
     * The current path.
     * @var string
     */
    private $path;
-   
+
    /**
     * Construct a new FilterChainer
     * @param $path string
@@ -37,7 +37,7 @@ class FilterChainer extends MetalizerObject {
    public function __construct($path) {
       $this->path = $path;
    }
-   
+
    /**
     * Run every filters. Each filter can modify the current path.
     * @return string
@@ -55,4 +55,5 @@ class FilterChainer extends MetalizerObject {
 
       return $this->path;
    }
+
 }

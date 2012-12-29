@@ -30,14 +30,14 @@ define('WEEK', DAY * 7);
  */
 class TimeUtil extends Util {
 
-	/**
-	 * Return the current time in a Unix timestamp.
-	 * @return long
-	 * 	The current time.
-	 */
-	public function now() {
-		return time();
-	}
+   /**
+    * Return the current time in a Unix timestamp.
+    * @return long
+    * 	The current time.
+    */
+   public function now() {
+      return time();
+   }
 
 }
 
@@ -45,5 +45,5 @@ class TimeUtil extends Util {
  * @see TimeUtil#now
  */
 function now() {
-	return util('Time')->now();
+   return util('Time')->now();
 }

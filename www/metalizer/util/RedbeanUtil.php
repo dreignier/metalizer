@@ -29,7 +29,7 @@ class RedbeanUtil extends Util {
     * @var RedbeanUtil_DynamicToStatic
     */
    private $dynamicToStatic;
-   
+
    /**
     * The cache for the beans
     * RedbeanUtil_BeanCache
@@ -43,7 +43,7 @@ class RedbeanUtil extends Util {
       $this->dynamicToStatic = new RedbeanUtil_DynamicToStatic();
       $this->connect();
    }
-   
+
    /**
     * Connect the database and set the freeze parameter.
     * Also set the formatter.
@@ -126,20 +126,20 @@ class RedbeanUtil_ModelFormatter extends MetalizerObject implements RedBean_IMod
  * Handle the cache of beans.
  */
 class RedbeanUtil_BeanCache extends MetalizerObject {
-   
+
    /**
     * We use a hot local cache.
     * @var array
     */
    private $cache = array();
-   
+
    /**
     * On sleep we clear the local cache.
     */
    public function onSleep() {
       $this->cache = array();
    }
-   
+
    /**
     * Put or update a bean in the cache. The bean must be registered and valid.
     * @param $bean RedBean_OODBBean
@@ -151,21 +151,21 @@ class RedbeanUtil_BeanCache extends MetalizerObject {
       if (!$bean->id || !$bean->getMeta('type')) {
          return;
       }
-      
+
       $type = $bean->getMeta('type');
       $id = $bean->id;
-      
+
       if (!isset($this->cache[$type])) {
          $this->cache[$type] = array();
       }
-      
+
       $this->cache[$type][$id] = $bean;
-      
+
       if ($cold) {
          cache()->put("metalizer.model.bean.$type.$id", $bean);
       }
    }
-   
+
    /**
     * Try to get a bean
     * @param $type string
@@ -180,17 +180,17 @@ class RedbeanUtil_BeanCache extends MetalizerObject {
       if (isset($this->cache[$type][$id])) {
          return $this->cache[$type][$id];
       }
-      
+
       // Try the cold cache
       if ($bean = cache()->get("metalizer.model.bean.$type.$id")) {
          $this->put($bean, false);
          return $bean;
       }
-      
+
       // Not found
       return null;
    }
-   
+
    /**
     * Clean a part of the cache.
     * @param $type string
@@ -203,17 +203,17 @@ class RedbeanUtil_BeanCache extends MetalizerObject {
          if (isset($this->cache[$type]) && isset($this->cache[$type][$id])) {
             unset($this->cache[$type][$id]);
          }
-         
+
          cache()->clean("metalizer.model.bean.$type.$id");
       } else {
          if (isset($this->cache[$type])) {
             unset($this->cache[$type]);
          }
-         
+
          cache()->clean("metalizer.model.bean.$type");
       }
    }
-   
+
    /**
     * Remove the bean from the cache. The bean must be registered and valid.
     * @param $bean RedBean_OODBBean
@@ -223,10 +223,10 @@ class RedbeanUtil_BeanCache extends MetalizerObject {
       if (!$bean->id || !$bean->getMeta('type')) {
          return;
       }
-      
+
       $this->clean($bean->id, $bean->getMeta('type'));
    }
-   
+
 }
 
 /**
@@ -241,20 +241,20 @@ class RedBeanUtil_MetalizerFacade extends RedBean_OODB {
     * @var RedbeanUtil
     */
    private $util;
-   
+
    /**
     * The bean cache
     * @var RedbeanUtil_BeanCache
     */
    private $cache;
-   
+
    /**
     * @see RedBean_OODB#__construct
     */
    public function __construct($writer) {
       parent::__construct($writer);
    }
-   
+
    /**
     * Set the cache
     * @param $cache RedbeanUtil_BeanCache
@@ -263,7 +263,7 @@ class RedBeanUtil_MetalizerFacade extends RedBean_OODB {
    public function setCache($cache) {
       $this->cache = $cache;
    }
-   
+
    /**
     * Set the util
     * @param $util RedbeanUtil
@@ -287,49 +287,50 @@ class RedBeanUtil_MetalizerFacade extends RedBean_OODB {
       if ($bean = $this->cache->get($type, $id)) {
          return $bean;
       }
-      
+
       $bean = parent::load($type, $id);
-      
+
       $this->cache->put($bean);
-      
+
       return $bean;
    }
-   
+
    /**
     * @see RedBean_OODB#store
     */
    public function store($bean) {
       $result = parent::store($bean);
-      
+
       $this->cache->put($bean);
 
-      return $result;      
-   } 
+      return $result;
+   }
 
    /**
     * @see RedBean_OODB#trash
     */
    public function trash($bean) {
       $this->cache->remove($bean);
-      
+
       parent::trash($bean);
    }
-   
+
    /**
     * @see RedBean_OODB#batch
     */
    public function batch($type, $ids) {
-      return parent::batch($type, $ids);   
+      return parent::batch($type, $ids);
    }
-   
+
    /**
     * @see RedBean_OODB#wipe
     */
    public function wipe($type) {
       $this->cache->clean($type);
-      
-      return parent::wipe($type);   
+
+      return parent::wipe($type);
    }
+
 }
 
 /**

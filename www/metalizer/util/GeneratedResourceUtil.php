@@ -23,7 +23,7 @@
  *
  */
 class GeneratedResourceUtil extends Util {
-   
+
    /**
     * Clean the generated resources directory.
     */
@@ -31,5 +31,5 @@ class GeneratedResourceUtil extends Util {
       util('File')->rmdir(PATH_RESOURCE_GEN);
       @mkdir(PATH_RESOURCE_GEN);
    }
-   
+
 }

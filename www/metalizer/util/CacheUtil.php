@@ -47,7 +47,7 @@ class CacheUtil extends Util {
    private function getFilePath($name) {
       return PATH_CACHE . str_replace('.', '/', $name);
    }
-   
+
    /**
     * @return bool
     *    true is cache is enabled, false otherwise.
@@ -86,7 +86,7 @@ class CacheUtil extends Util {
       if (!$this->isEnabled()) {
          return false;
       }
-      
+
       $file = $this->getFilePath($name);
 
       return file_exists($file);
@@ -125,9 +125,9 @@ class CacheUtil extends Util {
       if (!$this->isEnabled()) {
          return;
       }
-      
+
       $file = $this->getFilePath($name);
-      
+
       if ($this->exists($name)) {
          unlink($file);
          return;

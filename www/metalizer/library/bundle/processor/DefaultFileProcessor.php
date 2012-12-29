@@ -16,51 +16,51 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
- 
+
 /**
  * The default file processor.
  * @author David Reignier
  *
  */
 class DefaultFileProcessor extends BundleFileProcessor {
-   
+
    /**
     * @see BundleFileProcessor#path
     */
    public function path($pattern) {
       return PATH_RESOURCE . $pattern;
    }
-   
+
    /**
     * @see BundleFileProcessor#url
     */
    public function url($path) {
       return resUrl($path, false);
    }
-   
+
    /**
     * @see BundleFileProcessor#read
     */
    public function read($path) {
       $extensionPos = strrpos($path, '.');
       $minified = substr($path, 0, $extensionPos) . '.min' . substr($path, $extensionPos);
-      
+
       return file_exists($minified) ? file_get_contents($minified) : file_get_contents($path);
    }
-   
+
    /**
     * @see BundleFileProcessor#initialize
     */
    public function initialize($pattern) {
-      
+
    }
-   
+
    public function isValid($path) {
       if (isDevMode()) {
          return strpos($path, '.min.') === false;
       }
-      
+
       return true;
    }
-   
-}   
+
+}

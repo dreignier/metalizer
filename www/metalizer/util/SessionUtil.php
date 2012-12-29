@@ -23,7 +23,7 @@
  *
  */
 class SessionUtil extends Util {
-   
+
    /**
     * @param $name string
     *    A string.
@@ -33,7 +33,7 @@ class SessionUtil extends Util {
    private function prepareName($name) {
       return "metalizer.$name";
    }
-   
+
    /**
     * Set a session value.
     * @param $name string
@@ -43,10 +43,10 @@ class SessionUtil extends Util {
     */
    public function set($name, $value) {
       $name = $this->prepareName($name);
-      
+
       $_SESSION[$name] = $value;
    }
-   
+
    /**
     * Get a session value
     * @param $name string
@@ -56,14 +56,14 @@ class SessionUtil extends Util {
     */
    public function get($name) {
       $name = $this->prepareName($name);
-      
+
       if (!isset($_SESSION[$name])) {
          return null;
       }
-      
+
       return $_SESSION[$name];
    }
-   
+
    /**
     * Clean a session value.
     * @param $name string
@@ -71,12 +71,12 @@ class SessionUtil extends Util {
     */
    public function clean($name) {
       $name = $this->prepareName($name);
-      
+
       if (isset($_SESSION[$name])) {
          unset($_SESSION[$name]);
       }
    }
-   
+
    /**
     * Clean all session variables.
     */
@@ -87,12 +87,12 @@ class SessionUtil extends Util {
          }
       }
    }
-   
-}  
+
+}
 
 /**
  * @return SessionUtil
  */
 function session() {
    return util('session');
-} 
+}

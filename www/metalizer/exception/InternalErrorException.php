@@ -24,8 +24,8 @@
  */
 class InternalErrorException extends HttpException {
 
-	public function __construct($message = null) {
-		parent::__construct(500, $message ? $message : 'Internal Error');
-	}
+   public function __construct($message = null) {
+      parent::__construct(500, $message ? $message : 'Internal Error');
+   }
 
 };

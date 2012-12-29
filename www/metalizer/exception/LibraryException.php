@@ -22,4 +22,5 @@
  * @author David Reignier
  *
  */
-class LibraryException extends MetalizerException {}
+class LibraryException extends MetalizerException {
+}

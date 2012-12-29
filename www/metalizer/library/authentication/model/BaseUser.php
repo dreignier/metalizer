@@ -23,7 +23,7 @@
  *
  */
 class BaseUser extends Model {
-   
+
    /**
     * Set the email.
     * @param $email string
@@ -32,7 +32,7 @@ class BaseUser extends Model {
    public function setEmail($email) {
       return $this->set('email', $email);
    }
-   
+
    /**
     * Set the password. The password will be encrypted using the crypt php function. The salt is auto generated.
     * @param $password string
@@ -41,7 +41,7 @@ class BaseUser extends Model {
    public function setPassword($password) {
       return $this->set('password', crypt($password));
    }
-   
+
    /**
     * Set the login.
     * @param $login string
@@ -50,7 +50,7 @@ class BaseUser extends Model {
    public function setLogin($login) {
       return $this->set('login', $login);
    }
-   
+
    /**
     * @return string
     *    The email of the user.
@@ -58,7 +58,7 @@ class BaseUser extends Model {
    public function getEmail() {
       return $this->get('email');
    }
- 
+
    /**
     * @return login
     *    The login of the user
@@ -66,7 +66,7 @@ class BaseUser extends Model {
    public function getLogin() {
       return $this->get('login');
    }
-   
+
    /**
     * @param $password string
     *    A clear password.
@@ -77,4 +77,5 @@ class BaseUser extends Model {
       $crypted = $this->get('password');
       return crypt($password, $crypted) == $crypted;
    }
-} 
+
+}

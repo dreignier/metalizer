@@ -20,7 +20,7 @@
 /**
  * Metalizer initialization file.
  */
- 
+
 // *** Classloader initialization ***
 
 require_once PATH_METALIZER_CORE . 'ClassLoader.php';
@@ -60,5 +60,5 @@ foreach (config('header.default') as $header => $value) {
 // *** Application initialization ***
 $initFile = PATH_APPLICATION . 'initialize.php';
 if (file_exists($initFile)) {
-	require_once $initFile;
+   require_once $initFile;
 }

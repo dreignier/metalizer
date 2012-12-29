@@ -41,12 +41,12 @@ class ConfigurationUtil extends Util {
       foreach (util('File')->glob(PATH_METALIZER_CONFIGURATION . '*.php') as $file) {
          require $file;
       }
-      
+
       // Metalizer default libraries configuration
       foreach (util('File')->glob(PATH_METALIZER_LIBRARY . '*/configuration/*.php') as $file) {
          require $file;
       }
-      
+
       // Application default libraries configuration
       foreach (util('File')->glob(PATH_APPLICATION_LIBRARY . '*/configuration/*.php') as $file) {
          require $file;

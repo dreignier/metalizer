@@ -16,20 +16,20 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
- 
+
 /**
  * A FileProcessor can be used by a BundleGenerator to handle bundle files.
  * @author David Reignier
  *
  */
 abstract class BundleFileProcessor extends MetalizerObject {
-   
+
    /**
     * The name of the bundle
     * @var string
     */
    private $name;
-   
+
    /**
     * Construct a new BundleFileProcessor
     * @param $name string
@@ -38,7 +38,7 @@ abstract class BundleFileProcessor extends MetalizerObject {
    public function __construct($name) {
       $this->name = $name;
    }
-   
+
    /**
     * @return string
     *    The name of the bundle
@@ -46,7 +46,7 @@ abstract class BundleFileProcessor extends MetalizerObject {
    public function getName() {
       return $this->name;
    }
-   
+
    /**
     * @param $path string
     *    A path to a file
@@ -54,7 +54,7 @@ abstract class BundleFileProcessor extends MetalizerObject {
     *    <code>true</code> if the given file is valid for the current bundle, <code>false</code> otherwise.
     */
    abstract public function isValid($path);
-   
+
    /**
     * @param $pattern string
     *    A glob pattern
@@ -62,7 +62,7 @@ abstract class BundleFileProcessor extends MetalizerObject {
     *    The good path for the given pattern.
     */
    abstract public function path($pattern);
-   
+
    /**
     * @param $path string
     *    A path to a file
@@ -70,21 +70,21 @@ abstract class BundleFileProcessor extends MetalizerObject {
     *    The good url for the given file.
     */
    abstract public function url($path);
-   
+
    /**
-    * Called only in production. Read the content of a file. 
+    * Called only in production. Read the content of a file.
     * @param $path string
     *    A path to a file
     * @return string
     *    The content of the given file.
     */
    abstract public function read($path);
-   
+
    /**
     * Initialize a pattern before the bundle creation.
     * @param $pattern string
     *    A glob pattern
     */
    abstract public function initialize($pattern);
-   
-}   
+
+}

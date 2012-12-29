@@ -45,7 +45,7 @@ class I18NUtil extends Util {
          util('File')->checkDirectory(PATH_RESOURCE_JS_LANG);
          // Generate all lang js files once for all.
          $page = new I18NJsPage();
-         foreach(config('lang.languages') as $language) {
+         foreach (config('lang.languages') as $language) {
             $this->load($language);
             ob_start();
             $page->generate($language, $this->getAll());
@@ -136,7 +136,7 @@ class I18NUtil extends Util {
          return '$' . $key . '$';
       }
    }
-   
+
    /**
     * Test if a key exists.
     * @param $key string

@@ -29,22 +29,22 @@ abstract class Model extends MetalizerObject {
     * @var RedBean_OODBBean
     */
    protected $bean;
-  
+
    /**
     * A local cache of fetched properties.
     * @var array[Model]
     */
    protected $fetched = array();
-   
+
    public function __construct() {
       list(, $caller) = debug_backtrace(false);
-      
+
       if (!isset($caller['class']) || !($caller['class'] == 'ModelFactory' || is_subclass_of($caller['class'], 'ModelFactory'))) {
          $class = $this->getClass();
          throw new ModelException("You can't construct a new model, you must use model('$class')->dispense();");
       }
    }
-   
+
    /**
     * Called after a "load"
     */
@@ -72,7 +72,6 @@ abstract class Model extends MetalizerObject {
 
    }
 
-
    /**
     * Called on a "trash"
     */
@@ -86,7 +85,7 @@ abstract class Model extends MetalizerObject {
    public function afterDelete() {
 
    }
-   
+
    /**
     * @return bool
     *    true if the model is already stored in the database, false otherwise.
@@ -145,7 +144,7 @@ abstract class Model extends MetalizerObject {
    public function getFactory() {
       return model($this->getClass());
    }
-   
+
    /**
     * A generic setter for models classes.
     * If the current model got a method called 'validate$name', the method is called to validate the given value.
@@ -162,17 +161,17 @@ abstract class Model extends MetalizerObject {
             throw new ModelValidationException($name, $value);
          }
       }
-      
+
       if (is_object($value) && is_a($value, 'Model')) {
          $this->fetched[$name] = $value;
          $value = $value->getBean();
       }
-      
+
       $this->bean->$name = $value;
-      
+
       return $this;
    }
-   
+
    /**
     * A generic getter for models classes.
     * @param $name string
@@ -183,7 +182,7 @@ abstract class Model extends MetalizerObject {
    protected function get($name) {
       return $this->bean->$name;
    }
-   
+
    /**
     * Fetch a member in the bean as a class.
     * @param $class string
@@ -193,12 +192,12 @@ abstract class Model extends MetalizerObject {
       if (!isset($this->fetched[$name])) {
          // Get the table class
          $table = model($class)->getTable();
-         $this->fetched[$name] = $this->wrap($this->bean->fetchAs($table)->$name); 
+         $this->fetched[$name] = $this->wrap($this->bean->fetchAs($table)->$name);
       }
-      
+
       return $this->fetched[$name];
    }
-   
+
    /**
     * Wrap a redbean in a Model, using the current Model factory.
     * @param $bean RedBean_OODBBean
@@ -209,5 +208,5 @@ abstract class Model extends MetalizerObject {
    public function wrap($bean) {
       return $this->getFactory()->wrap($bean);
    }
-   
+
 }

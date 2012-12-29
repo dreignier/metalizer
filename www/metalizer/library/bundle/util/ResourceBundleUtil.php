@@ -36,7 +36,7 @@ class ResourceBundleUtil extends Util {
    private function bundle($bundle, $files, $generator) {
       $generator->generate($bundle, $files);
    }
-      
+
    /**
     * Generate a css bundle.
     * @param $bundle string
@@ -46,14 +46,14 @@ class ResourceBundleUtil extends Util {
     */
    public function css($bundle) {
       $files = config("bundle.$bundle.css");
-      
+
       if (!$files) {
          throw new BundleException("Can't find '$bundle' css bundle configuration");
       }
-      
+
       $this->bundle($bundle, $files, new CssBundleGenerator());
    }
-   
+
    /**
     * Generate a js bundle.
     * @param $bundle string
@@ -63,14 +63,14 @@ class ResourceBundleUtil extends Util {
     */
    public function js($bundle) {
       $files = config("bundle.$bundle.js");
-      
+
       if (!$files) {
          throw new BundleException("Can't find '$bundle' js bundle configuration");
       }
-      
+
       $this->bundle($bundle, $files, new JsBundleGenerator());
    }
-   
+
 }
 
 /**
@@ -84,5 +84,5 @@ function cssBundle($bundle) {
  * @see ResourceBundleUtil#js
  */
 function jsBundle($bundle) {
-   util('ResourceBundle')->js($bundle); 
+   util('ResourceBundle')->js($bundle);
 }

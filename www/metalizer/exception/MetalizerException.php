@@ -22,4 +22,5 @@
  * @author David Reignier
  *
  */
-class MetalizerException extends Exception {}
+class MetalizerException extends Exception {
+}
