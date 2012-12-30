@@ -482,9 +482,11 @@ class ModelFactory extends MetalizerObject {
    public function wrapAll($beans) {
       $result = array();
 
-      foreach ($beans as $bean => $key) {
-         if ($bean->id) {
-            $result[$key] = $this->wrap($beans);
+      foreach ($beans as $id => $bean) {
+         if ($bean->id && $bean->id == $id) {
+            $result[$id] = $this->wrap($bean);
+         } else {
+            $this->log()->warning("wrapAll : A given bean is not valid");
          }
       }
 
@@ -510,6 +512,59 @@ class ModelFactory extends MetalizerObject {
          $this->subClasses[] = $class;
          $this->subClassesChanged = true;
       }
+   }
+   
+   public function associate($name, $first, $second) {
+      if (!$first->isStored()) {
+         $first->store();
+      }
+      
+      if (!$second->isStored()) {
+         $second->store();
+      }
+      
+      $intermediate = $first->getIntermediate($name);
+      
+      $class = $second->getClass();
+      if (!$intermediate->associationClass) {
+         $intermediate->associationClass = $class;
+      } else if ($intermediate->associationClass != $class) {
+         throw new ModelException("The <b>$name</b> association is already bind to the <b>$intermediate->associationClass</b> class. You can't add a <b>$class</b> in this association");
+      }
+      
+      R()->associate($intermediate, $second->getBean());
+   }
+   
+   public function related($name, $model, $sql = '', $params = array()) {
+      $intermediate = $model->getIntermediate($name);
+      
+      if (!$intermediate->id) {
+         return array();
+      }
+      
+      return $this->wrapAll(R()->related($intermediate, model($intermediate->associationClass)->getTable(), $sql, $params));
+   }
+   
+   public function unassociate($name, $first, $second) {
+      $intermediate = $first->getIntermediate($name);
+      
+      R()->unassociate($intermediate, $second->getBean());
+   }
+   
+   public function clearRelations($name, $model, $sql = '', $params = array()) {
+      foreach ($this->related($name, $model, $sql, $params) as $id => $related) {
+         $this->unassociate($name, $model, $related);
+      }
+   }
+   
+   public function areRelated($name, $first, $second) {
+      $intermediate = $first->getIntermediate($name);
+      
+      if (!$intermediate->id || !$intermediate->associationClass) {
+         return false;
+      }
+      
+      return R()->areRelated($intermediate, $second->getBean());
    }
 
 }

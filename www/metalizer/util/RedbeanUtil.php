@@ -116,7 +116,11 @@ class RedbeanUtil_ModelFormatter extends MetalizerObject implements RedBean_IMod
     * In Metalizer, we always use the Bean class for the Redbean bean model.
     */
    public function formatModel($model) {
-      return 'Bean';
+      if (class_exists($model) && is_subclass_of($model, 'Model')) {
+         return 'Bean';
+      }
+      
+      return null;
    }
 
 }
@@ -226,7 +230,7 @@ class RedbeanUtil_BeanCache extends MetalizerObject {
          return;
       }
 
-      $this->clean($bean->id, $bean->getMeta('type'));
+      $this->clean($bean->getMeta('type'), $bean->id);
    }
 
 }
@@ -302,7 +306,7 @@ class RedBeanUtil_MetalizerFacade extends RedBean_OODB {
     */
    public function store($bean) {
       $result = parent::store($bean);
-
+      
       $this->cache->put($bean);
 
       return $result;

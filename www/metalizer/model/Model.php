@@ -41,7 +41,7 @@ abstract class Model extends MetalizerObject {
 
       if (!isset($caller['class']) || !($caller['class'] == 'ModelFactory' || is_subclass_of($caller['class'], 'ModelFactory'))) {
          $class = $this->getClass();
-         throw new ModelException("You can't construct a new model, you must use model('$class')->dispense();");
+         throw new ModelException("You can't construct a new model, you must use <code>model('$class')->dispense();</code>");
       }
    }
 
@@ -125,16 +125,20 @@ abstract class Model extends MetalizerObject {
 
    /**
     * Store or update the current model in the database.
+    * @return Model
+    *    $this
     */
    public function store() {
-      $this->getFactory()->store($this);
+      return $this->getFactory()->store($this);
    }
 
    /**
     * Delete the current model in the database and caches.
+    * @return Model
+    *    $this
     */
    public function trash() {
-      $this->getFactory()->trash($this);
+      return $this->getFactory()->trash($this);
    }
 
    /**
@@ -152,6 +156,8 @@ abstract class Model extends MetalizerObject {
     *    The name of the field to set
     * @param $value mixed
     *    The new value of the field
+    * @return Model
+    *    $this
     */
    protected function set($name, $value) {
       $reflection = new ReflectionClass($this->getClass());
@@ -187,6 +193,8 @@ abstract class Model extends MetalizerObject {
     * Fetch a member in the bean as a class.
     * @param $class string
     *    A model class.
+    * @return mixed
+    *    The given property fetched as the given class.
     */
    protected function fetchAs($class, $name) {
       if (!isset($this->fetched[$name])) {
@@ -208,5 +216,40 @@ abstract class Model extends MetalizerObject {
    public function wrap($bean) {
       return $this->getFactory()->wrap($bean);
    }
-
+   
+   public function getIntermediate($name) {
+      $name = 'metalizerIntermediate' . ucfirst($name);
+      
+      $intermediate = $this->bean->fetchAs('metalizerintermediate')->$name;
+      
+      if (!$intermediate || !$intermediate->id) {
+         $intermediate = R()->dispense('metalizerintermediate');
+         $this->bean->$name = $intermediate;
+      } 
+      
+      return $intermediate;
+   }
+    
+   protected function associate($name, $model) {
+      $this->getFactory()->associate($name, $this, $model);
+      return $this;
+   }
+   
+   protected function related($name, $sql = '', $params = array()) {
+      return $this->getFactory()->related($name, $this, $sql, $params);
+   }
+   
+   protected function unassociate($name, $model, $sql = '', $params = array()) {
+      $this->getFactory()->unassociate($name, $this, $model, $sql, $params);
+      return $this;
+   }
+   
+   protected function clearRelations($name) {
+      $this->getFactory()->clearRelations($name, $this);
+      return $this;
+   }
+   
+   protected function isRelated($name, $model) {
+      return $this->getFactory()->areRelated($name, $this, $model);
+   }
 }
