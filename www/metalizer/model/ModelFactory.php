@@ -495,7 +495,7 @@ class ModelFactory extends MetalizerObject {
 
    /**
     * Register a ModelFactory as a subclass handler for this ModelFactory.
-    * @param ModelFactory $handler
+    * @param $handler ModelFactory 
     * 	A ModelFactory
     */
    protected function registerSubFactory($factory) {
@@ -504,7 +504,7 @@ class ModelFactory extends MetalizerObject {
 
    /**
     * Register a subclass for this ModelFactory.
-    * @param string $class
+    * @param $class string 
     *    A subclass of Model.
     */
    protected function registerSubClass($class) {
@@ -514,6 +514,15 @@ class ModelFactory extends MetalizerObject {
       }
    }
    
+   /**
+    * Create a single way association between 2 models.
+    * @param $name string
+    *    The name of the association
+    * @param $first Model
+    *    The first model
+    * @param $second
+    *    The second model
+    */
    public function associate($name, $first, $second) {
       if (!$first->isStored()) {
          $first->store();
@@ -525,16 +534,29 @@ class ModelFactory extends MetalizerObject {
       
       $intermediate = $first->getIntermediate($name);
       
-      $class = $second->getClass();
-      if (!$intermediate->associationClass) {
-         $intermediate->associationClass = $class;
-      } else if ($intermediate->associationClass != $class) {
-         throw new ModelException("The <b>$name</b> association is already bind to the <b>$intermediate->associationClass</b> class. You can't add a <b>$class</b> in this association");
+      $type = $second->getFactory()->getTable();
+      if (!$intermediate->associationType) {
+         $intermediate->associationType = $type;
+      } else if ($intermediate->associationType != $type) {
+         throw new ModelException("The <b>$name</b> association is already bind to the <b>$intermediate->associationType</b> class. You can't add a <b>" . $second->getClass() . '</b> in this association');
       }
       
       R()->associate($intermediate, $second->getBean());
    }
    
+   /**
+    * Retrieve all related models from a given model.
+    * @param $name string
+    *    The name of the association
+    * @param $model Model
+    *    A model.
+    * @param $sql string
+    *    The WHERE part of the query. Optional, empty by default.
+    * @param $params array
+    *    The parameters for the $sql. Optional, empty by default.
+    * @return array[Model]
+    *    All related models for the current model in the given association
+    */
    public function related($name, $model, $sql = '', $params = array()) {
       $intermediate = $model->getIntermediate($name);
       
@@ -542,25 +564,64 @@ class ModelFactory extends MetalizerObject {
          return array();
       }
       
-      return $this->wrapAll(R()->related($intermediate, model($intermediate->associationClass)->getTable(), $sql, $params));
+      return $this->wrapAll(R()->related($intermediate, $intermediate->associationType, $sql, $params));
    }
    
-   public function unassociate($name, $first, $second) {
+   /**
+    * Unassociate two model.
+    * @param $name string
+    *    he name of the association.
+    * @param $first Model
+    *    The first model
+    * @param $second
+    *    The second model
+    * @param $delete boolean
+    *    Option. If true, $second is trashed. <code>false</code> by default.
+    */
+   public function unassociate($name, $first, $second, $delete = false) {
       $intermediate = $first->getIntermediate($name);
       
       R()->unassociate($intermediate, $second->getBean());
-   }
-   
-   public function clearRelations($name, $model, $sql = '', $params = array()) {
-      foreach ($this->related($name, $model, $sql, $params) as $id => $related) {
-         $this->unassociate($name, $model, $related);
+      
+      if ($delete) {
+         $second->trash();
       }
    }
    
+   /**
+    * Unassociate many models from a model
+    * @param $name string
+    *    he name of the association.
+    * @param $model Model
+    *    A model.
+    * @param $delete boolean
+    *    Option. If true, the unassociated models will be trashed. <code>false</code> by default.
+    * @param $sql string
+    *    The WHERE part of the query. Optional, empty by default. An empty $sql mean you will remove all models from this association.
+    * @param $params array
+    *    The parameters for the $sql. Optional, empty by default.
+    */
+   public function clearRelations($name, $model, $delete = false, $sql = '', $params = array()) {
+      foreach ($this->related($name, $model, $sql, $params) as $id => $related) {
+         $this->unassociate($name, $model, $related, $delete);
+      }
+   }
+   
+   /**
+    * Test if a two model are related
+    * @param $name string
+    *    The name of the association.
+    * @param $first Model
+    *    The first model
+    * @param $second
+    *    The second model
+    * @return boolean
+    *    <code>true</code> if the $second is related to $first in the given association, <code>false</code> otherwise.
+    */
    public function areRelated($name, $first, $second) {
       $intermediate = $first->getIntermediate($name);
       
-      if (!$intermediate->id || !$intermediate->associationClass) {
+      if (!$intermediate->id || !$intermediate->associationType) {
          return false;
       }
       

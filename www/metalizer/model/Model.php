@@ -217,6 +217,13 @@ abstract class Model extends MetalizerObject {
       return $this->getFactory()->wrap($bean);
    }
    
+   /**
+    * Get the intermediate bean for an association.
+    * @param $name string
+    *    The name of the association.
+    * @return RedBean_OODBBean
+    *    The intermediate bean for the given association.
+    */
    public function getIntermediate($name) {
       $name = 'metalizerIntermediate' . ucfirst($name);
       
@@ -230,25 +237,78 @@ abstract class Model extends MetalizerObject {
       return $intermediate;
    }
     
+   /**
+    * Associate the current model with an other model.
+    * @param $name string
+    *    The name of the association.
+    * @param $model Model
+    *    The other model.
+    * @return Model
+    *    $this
+    */
    protected function associate($name, $model) {
       $this->getFactory()->associate($name, $this, $model);
       return $this;
    }
    
+   /**
+    * Retrieve all associated models with the current model.
+    * @param $name string
+    *    The name of the association.
+    * @param $sql string
+    *    The WHERE part of the query. Optional, empty by default.
+    * @param $params array
+    *    The parameters for the $sql. Optional, empty by default.
+    * @return array[Model]
+    *    All related models for the current model in the given association
+    */
    protected function related($name, $sql = '', $params = array()) {
       return $this->getFactory()->related($name, $this, $sql, $params);
    }
    
-   protected function unassociate($name, $model, $sql = '', $params = array()) {
-      $this->getFactory()->unassociate($name, $this, $model, $sql, $params);
+   /**
+    * Unassociate a model from this bean.
+    * @param $name string
+    *    he name of the association.
+    * @param $model Model
+    *    The model to unassociate
+    * @param $delete boolean
+    *    Option. If true, $model is trashed. <code>false</code> by default.
+    * @return Model
+    *    $this
+    */
+   protected function unassociate($name, $model, $delete = false) {
+      $this->getFactory()->unassociate($name, $this, $model, $delete);
       return $this;
    }
    
-   protected function clearRelations($name) {
-      $this->getFactory()->clearRelations($name, $this);
+   /**
+    * Unassociate many models from the current model.
+    * @param $name string
+    *    he name of the association.
+    * @param $delete boolean
+    *    Option. If true, the unassociated models will be trashed. <code>false</code> by default.
+    * @param $sql string
+    *    The WHERE part of the query. Optional, empty by default. An empty $sql mean you will remove all models from this association.
+    * @param $params array
+    *    The parameters for the $sql. Optional, empty by default.
+    * @return Model
+    *    $this
+    */
+   protected function clearRelations($name, $delete = false, $sql = '', $params = array()) {
+      $this->getFactory()->clearRelations($name, $this, $delete, $sql, $params);
       return $this;
    }
    
+   /**
+    * Test if a model is related to this one.
+    * @param $name string
+    *    The name of the association.
+    * @param $model Model
+    *    The other model.
+    * @return boolean
+    *    <code>true</code> if the given model is related to the current model in the given association, <code>false</code> otherwise.
+    */
    protected function isRelated($name, $model) {
       return $this->getFactory()->areRelated($name, $this, $model);
    }

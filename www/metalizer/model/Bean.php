@@ -29,6 +29,13 @@ class Bean extends RedBean_SimpleModel {
     * @var Model
     */
    private $model;
+   
+   /**
+    * Clean the current bean.
+    */
+   public function __sleep() {
+      $this->model = null;
+   }
 
    /**
     * @param $model Model
