@@ -29,8 +29,8 @@ class GeneratedResourceUtil extends Util {
     */
    public function __construct() {
       if (isDevMode()) {
-         util('File')->rmdir(PATH_RESOURCE_GEN);
-         @mkdir(PATH_RESOURCE_GEN);
+         _file()->rmdir(PATH_RESOURCE_GEN);
+         mkdir(PATH_RESOURCE_GEN);
       }
    }
 

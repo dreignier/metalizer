@@ -94,7 +94,7 @@ class Page extends Controller {
       if ($contentType != 'text/html') {
          $this->noOutputClean();
       }
-      util('Header')->set('Content-Type', $this->contentType);
+      _header()->set('Content-Type', $this->contentType);
    }
 
    /**
@@ -103,7 +103,7 @@ class Page extends Controller {
     *    A http response code.
     */
    protected function setCode($code) {
-      util('header')->setHttpResponseCode($code);
+      _header()->setHttpResponseCode($code);
    }
 
    /**

@@ -39,7 +39,7 @@ class LibraryUtil extends Util {
     * @throws LibraryException
     *    If the given library doesn't exist.
     */
-   public function getPath($name) {
+   public function path($name) {
       if (isset($this->cache[$name])) {
          return $this->cache[$name];
       }
@@ -72,10 +72,17 @@ class LibraryUtil extends Util {
 }
 
 /**
+ * @return LibraryUtil
+ */
+function library() {
+   return util('Library');
+}
+
+/**
  * @see LibraryUtil#getPath
  */
 function getLibraryPath($name) {
-   return util('Library')->getPath($name);
+   return util('Library')->path($name);
 }
 
 /**

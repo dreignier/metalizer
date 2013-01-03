@@ -39,7 +39,7 @@ class TemplateUtil extends Util {
       );
 
       foreach ($paths as $path) {
-         foreach (util('File')->glob($path) as $file) {
+         foreach (_file()->glob($path) as $file) {
             $this->templates[substr($file, strpos($file, '/template/') + 10, -4)] = $file;
          }
       }
@@ -58,6 +58,16 @@ class TemplateUtil extends Util {
 
 }
 
+/**
+ * @return TemplateUtil
+ */
+function template() {
+   return util('Template');
+}
+
+/**
+ * @see TemplateUtil#getPath
+ */
 function getTemplatePath($template) {
    return util('Template')->getPath($template);
 }

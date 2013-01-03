@@ -130,7 +130,7 @@ abstract class BundleGenerator extends MetalizerObject {
          $processor = $this->findProcessor($pattern);
          $pattern = str_replace($processor->getName() . ':', '', $pattern);
          $processor->initialize($pattern);
-         foreach (util('File')->glob($processor->path($pattern)) as $path) {
+         foreach (_file()->glob($processor->path($pattern)) as $path) {
             if (!$processor->isValid($path)) {
                continue;
             }
@@ -154,13 +154,13 @@ abstract class BundleGenerator extends MetalizerObject {
       $bundlePath = $this->path($bundle);
 
       if (!file_exists($bundlePath)) {
-         util('File')->checkDirectory($bundlePath);
+         _file()->checkDirectory($bundlePath);
          $handle = fopen($bundlePath, 'w');
          foreach ($patterns as $pattern) {
             $processor = $this->findProcessor($pattern);
             $pattern = str_replace($processor->getName() . ':', '', $pattern);
             $processor->initialize($pattern);
-            foreach (util('File')->glob($processor->path($pattern)) as $path) {
+            foreach (_file()->glob($processor->path($pattern)) as $path) {
                if (!$processor->isValid($path)) {
                   continue;
                }

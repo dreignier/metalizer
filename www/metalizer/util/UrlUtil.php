@@ -131,6 +131,13 @@ class UrlUtil extends Util {
 }
 
 /**
+ * @return UrlUtil
+ */
+function url() {
+   return util('Url');
+}
+
+/**
  * @see UrlUtil#site
  */
 function siteUrl($url) {

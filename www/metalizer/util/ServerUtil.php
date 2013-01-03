@@ -66,6 +66,14 @@ class ServerUtil extends Util {
 
 }
 
+/**
+ * @return ServerUtil
+ *    The ServerUtil
+ */
+function server() {
+   return util('Server');
+}
+
 function getIp() {
    return util('Server')->getIp();
 }

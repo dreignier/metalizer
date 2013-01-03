@@ -56,6 +56,16 @@ class StringUtil extends Util {
 
 }
 
+/**
+ * @return StringUtil
+ */
+function string() {
+   return util('String');
+}
+
+/**
+ * @see StringUtil#escapeHtml
+ */
 function escapeHtml($string) {
    return util('String')->escapeHtml($string);
 }

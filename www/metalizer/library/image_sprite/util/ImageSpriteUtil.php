@@ -81,7 +81,7 @@ class ImageSpriteUtil extends Util {
 	 * 	The name of the sprite. With this name, the sprite configuration can be found.
 	 */
 	public function sprite($sprite) {
-		util('File')->checkDirectory(PATH_SPRITE);
+		_file()->checkDirectory(PATH_SPRITE);
 		$config = config('sprite');
       $pattern = PATH_RESOURCE . $config[$sprite];
 		if (isDevMode()) {
@@ -102,7 +102,7 @@ class ImageSpriteUtil extends Util {
 		$css = '';
 		
 		// Find files and generate CSS
-		foreach (util('File')->glob($pattern) as $file) {
+		foreach (_file()->glob($pattern) as $file) {
 			if (array_key_exists(substr($file, -3), $this->extensions)) {
 				list($x, $y) = getimagesize($file);
 				$css .= '.' . $this->getCssClass($file) . " {\n";
@@ -114,7 +114,7 @@ class ImageSpriteUtil extends Util {
 		}
 		
 		$sprite = PATH_RESOURCE_GEN . $sprite;
-      util('File')->checkDirectory($sprite);
+      _file()->checkDirectory($sprite);
       file_put_contents($sprite, $css);
 	}
 	
@@ -129,7 +129,7 @@ class ImageSpriteUtil extends Util {
       $css = '';
 
 		// Find files
-      foreach (util('File')->glob($pattern) as $file) {
+      foreach (_file()->glob($pattern) as $file) {
 			if (array_key_exists(substr($file, -3), $this->extensions)) {
 	      	list($x, $y) = getimagesize($file);
 				
@@ -176,7 +176,7 @@ class ImageSpriteUtil extends Util {
 		}
       
       $sprite = PATH_RESOURCE_GEN . $sprite;
-      util('File')->checkDirectory($sprite);
+      _file()->checkDirectory($sprite);
       file_put_contents($sprite, $css);
    }
    

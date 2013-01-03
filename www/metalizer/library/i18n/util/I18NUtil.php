@@ -42,7 +42,7 @@ class I18NUtil extends Util {
 
    public function __construct() {
       if (!isDevMode()) {
-         util('File')->checkDirectory(PATH_RESOURCE_JS_LANG);
+         _file()->checkDirectory(PATH_RESOURCE_JS_LANG);
          // Generate all lang js files once for all.
          $page = new I18NJsPage();
          foreach (config('lang.languages') as $language) {
@@ -91,22 +91,22 @@ class I18NUtil extends Util {
          $lang = array();
 
          // Metalizer default lang files
-         foreach (util('File')->glob(PATH_METALIZER_LANG . "$language/*.php") as $file) {
+         foreach (_file()->glob(PATH_METALIZER_LANG . "$language/*.php") as $file) {
             require $file;
          }
 
          // Metalizer libraries lang files
-         foreach (util('File')->glob(PATH_METALIZER_LIBRARY . "*/lang/$language/*.php") as $file) {
+         foreach (_file()->glob(PATH_METALIZER_LIBRARY . "*/lang/$language/*.php") as $file) {
             require $file;
          }
 
          // Application libraries lang files
-         foreach (util('File')->glob(PATH_APPLICATION_LIBRARY . "*/lang/$language/*.php") as $file) {
+         foreach (_file()->glob(PATH_APPLICATION_LIBRARY . "*/lang/$language/*.php") as $file) {
             require $file;
          }
 
          // Application lang files
-         foreach (util('File')->glob(PATH_APPLICATION_LANG . "$language/*.php") as $file) {
+         foreach (_file()->glob(PATH_APPLICATION_LANG . "$language/*.php") as $file) {
             require $file;
          }
 

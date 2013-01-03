@@ -64,6 +64,16 @@ class HeaderUtil extends Util {
 
 }
 
+/**
+ * @return HeaderUtil
+ */
+function _header() {
+   return util('Header');
+}
+
+/**
+ *  @see HeaderUtil#redirect
+ */
 function redirect($url) {
    util('Header')->redirect($url);
 }

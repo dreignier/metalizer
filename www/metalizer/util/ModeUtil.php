@@ -39,6 +39,13 @@ class ModeUtil extends Util {
 }
 
 /**
+ * @see ModeUtil#getMode 
+ */
+function mode() {
+   return util('Mode')->getMode();
+}
+
+/**
  * @return bool
  * 	true if the current application mode is MODE_DEVELOPMENT. False otherwise.
  */

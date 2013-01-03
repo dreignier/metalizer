@@ -38,22 +38,22 @@ class ConfigurationUtil extends Util {
       $config = array();
 
       // Metalizer default configuration
-      foreach (util('File')->glob(PATH_METALIZER_CONFIGURATION . '*.php') as $file) {
+      foreach (_file()->glob(PATH_METALIZER_CONFIGURATION . '*.php') as $file) {
          require $file;
       }
 
       // Metalizer default libraries configuration
-      foreach (util('File')->glob(PATH_METALIZER_LIBRARY . '*/configuration/*.php') as $file) {
+      foreach (_file()->glob(PATH_METALIZER_LIBRARY . '*/configuration/*.php') as $file) {
          require $file;
       }
 
       // Application default libraries configuration
-      foreach (util('File')->glob(PATH_APPLICATION_LIBRARY . '*/configuration/*.php') as $file) {
+      foreach (_file()->glob(PATH_APPLICATION_LIBRARY . '*/configuration/*.php') as $file) {
          require $file;
       }
 
       // Application configuration
-      foreach (util('File')->glob(PATH_APPLICATION_CONFIGURATION . '*.php') as $file) {
+      foreach (_file()->glob(PATH_APPLICATION_CONFIGURATION . '*.php') as $file) {
          require $file;
       }
 
@@ -80,8 +80,12 @@ class ConfigurationUtil extends Util {
 }
 
 /**
- * @see ConfigurationUtil#get
+ * @return ConfigurationUtil
  */
-function config($key) {
+function config($key = null) {
+   if ($key == null) {
+      return util('Configuration');
+   }
+   
    return util('Configuration')->get($key);
 }

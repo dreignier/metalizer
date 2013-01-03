@@ -85,7 +85,6 @@ class FileUtil extends Util {
     *    If true, only file are returned. Optional. True by default.
     * @param $flags int
     *    Optional. Default : GLOB_MARK | GLOB_BRACE
-    *    GLOB_ONLYFILE is a metalizer flag.
     */
    public function glob($pattern, $onlyFile = true, $flags = null) {
       if ($flags === null) {
@@ -104,9 +103,28 @@ class FileUtil extends Util {
       return $result;
    }
 
+   /**
+    * Get the extension of a file
+    * @param $file string
+    *    A file name
+    * @param string
+    *    The $file extension.
+    */
    public function extension($file) {
       $point = strrpos($file, '.');
       return $point === false ? '' : substr($file, $point + 1);
    }
+   
+   public function getDirectorySize($directory) {
+      $com = new COM('scripting.filesystemobject');
+      return $com->getfolder($directory)->size;
+   }
 
+}
+
+/**
+ * @return FileUtil
+ */
+function _file() {
+   return util('File');
 }

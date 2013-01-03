@@ -109,3 +109,10 @@ class PageUtil extends Util {
    }
 
 }
+
+/**
+ * @return PageUtil
+ */
+function page() {
+   return util('Page');
+}

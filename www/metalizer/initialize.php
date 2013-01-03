@@ -51,9 +51,9 @@ util('GeneratedResource');
 // Set some header value
 foreach (config('header.default') as $header => $value) {
    if ($value) {
-      util('Header')->set($header, $value);
+      _header()->set($header, $value);
    } else {
-      util('Header')->remove($header);
+      _header()->remove($header);
    }
 }
 

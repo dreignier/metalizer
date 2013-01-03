@@ -30,11 +30,10 @@ class CacheUtil extends Util {
    public function __construct() {
       // If cache is disabled, we clear the cache folder.
       if (!$this->isEnabled()) {
-         util('File')->rmdir(PATH_CACHE);
-         mkdir(PATH_CACHE);
+         $this->nuke();
       }
    }
-
+   
    /**
     * Get the path for a file.
     * @param $name string
@@ -53,6 +52,11 @@ class CacheUtil extends Util {
    public function isEnabled() {
       return (config('cache.enabled') && !isDevMode());
    }
+   
+   public function nuke() {
+      _file()->rmdir(PATH_CACHE);
+      mkdir(PATH_CACHE);
+   }
 
    /**
     * Put a value in the cache.
@@ -68,7 +72,7 @@ class CacheUtil extends Util {
 
       $file = $this->getFilePath($name);
 
-      util('File')->checkDirectory($file);
+      _file()->checkDirectory($file);
 
       $value = serialize($value);
       file_put_contents($file, $value);
@@ -103,7 +107,7 @@ class CacheUtil extends Util {
       }
 
       if (!$this->exists($name)) {
-         $this->log()->warning("There's no value with the name '$name' in the cache");
+         $this->log()->debug("There's no value with the name '$name' in the cache");
          return null;
       }
 
@@ -139,7 +143,7 @@ class CacheUtil extends Util {
 
       $this->log()->warning("A clean for '$name' is called, but there's nothing to clean here");
    }
-
+   
 }
 
 /**
