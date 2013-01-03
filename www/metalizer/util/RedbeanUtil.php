@@ -35,6 +35,17 @@ class RedbeanUtil extends Util {
     * RedbeanUtil_BeanCache
     */
    private $cache;
+   
+   /**
+    * An array containing the mapping between redbean query writers and metalizer query writers.
+    */
+   private $writerMapping = array(
+      'RedBean_QueryWriter_CUBRID' => 'CubridQueryWriter',
+      'RedBean_QueryWriter_MySQL' => 'MysqlQueryWriter',
+      'RedBean_QueryWriter_Oracle' => 'OracleQueryWriter',
+      'RedBean_QueryWriter_PostgreSQL' => 'PostgreSqlQueryWriter',
+      'RedBean_QueryWriter_SQLiteT' => 'SQLiteTQueryWriter'
+   );
 
    /**
     * Construct a new RedbeanUtil
@@ -55,12 +66,17 @@ class RedbeanUtil extends Util {
       RedBean_ModelHelper::setModelFormatter(new ModelFormatter());
 
       // Configure redbean with some of our own classes.
-      $toolbox = R::$toolbox;
-      $facade = new Facade($toolbox->getWriter());
+      
+      $class = $this->writerMapping[get_class(R::$writer)];
+      $writer = new $class(R::$adapter);
+      
       $this->cache = new BeanCache();
-      $facade->setCache($this->cache);
-      $facade->setUtil($this);
-      R::configureFacadeWithToolbox(new RedBean_ToolBox($facade, $toolbox->getDatabaseAdapter(), $toolbox->getWriter()));
+
+      $oodb = new OODB($writer);
+      $oodb->setCache($this->cache);
+      $oodb->setUtil($this);
+      
+      R::configureFacadeWithToolbox(new RedBean_ToolBox($oodb, R::$adapter, $writer));
    }
 
    /**
