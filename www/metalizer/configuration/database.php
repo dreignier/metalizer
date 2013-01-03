@@ -26,3 +26,15 @@ $config['database.user'] = 'metalizer';
  * @var string
  */
 $config['database.password'] = 'metalizer';
+
+/**
+ * The prefix for all tables in the database
+ * @var string
+ */
+$config['database.table_prefix'] = 'metalizer_';
+
+/**
+ * The freeze value for redbean.
+ * @var mixed
+ */
+$config['database.freeze'] = false;
