@@ -92,7 +92,7 @@ set_time_limit(config('php.time_limit'));
 
 try {
    // *** Resolve the page, the method and the parameters ***
-	$pathInfo = trim(@util('Server')->get('PATH_INFO'));
+	$pathInfo = trim(@server()->get('PATH_INFO'));
    $chainer = new FilterChainer($pathInfo);
    $pathInfo = $chainer->run();
    $resolver = new PageResolver($pathInfo);
@@ -118,7 +118,7 @@ try {
    
    echo $output;
 } catch (Exception $exception) {
-   util('header')->setHttpResponseCode((is_a($exception, 'HttpException') ? $exception->getCode() : 500));
+   _header()->setHttpResponseCode((is_a($exception, 'HttpException') ? $exception->getCode() : 500));
    ob_end_clean();
 
    logError('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());

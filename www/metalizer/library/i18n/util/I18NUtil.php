@@ -72,11 +72,6 @@ class I18NUtil extends Util {
       }
    }
 
-   public function onSleep() {
-      $this->i18n = null;
-      $this->currentLanguage = null;
-   }
-
    /**
     * Load a language.
     * @param $language string
@@ -85,8 +80,8 @@ class I18NUtil extends Util {
    public function load($language) {
       $this->checkLanguage($language);
 
-      if (cache()->exists("lang.$language")) {
-         $this->i18n = cache()->get("lang.$language");
+      if (cache()->has("lang.$language")) {
+         $this->i18n = cache()->load("lang.$language");
       } else {
          $lang = array();
 
@@ -111,7 +106,7 @@ class I18NUtil extends Util {
          }
 
          $this->i18n = $lang;
-         cache()->put("lang.$language", $lang);
+         cache()->store("lang.$language", $lang);
       }
 
       $this->currentLanguage = $language;

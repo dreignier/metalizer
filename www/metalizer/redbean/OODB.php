@@ -41,15 +41,15 @@ class OODB extends RedBean_OODB {
     */
    public function __construct($writer) {
       parent::__construct($writer);
+      $this->cache = new BeanCache();
    }
 
    /**
-    * Set the cache
-    * @param $cache RedbeanUtil_BeanCache
-    *    The cache to use.
+    * @return BeanCache
+    *    The bean cache.
     */
-   public function setCache($cache) {
-      $this->cache = $cache;
+   public function getCache() {
+      return $this->cache;
    }
 
    /**
@@ -72,13 +72,13 @@ class OODB extends RedBean_OODB {
     * @see RedBean_OODB#load
     */
    public function load($type, $id) {
-      if ($bean = $this->cache->get($type, $id)) {
+      if ($bean = $this->cache->load($type, $id)) {
          return $bean;
       }
 
       $bean = parent::load($type, $id);
 
-      $this->cache->put($bean);
+      $this->cache->store($bean);
 
       return $bean;
    }
@@ -89,7 +89,7 @@ class OODB extends RedBean_OODB {
    public function store($bean) {
       $result = parent::store($bean);
       
-      $this->cache->put($bean);
+      $this->cache->store($bean);
 
       return $result;
    }
@@ -98,7 +98,7 @@ class OODB extends RedBean_OODB {
     * @see RedBean_OODB#trash
     */
    public function trash($bean) {
-      $this->cache->remove($bean);
+      $this->cache->trash($bean);
 
       parent::trash($bean);
    }
@@ -114,7 +114,7 @@ class OODB extends RedBean_OODB {
     * @see RedBean_OODB#wipe
     */
    public function wipe($type) {
-      $this->cache->clean($type);
+      $this->cache->trashAll($type);
 
       return parent::wipe($type);
    }

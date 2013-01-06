@@ -22,13 +22,22 @@
  * @author David Reignier
  *
  */
-class Bean extends RedBean_SimpleModel {
+class Bean extends RedBean_SimpleModel implements Serializable {
 
    /**
     * The model of the current bean
     * @var Model
     */
    private $model;
+   
+   public function serialize() {
+      $this->model = null;
+      return serialize($this->bean);
+   }
+   
+   public function unserialize($serialized) {
+      $this->bean = unserialize($serialized);
+   }
    
    /**
     * Clean the current bean.
@@ -52,21 +61,7 @@ class Bean extends RedBean_SimpleModel {
    public function fetchAs($type) {
       return $this->unbox()->fetchAs($type);
    }
-
-   /**
-    * Call the model sleep method.
-    */
-   public function sleep() {
-      $this->getModel()->sleep();
-   }
    
-   /**
-    * Call the model wakeUp method.
-    */
-   public function wakeUp() {
-      $this->getModel()->wakeUp();
-   }
-
    /**
     * @return Model
     *    The Model of the current bean
@@ -113,7 +108,7 @@ class Bean extends RedBean_SimpleModel {
    public function delete() {
       $this->getModel()->beforeDelete();
       // We must delete the current model in its factory.
-      $this->getModel()->getFactory()->beforeTrash();
+      $this->getModel()->getFactory()->beforeTrash($this->getModel());
    }
 
    /**

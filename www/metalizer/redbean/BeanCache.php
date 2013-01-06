@@ -29,100 +29,61 @@ class BeanCache extends MetalizerObject {
     */
    private $cache = array();
 
-   /**
-    * Save the hot cache in the cold cache
-    */
-   public function onSleep() {
-      foreach ($this->cache as $type => $beans) {
-         foreach ($beans as $id => $bean) {
-            // Don't cache a tainted bean.
-            if (!$bean->getMeta('tainted')) {
-               $bean->sleep();
-               cache()->put("metalizer.model.bean.$type.$id", $bean);
-            }
-         }
-      }
-   }   
-
-   /**
-    * Put or update a bean in the cache. The bean must be registered and valid.
-    * @param $bean RedBean_OODBBean
-    *    A bean.
-    */
-   public function put($bean) {
-      if (!$bean->id || !$bean->getMeta('type')) {
-         return;
-      }
-
-      $type = $bean->getMeta('type');
-      $id = $bean->id;
-
-      if (!isset($this->cache[$type])) {
-         $this->cache[$type] = array();
-      }
-
-      $this->cache[$type][$id] = $bean;
+   public function __construct() {
+      $this->cache = new SimpleCache('bean');
    }
-
+   
    /**
-    * Try to get a bean
+    * @param $bean RedBean_OODB
+    *    A bean
+    * @return string
+    *    The key corresponding to the given bean.
+    */
+   private function key($bean) {
+      return $bean->getMeta('type') . ".$bean->id"; 
+   }
+   
+   /**
+    * Store a bean
+    * @param $bean RedBean_OODB
+    *    A bean
+    */
+   public function store($bean) {
+      $this->cache->store($this->key($bean), $bean);
+   }
+   
+   /**
+    * Load a bean
     * @param $type string
-    *    A bean type
-    * @param $id integer
-    *    A bean id
-    * @return RedBean_OODBBean
-    *    The corresponding bean. Or null if the cache can't found the bean.
+    *    The type of the bean
+    * @param $id int
+    *    The id of the bean
+    * @return RedBean_OODB
+    *    The bean correspond to the given type and id. Or null, if there's no bean found.
     */
-   public function get($type, $id) {
-      // Try the hot cache
-      if (isset($this->cache[$type][$id])) {
-         return $this->cache[$type][$id];
-      }
-
-      // Try the cold cache
-      if ($bean = cache()->get("metalizer.model.bean.$type.$id")) {
-         $this->put($bean);
-         return $bean;
-      }
-
-      // Not found
-      return null;
+   public function load($type, $id) {
+      return $this->cache->load("$type.$id");
    }
-
+   
    /**
-    * Clean a part of the cache.
+    * Remove a bean from the cache.
+    * @param $bean RedBean_OODB
+    *    The bean to remove
+    */
+   public function trash($bean) {
+      $this->cache->trash($this->key($bean));
+   }
+   
+   /**
+    * Remove all bean of a type in the cache
     * @param $type string
     *    A bean type.
-    * @param $id integer
-    *    A bean id. Optional. If id is missing, we clean all the beans for the given type.
     */
-   public function clean($type, $id = 0) {
-      if ($id) {
-         if (isset($this->cache[$type]) && isset($this->cache[$type][$id])) {
-            unset($this->cache[$type][$id]);
-         }
-
-         cache()->clean("metalizer.model.bean.$type.$id");
-      } else {
-         if (isset($this->cache[$type])) {
-            unset($this->cache[$type]);
-         }
-
-         cache()->clean("metalizer.model.bean.$type");
-      }
+   public function trashAll($type) {
+      $this->cache->trashAll($type);
    }
-
-   /**
-    * Remove the bean from the cache. The bean must be registered and valid.
-    * @param $bean RedBean_OODBBean
-    *    A bean.
-    */
-   public function remove($bean) {
-      if (!$bean->id || !$bean->getMeta('type')) {
-         return;
-      }
-
-      $this->clean($bean->getMeta('type'), $bean->id);
+   
+   public function finalize() {
+      $this->cache->finalize();
    }
-
 }

@@ -66,13 +66,6 @@ class UtilManager extends Manager {
       return parent::get($name);
    }
 
-   /**
-    * On wake up, we must require utils folders.
-    */
-   public function onWakeUp() {
-      $this->requireUtils();
-   }
-
 }
 
 /**

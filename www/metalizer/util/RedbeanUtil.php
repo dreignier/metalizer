@@ -29,13 +29,13 @@ class RedbeanUtil extends Util {
     * @var RedbeanUtil_DynamicToStatic
     */
    private $dynamicToStatic;
-
-   /**
-    * The cache for the beans
-    * RedbeanUtil_BeanCache
-    */
-   private $cache;
    
+   /**
+    * The metalizer oodb for redbean
+    * @var OODB
+    */
+   private $oodb;
+
    /**
     * An array containing the mapping between redbean query writers and metalizer query writers.
     */
@@ -69,32 +69,18 @@ class RedbeanUtil extends Util {
       
       $class = $this->writerMapping[get_class(R::$writer)];
       $writer = new $class(R::$adapter);
+
+      $this->oodb = new OODB($writer);
+      $this->oodb->setUtil($this);
       
-      $this->cache = new BeanCache();
-
-      $oodb = new OODB($writer);
-      $oodb->setCache($this->cache);
-      $oodb->setUtil($this);
-      
-      R::configureFacadeWithToolbox(new RedBean_ToolBox($oodb, R::$adapter, $writer));
+      R::configureFacadeWithToolbox(new RedBean_ToolBox($this->oodb, R::$adapter, $writer));
    }
-
-   /**
-    * We need to require the redbean file and connect to the database.
-    */
-   public function onWakeUp() {
-      $this->connect();
-      $this->cache->wakeUp();
-   }
-
    /**
     * Close the database connection.
     */
-   public function onSleep() {
-      $this->cache->sleep();
-      if (class_exists('R')) {
-         R::close();
-      }
+   public function finalize() {
+      $this->oodb->getCache()->finalize();
+      R::close();
    }
 
    /**
@@ -128,3 +114,12 @@ class RedbeanUtil_DynamicToStatic extends MetalizerObject {
 function R() {
    return util('Redbean')->get();
 }
+
+/**
+ * @return RedbeanUtil
+ */
+function redbean() {
+   return util('Redbean');
+}
+
+

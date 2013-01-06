@@ -48,16 +48,6 @@ abstract class Manager extends MetalizerObject {
    }
 
    /**
-    * On sleep, the manager order to all items to sleep too.
-    * @see MetalizerObject#onSleep()
-    */
-   public function onSleep() {
-      foreach ($this->items as $item) {
-         $item->sleep();
-      }
-   }
-
-   /**
     * Get a item. It return the object of the class '$name' . '$class'. The result is awaken.
     * @param $name string
     * 	The name of the item.
@@ -70,11 +60,16 @@ abstract class Manager extends MetalizerObject {
 
       $result = $this->items[$name];
 
-      if ($result) {
-         $result->wakeUp($this);
-      }
-
       return $result;
+   }
+   
+   /**
+    * Call finalize on all items
+    */
+   public function finalize() {
+      foreach ($this->items as $item) {
+         $item->finalize();
+      }
    }
 
    /**

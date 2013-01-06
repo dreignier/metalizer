@@ -29,7 +29,7 @@ abstract class BundleGenerator extends MetalizerObject {
     * @param $bundlePath string
     *    The path to a bundle file.
     */
-   abstract public function finalize($bundlePath);
+   abstract public function afterGenerate($bundlePath);
 
    /**
     * Must generate the good html code (with echo) for an url.
@@ -86,7 +86,7 @@ abstract class BundleGenerator extends MetalizerObject {
 
       $class = config("bundle.processor.$processor");
 
-      if (!is_subclass_of($class, "BundleFileProcessor")) {
+      if (!$class || !is_subclass_of($class, "BundleFileProcessor")) {
          throw new BundleException("$processor is not a valid file processor");
       }
 
@@ -174,7 +174,7 @@ abstract class BundleGenerator extends MetalizerObject {
          }
          fclose($handle);
 
-         $this->finalize($bundlePath);
+         $this->afterGenerate($bundlePath);
       }
       $this->html(resUrl($this->path($bundle), false));
    }

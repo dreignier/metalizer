@@ -64,17 +64,17 @@ class ConfigurationUtil extends Util {
     * Get a configuration value.
     * @param $key string
     * 	The name of the value
+    * @param $default mixed
+    *    The default value if no configuration value is associated with the given key.
     * @return mixed
     * 	The value
-    * @throws ConfigurationKeyNotFoundException
-    * 	If the key can't be found in the configuration values.
     */
-   public function get($key) {
+   public function get($key, $default = null) {
       if (isset($this->configuration[$key])) {
          return $this->configuration[$key];
       }
 
-      return null;
+      return $default;
    }
 
 }
@@ -82,10 +82,10 @@ class ConfigurationUtil extends Util {
 /**
  * @return ConfigurationUtil
  */
-function config($key = null) {
+function config($key = null, $default = null) {
    if ($key == null) {
       return util('Configuration');
    }
    
-   return util('Configuration')->get($key);
+   return util('Configuration')->get($key, $default);
 }

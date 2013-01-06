@@ -18,21 +18,14 @@
  */
 
 /**
- * Metalizer finalization file.
+ * A SimpleCache is just a HotCache with a ColdCache as subcache. 
+ * @author David Reignier
  */
-
-// *** Application finalize ***
-$finalFile = PATH_APPLICATION . 'finalize.php';
-if (file_exists($finalFile)) {
-   require_once $finalFile;
+class SimpleCache extends HotCache {
+      
+   public function __construct($name) {
+      parent::__construct($name . '_hot');
+      $this->subcache = new ColdCache($name . '_cold');
+   }
+      
 }
-
-// *** Finalize model factories ***
-manager('ModelFactory')->finalize();
-
-// *** Finalize utils ***
-property()->finalize();
-
-redbean()->finalize();
-
-cache()->finalize();

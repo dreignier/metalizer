@@ -47,6 +47,12 @@ manager('Util');
 // Initialize the generated resources util if it doesn't exist.
 util('GeneratedResource');
 
+// *** Clean the cache in development mode ***
+if (isDevMode()) {
+   _file()->rmdir(PATH_CACHE);
+   mkdir(PATH_CACHE);
+}
+
 // *** Header handling ***
 // Set some header value
 foreach (config('header.default') as $header => $value) {

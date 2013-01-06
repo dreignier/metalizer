@@ -25,88 +25,10 @@
 class MetalizerObject {
 
    /**
-    * Say if the object is sleeping.
-    * @var boolean
-    */
-   private $sleeping = false;
-
-   /**
-    * The manager of the object. Can be null.
-    * @var Manager
-    */
-   private $manager = null;
-
-   /**
     * The looger for the object
     * @var Logger
     */
    private $logger = null;
-
-   /**
-    * Get the manager of the object.
-    * @return Manager
-    * 	The manager of the object, or null.
-    */
-   public function getManager() {
-      return $this->manager;
-   }
-
-   /**
-    * Set the manager of the object.
-    * @param $manager Manager
-    * 	A manager
-    */
-   public function setManager($manager) {
-      $this->manager = $manager;
-   }
-
-   /**
-    * @return true if the object is sleeping, false otherwise.
-    */
-   public function isSleeping() {
-      return $this->sleeping;
-   }
-
-   /**
-    * Put the object in the sleep state. MetalizerObject#onSleep will be called.
-    */
-   public function sleep() {
-      if (!$this->sleeping) {
-         $this->onSleep();
-         $this->manager = null;
-         $this->sleeping = true;
-         $this->logger = null;
-      }
-   }
-
-   /**
-    * Called when MetalizerObject#sleep is called. Do nothing by default. Subclasses should override this method.
-    */
-   public function onSleep() {
-
-   }
-
-   /**
-    * Wake up the object.
-    * @param $manager Manager
-    * 	Optional. The new manager of the object.
-    */
-   public function wakeUp($manager = null) {
-      if ($this->sleeping) {
-         if ($manager) {
-            $this->manager = $manager;
-         }
-         $this->onWakeUp();
-         $this->sleeping = false;
-      }
-   }
-
-   /**
-    * Called when MetalizerObject#wakeUp is called. Do nothing by default. Subclasses should override this method.
-    */
-   public function onWakeUp() {
-
-   }
 
    /**
     * @return string
@@ -132,6 +54,13 @@ class MetalizerObject {
     */
    public function getLogName() {
       return "";
+   }
+   
+   /**
+    * Finalize the object
+    */
+   public function finalize() {
+      
    }
 
    /**

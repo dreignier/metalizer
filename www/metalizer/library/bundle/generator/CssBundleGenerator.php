@@ -39,9 +39,9 @@ class CssBundleGenerator extends BundleGenerator {
    }
 
    /**
-    * @see BundleGenerator#finalize
+    * @see BundleGenerator#afterGenerate
     */
-   public function finalize($path) {
+   public function afterGenerate($path) {
       $css = file_get_contents($path);
 
       // Simple CSS Minifier from http://www.lateralcode.com/css-minifier/

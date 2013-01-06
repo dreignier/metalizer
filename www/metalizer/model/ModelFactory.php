@@ -117,11 +117,7 @@ class ModelFactory extends MetalizerObject {
     * Cache and clear instances.
     * Save the subclasses.
     */
-   public function onSleep() {
-      foreach ($this->instances as $instance) {
-         $instance->sleep();
-      }
-      
+   public function finalize() {
       store()->store("metalizer.model.subclasses_$this->class", $this->subClasses);
    }
 

@@ -28,10 +28,6 @@ class CaptchaUtil extends Util {
       require_once getLibraryPath('captcha') . 'external/simple-php-captcha.php';
    }
    
-   public function onWakeUp() {
-      require_once getLibraryPath('captcha') . 'external/simple-php-captcha.php';
-   }
-   
    /**
     * Generate the captcha html. The html is just an img tag with 'captcha' as css class.
     * All captcha informations are put in the user session.

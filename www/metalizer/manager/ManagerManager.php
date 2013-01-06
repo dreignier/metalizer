@@ -42,13 +42,6 @@ class ManagerManager extends Manager {
    }
 
    /**
-    * Finalize the ManagerManager. Must be called at the end of the application. The ManagerManager put itself in sleep mode and in a cache file.
-    */
-   static public function terminate() {
-      ManagerManager::$instance->sleep();
-   }
-
-   /**
     * Initialize the ManagerManager. After that, you can access to the ManagerManager with the ManagerManager#instance() function.
     * In production mode, the ManagerManager will try to retrieve itself in its cache file.
     */

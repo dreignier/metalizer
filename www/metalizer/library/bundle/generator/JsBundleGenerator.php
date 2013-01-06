@@ -39,9 +39,9 @@ class JsBundleGenerator extends BundleGenerator {
    }
 
    /**
-    * @see BundleGenerator#finalize
+    * @see BundleGenerator#afterGenerate
     */
-   public function finalize($path) {
+   public function afterGenerate($path) {
       require_once getLibraryPath('bundle') . 'external/jsmin.php';
 
       $content = file_get_contents($path);
