@@ -37,6 +37,13 @@ class MetalizerObject {
    public function toString() {
       return $this->getClass();
    }
+   
+   /**
+    * Replace the __toString magic method by toString
+    */
+   public function __toString() {
+      return $this->toString();
+   }
 
    /**
     *

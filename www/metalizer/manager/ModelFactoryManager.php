@@ -37,6 +37,10 @@ class ModelFactoryManager extends Manager {
     * 	The name of the item.
     */
    protected function load($name) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Load $name");
+      }
+      
       $item = new ModelFactory($name);
       $this->items[$name] = $item;
    }

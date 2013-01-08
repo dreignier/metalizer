@@ -27,10 +27,10 @@ define('MANAGER_MANAGER_CACHE_FILE', PATH_CACHE . 'metalizer/managers');
 class ManagerManager extends Manager {
 
    /**
-    * ManagerManager is a singletion
+    * ManagerManager is a singleton
     * @var ManagerManager
     */
-   static private $instance;
+   static private $instance = null;
 
    /**
     * Construct a new ManagerManager. Because of php, we can't set this constructor in private.
@@ -38,6 +38,10 @@ class ManagerManager extends Manager {
     * @return ManagerManager
     */
    public function __construct() {
+      if (ManagerManager::$instance) {
+         
+      }
+      
       parent::__construct('Manager');
    }
 

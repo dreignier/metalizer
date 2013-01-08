@@ -73,12 +73,14 @@ abstract class Manager extends MetalizerObject {
    }
 
    /**
-    * If an objet can't be found by Manager#get, we try to load it with this function.
+    * If an object can't be found by Manager#get, we try to load it with this function.
     * It must add the new object in the $items member. Or  Manager#get will failed.
     * @param $name string
     * 	The name of the item.
     */
    protected function load($name) {
+      // Reminded - We can't use utils here. Because UtilManager is a Manager.
+      
       $class = $name . $this->class;
       $item = new $class();
       $this->items[$name] = $item;

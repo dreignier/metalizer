@@ -52,6 +52,10 @@ class Template extends View {
     * 	The webscript name. When the Template will display the region, it will search for a webscript class with this name.
     */
    public function component($name, $webscriptName) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Register webscript $webscriptName in region $name");
+      }
+      
       $this->components[$name] = $webscriptName;
    }
 
@@ -64,6 +68,13 @@ class Template extends View {
     */
    protected function region($name, $chrome = null) {
       if (isset($this->components[$name])) {
+         if ($this->log()->isDebugEnabled()) {
+            $this->log()->debug("Displaying $name");
+            if ($chrome) {
+               $this->log()->debug("Chrome : $chrome");   
+            }
+         }
+         
          $class = $this->components[$name];
 
          $webscript = new $class($this->data);
@@ -74,6 +85,10 @@ class Template extends View {
          } catch (Exception $exception) {
             $webscript->error($exception);
          }
+      } else {
+         if ($this->log()->isInfoEnabled()) {
+            $this->log()->info("Region $name has no component");
+         }
       }
    }
 
@@ -83,6 +98,10 @@ class Template extends View {
     * 	The name of the template.
     */
    protected function template($name) {
+      if ($this->log()->isDebugEnabled()) {
+            $this->log()->debug("Use template $name");
+      }
+      
       $template = new Template($name, $this->data);
       $template->components = $this->components;
       $template->display();

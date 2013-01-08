@@ -57,6 +57,10 @@ class Chrome extends View {
     * @see View#display
     */
    protected function content() {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug('Displaying content');
+      }
+      
       $this->content->display();
    }
 

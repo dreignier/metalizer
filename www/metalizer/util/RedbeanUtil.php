@@ -60,6 +60,10 @@ class RedbeanUtil extends Util {
     * Also set the formatter.
     */
    public function connect() {
+      if ($this->log()->isInfoEnabled()) {
+         $this->log()->info('Initialize redbean');
+      }
+      
       R::setup(config('database.connection_string'), config('database.user'), config('database.password'));
       R::freeze(config('database.freeze'));
       R::debug(true, $this->log());
@@ -79,6 +83,10 @@ class RedbeanUtil extends Util {
     * Close the database connection.
     */
    public function finalize() {
+      if ($this->log()->isInfoEnabled()) {
+         $this->log()->info('Finalize redbean');
+      }
+      
       $this->oodb->getCache()->finalize();
       R::close();
    }

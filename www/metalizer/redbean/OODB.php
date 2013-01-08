@@ -63,6 +63,7 @@ class OODB extends RedBean_OODB {
 
    /**
     * We are not in a MetalizerObject. So we use the logger of RedbeanUtil.
+    * @return Logger
     */
    protected function log() {
       return $this->util->log();
@@ -72,6 +73,10 @@ class OODB extends RedBean_OODB {
     * @see RedBean_OODB#load
     */
    public function load($type, $id) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Load $type : $id");
+      }
+      
       if ($bean = $this->cache->load($type, $id)) {
          return $bean;
       }
@@ -87,7 +92,15 @@ class OODB extends RedBean_OODB {
     * @see RedBean_OODB#store
     */
    public function store($bean) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Store " . $bean->getMeta('type'));
+      }
+      
       $result = parent::store($bean);
+      
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("New id : " . $bean->id);
+      }
       
       $this->cache->store($bean);
 
@@ -98,6 +111,10 @@ class OODB extends RedBean_OODB {
     * @see RedBean_OODB#trash
     */
    public function trash($bean) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Trash " . $bean->getMeta('type') . ' : ' . $bean->id);
+      }
+      
       $this->cache->trash($bean);
 
       parent::trash($bean);

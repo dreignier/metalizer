@@ -35,6 +35,10 @@ class CaptchaUtil extends Util {
     *    Extra css classes for the img tag.
     */
    public function generate($classes = '') {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug('Displaying captcha');
+      }
+      
       $captcha = captcha(array(
          'png_backgrounds' => array('../resource/default.png'),
          'fonts' => array('../resource/times_new_yorker.ttf'),

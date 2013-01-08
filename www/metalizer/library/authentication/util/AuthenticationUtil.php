@@ -61,6 +61,10 @@ class AuthenticationUtil extends Util {
     *    A base user.
     */
    public function login($user) {
+      if ($this->log()->isInfoEnabled()) {
+         $this->log()->info('Login ' . $user->getLogin());
+      }
+      
       $this->currentUser = $user;
       session()->set(AUTHENTICATION_SESSION_NAME, $user->getId());
    }
@@ -69,6 +73,10 @@ class AuthenticationUtil extends Util {
     * Logout the current user. Do nothing if there's no current user.
     */
    public function logout() {
+      if ($this->log()->isInfoEnabled() && $this->currentUser) {
+         $this->log()->info('Logout ' . $this->currentUser->getLogin());
+      }
+      
       session()->clean(AUTHENTICATION_SESSION_NAME);
       $this->currentuser = null;
    }

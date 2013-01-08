@@ -53,6 +53,10 @@ class View extends MetalizerObject {
     * The view display itself.
     */
    public function display() {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug('Displaying');
+      }
+      
       // Variables names are weird to avoid overriding by data keys.
       foreach ($this->data as $__key__ => $__value__) {
          $$__key__ = $__value__;

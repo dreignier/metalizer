@@ -104,6 +104,10 @@ class ImageSpriteUtil extends Util {
 		// Find files and generate CSS
 		foreach (_file()->glob($pattern) as $file) {
 			if (array_key_exists(substr($file, -3), $this->extensions)) {
+			   if ($this->log()->isTraceEnabled()) {
+			      $this->log()->trace("Add $file to sprite $sprite");
+			   }
+            
 				list($x, $y) = getimagesize($file);
 				$css .= '.' . $this->getCssClass($file) . " {\n";
 				$css .= "\tbackground-image: url('" . config('url.root') . $file . "');\n";
@@ -131,6 +135,10 @@ class ImageSpriteUtil extends Util {
 		// Find files
       foreach (_file()->glob($pattern) as $file) {
 			if (array_key_exists(substr($file, -3), $this->extensions)) {
+            if ($this->log()->isTraceEnabled()) {
+               $this->log()->trace("Add $file to sprite $sprite");
+            }
+            
 	      	list($x, $y) = getimagesize($file);
 				
 				if (!isset($this->files["$x"])) {

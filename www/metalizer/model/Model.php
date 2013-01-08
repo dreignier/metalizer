@@ -44,6 +44,14 @@ abstract class Model extends MetalizerObject {
          throw new ModelException("You can't construct a new model, you must use <code>model('$class')->dispense();</code>");
       }
    }
+   
+   public function toString() {
+      return $this->getClass() . ':' . $this->getId();
+   }
+   
+   public function getLogName() {
+      return $this->getClass() . ':' . $this->getId();
+   }
 
    /**
     * Called after a "load"
@@ -129,6 +137,10 @@ abstract class Model extends MetalizerObject {
     *    $this
     */
    public function store() {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Store called");
+      }
+      
       return $this->getFactory()->store($this);
    }
 
@@ -138,6 +150,10 @@ abstract class Model extends MetalizerObject {
     *    $this
     */
    public function trash() {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Trash called");
+      }
+      
       return $this->getFactory()->trash($this);
    }
 
@@ -247,6 +263,10 @@ abstract class Model extends MetalizerObject {
     *    $this
     */
    protected function associate($name, $model) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("associate $model in $name");
+      }
+      
       $this->getFactory()->associate($name, $this, $model);
       return $this;
    }
@@ -278,6 +298,10 @@ abstract class Model extends MetalizerObject {
     *    $this
     */
    protected function unassociate($name, $model, $delete = false) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("unassociate $model in $name");
+      }
+      
       $this->getFactory()->unassociate($name, $this, $model, $delete);
       return $this;
    }

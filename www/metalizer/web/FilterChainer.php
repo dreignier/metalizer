@@ -44,11 +44,23 @@ class FilterChainer extends MetalizerObject {
     *    The final path modified by filters.
     */
    public function run() {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug('run ...');
+      }
+      
       foreach (config('filter.patterns') as $pattern => $filter) {
          if (preg_match($pattern, $this->path)) {
+            if ($this->log()->isDebugEnabled()) {
+               $this->log()->debug("Run filter $filter");
+            }
+            
             $filter = new $filter();
             if ($temp = $filter->execute($this->path)) {
                $this->path = $temp;
+               
+               if ($this->log()->isDebugEnabled()) {
+                  $this->log()->debug("New path : $temp");
+               }   
             }
          }
       }

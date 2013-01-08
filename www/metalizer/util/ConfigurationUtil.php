@@ -35,6 +35,8 @@ class ConfigurationUtil extends Util {
     * @return ConfigurationUtil
     */
    public function __construct() {
+      // Reminder - Be aware of what you use here. Don't use a util which need the configuration util.
+      
       $config = array();
 
       // Metalizer default configuration

@@ -73,6 +73,10 @@ class Page extends Controller {
     */
    public function display() {
       if ($this->template) {
+         if ($this->log()->isInfoEnabled()) {
+            $this->log()->info("Displaying using the template $this->template");
+         }
+         
          $template = new Template($this->template, $this->data);
 
          foreach ($this->components as $region => $webscript) {
@@ -90,6 +94,10 @@ class Page extends Controller {
     *    The new content type for the page.
     */
    protected function setContentType($contentType) {
+      if ($this->log()->isInfoEnabled()) {
+         $this->log()->info("New content type : $contentType");
+      }
+      
       $this->contentType = $contentType;
       if ($contentType != 'text/html') {
          $this->noOutputClean();
@@ -103,6 +111,9 @@ class Page extends Controller {
     *    A http response code.
     */
    protected function setCode($code) {
+      if ($this->log()-isInfoEnabled()) {
+         $this->log()->info("New response code : $code");
+      }
       _header()->setHttpResponseCode($code);
    }
 

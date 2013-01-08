@@ -31,19 +31,11 @@ class Bean extends RedBean_SimpleModel implements Serializable {
    private $model;
    
    public function serialize() {
-      $this->model = null;
       return serialize($this->bean);
    }
    
    public function unserialize($serialized) {
       $this->bean = unserialize($serialized);
-   }
-   
-   /**
-    * Clean the current bean.
-    */
-   public function __sleep() {
-      $this->model = null;
    }
 
    /**

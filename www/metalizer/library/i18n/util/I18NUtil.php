@@ -78,11 +78,23 @@ class I18NUtil extends Util {
     *    The language to load.
     */
    public function load($language) {
+      if ($this->log()->isInfoEnabled()) {
+         $this->log()->info("Loading $language");
+      }
+      
       $this->checkLanguage($language);
 
       if (cache()->has("lang.$language")) {
+         if ($this->log()->isInfoEnabled()) {
+            $this->log()->info("Loading from cache");
+         }
+         
          $this->i18n = cache()->load("lang.$language");
       } else {
+         if ($this->log()->isInfoEnabled()) {
+            $this->log()->info("Reading lang files");
+         }
+         
          $lang = array();
 
          // Metalizer default lang files

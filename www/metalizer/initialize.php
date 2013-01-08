@@ -44,21 +44,31 @@ ManagerManager::initialize();
 // Create the UtilManager if it doesn't exist
 manager('Util');
 
-// Initialize the generated resources util if it doesn't exist.
-util('GeneratedResource');
+logDebug('Metalizer loaded');
+logTrace('Mode : ' . mode());
 
 // *** Clean the cache in development mode ***
 if (isDevMode()) {
+   logTrace('Clean the cache folder');
    _file()->rmdir(PATH_CACHE);
    mkdir(PATH_CACHE);
+}
+
+// *** Clean the generated resources in development mode
+if (isDevMode()) {
+   logTrace('Clean the generated resources folder');
+   _file()->rmdir(PATH_RESOURCE_GEN);
+   mkdir(PATH_RESOURCE_GEN);
 }
 
 // *** Header handling ***
 // Set some header value
 foreach (config('header.default') as $header => $value) {
    if ($value) {
+      logTrace("Set header : '$header' = '$value'");
       _header()->set($header, $value);
    } else {
+      logTrace("Remove header : '$header'");
       _header()->remove($header);
    }
 }
@@ -66,5 +76,6 @@ foreach (config('header.default') as $header => $value) {
 // *** Application initialization ***
 $initFile = PATH_APPLICATION . 'initialize.php';
 if (file_exists($initFile)) {
+   logDebug('Include application initialization');
    require_once $initFile;
 }

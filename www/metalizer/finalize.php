@@ -21,18 +21,25 @@
  * Metalizer finalization file.
  */
 
+logDebug('Metalizer finalization');
+ 
 // *** Application finalize ***
 $finalFile = PATH_APPLICATION . 'finalize.php';
 if (file_exists($finalFile)) {
+   logDebug('Include application finalization');
    require_once $finalFile;
 }
 
 // *** Finalize model factories ***
+logDebug('Finalize model factories');
 manager('ModelFactory')->finalize();
 
 // *** Finalize utils ***
+logDebug('Finalize properties');
 property()->finalize();
 
+logDebug('Finalize redbean');
 redbean()->finalize();
 
+logDebug('Finalize cache');
 cache()->finalize();

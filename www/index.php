@@ -87,12 +87,17 @@ define('PATH_DATA', PATH_ROOT . '../data/');
 
 require PATH_METALIZER . 'initialize.php';
 
+logTrace('Error reporting : ' . config('error.reporting'));
 error_reporting(config('error.reporting'));
+
+logTrace('Time limit : ' . config('php.time_limit'));
 set_time_limit(config('php.time_limit'));
 
 try {
    // *** Resolve the page, the method and the parameters ***
 	$pathInfo = trim(@server()->get('PATH_INFO'));
+   logDebug("Path info : $pathInfo");
+   
    $chainer = new FilterChainer($pathInfo);
    $pathInfo = $chainer->run();
    $resolver = new PageResolver($pathInfo);
@@ -104,6 +109,8 @@ try {
    $output = ob_get_clean();
    
    if (config('output.clean') && extension_loaded('tidy') && class_exists('tidy') && $page->cleanOutput()) {
+      logDebug('Cleaning ouput');
+      
       $configuration = config('output.clean.configuration');
       $tidy = new tidy();
       $tidy->parseString($output, $configuration, 'utf8');
@@ -128,6 +135,7 @@ try {
    if (config('page.error') && class_exists(config('page.error')) && is_a(config('page.error'), 'Page')) {
       $page = new Error();
       call_user_func_array(array($page, config('page.default_method')));
+      $age->display();
    } else {
       // Default error handle
       echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
@@ -139,3 +147,5 @@ try {
 // *** Metalizer finalization ***
 
 require PATH_METALIZER . 'finalize.php';
+
+logDebug('Metalizer end');

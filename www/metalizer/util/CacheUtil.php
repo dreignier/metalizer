@@ -46,7 +46,7 @@ class CacheUtil extends Util {
    }
    
    public function finalize() {
-      $this->cache->finalize;
+      $this->cache->finalize();
    }
 }
 

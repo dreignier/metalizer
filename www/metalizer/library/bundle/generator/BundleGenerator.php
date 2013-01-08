@@ -134,6 +134,10 @@ abstract class BundleGenerator extends MetalizerObject {
             if (!$processor->isValid($path)) {
                continue;
             }
+            
+            if ($this->log()->isTraceEnabled()) {
+               $this->log()->trace("Process $path with $processor");
+            }
 
             if (!in_array($path, $this->files)) {
                $this->html($processor->url($path));
@@ -154,6 +158,10 @@ abstract class BundleGenerator extends MetalizerObject {
       $bundlePath = $this->path($bundle);
 
       if (!file_exists($bundlePath)) {
+         if ($this->log()->isInfoEnabled()) {
+            $this->log()->info("Generate $bundlePath");
+         }
+         
          _file()->checkDirectory($bundlePath);
          $handle = fopen($bundlePath, 'w');
          foreach ($patterns as $pattern) {
@@ -164,6 +172,10 @@ abstract class BundleGenerator extends MetalizerObject {
                if (!$processor->isValid($path)) {
                   continue;
                }
+               
+               if ($this->log()->isTraceEnabled()) {
+                  $this->log()->trace("Process $path with $processor");
+               }  
 
                if (!in_array($path, $this->files)) {
                   $content = $processor->read($path);

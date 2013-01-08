@@ -39,9 +39,13 @@ class StoreUtil extends Util {
     * @param $name string
     * 	The name of the value.
     * @param $value mixed
-    *  The name. Must be serializable.
+    *    The name. Must be serializable.
     */
    public function store($name, $value) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Storing $value");
+      }
+      
       $file = $this->getFilePath($name);
       $this->cache[$file] = $value;
       _file()->checkDirectory($file);
@@ -56,10 +60,14 @@ class StoreUtil extends Util {
     * 	The value. Or null if no value with $name is found.
     */
    public function load($name) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Load $name");
+      }
+      
       if (!$this->exists($name)) {
          return null;
       }
-
+      
       $file = $this->getFilePath($name);
 
       if (isset($this->cache[$file])) {
@@ -78,6 +86,10 @@ class StoreUtil extends Util {
     * 	The name of a value or a folder of values.
     */
    public function delete($name) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Deleting $value");
+      }
+      
       $file = $this->getFilePath($name);
 
       unset($this->cache[$file]);

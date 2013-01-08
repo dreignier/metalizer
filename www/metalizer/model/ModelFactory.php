@@ -127,6 +127,10 @@ class ModelFactory extends MetalizerObject {
     * 	A new model object ready to be used. The class of the object is the handled class of this factory.
     */
    public function dispense() {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug('Dispense called');
+      }
+      
       $model = $this->newInstance();
 
       $bean = R()->dispense($this->table);
@@ -146,6 +150,10 @@ class ModelFactory extends MetalizerObject {
     * 	The model object to store.
     */
    public function store($model) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Storing $model");
+      }
+      
       R()->store($model->getBean());
    }
 
@@ -155,6 +163,10 @@ class ModelFactory extends MetalizerObject {
     * 	The model object to delete.
     */
    public function trash($model) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Trashing $model");
+      }
+      
       R()->trash($model->getBean());
    }
 
@@ -225,6 +237,10 @@ class ModelFactory extends MetalizerObject {
     * 	The model object with the given id. Or null.
     */
    public function findById($id) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("findById $id");
+      }
+      
       if ($instance = $this->findInstance($id)) {
          return $instance;
       }
@@ -260,6 +276,10 @@ class ModelFactory extends MetalizerObject {
     * 	The model corresponding to the query. Or null.
     */
    public function findOne($where = '', $params = array()) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("findOne where $where");
+      }
+      
       if ($where) {
          $where = "($where) AND ";
       }
@@ -309,6 +329,10 @@ class ModelFactory extends MetalizerObject {
     * 	An array of Model.
     */
    public function find($where = '', $params = array()) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("find where $where with limit $this->limit, offset $this->offset and order by $this->orderBy");
+      }
+      
       $result = array();
       $extra = '';
 
@@ -384,6 +408,10 @@ class ModelFactory extends MetalizerObject {
     *    The count result.
     */
    public function count($where = null, $params = array()) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Count where $where");
+      }
+      
       if ($where) {
          $where = "($where) AND ";
       }
@@ -528,6 +556,10 @@ class ModelFactory extends MetalizerObject {
          $second->store();
       }
       
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Associate $first with $second in $name");
+      }
+   
       $intermediate = $first->getIntermediate($name);
       
       $type = $second->getFactory()->getTable();
@@ -575,6 +607,10 @@ class ModelFactory extends MetalizerObject {
     *    Option. If true, $second is trashed. <code>false</code> by default.
     */
    public function unassociate($name, $first, $second, $delete = false) {
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Unassociate $first with $second in $name");
+      }
+      
       $intermediate = $first->getIntermediate($name);
       
       R()->unassociate($intermediate, $second->getBean());

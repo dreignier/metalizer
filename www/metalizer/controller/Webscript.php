@@ -88,6 +88,12 @@ class Webscript extends Controller {
    }
 
    public function error($exception) {
+      if ($this->log()->isErrorEnabled()) {
+         $this->log()->error('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());
+         $this->log()->error($exception->getFile() . '(' . $exception->getLine() . ')');
+         $this->log()->error($exception->getTraceAsString());
+      }
+      
       // Default error handle
       echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
       echo $exception->getFile() . '(' . $exception->getLine() . ')';

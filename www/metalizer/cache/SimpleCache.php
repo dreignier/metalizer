@@ -24,6 +24,10 @@
 class SimpleCache extends HotCache {
       
    public function __construct($name) {
+      if ($this->log()->isInfoEnabled()) {
+         $this->log()->info("Initializing ...");
+      }
+      
       parent::__construct($name . '_hot');
       $this->subcache = new ColdCache($name . '_cold');
    }

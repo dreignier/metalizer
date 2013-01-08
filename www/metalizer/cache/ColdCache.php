@@ -36,8 +36,14 @@ class ColdCache extends Cache {
       }
       
       if (file_exists($this->getIndexFilePath())) {
+         if ($this->log()->isInfoEnabled()) {
+            $this->log()->info('Load index');
+         }
          $this->index = unserialize(file_get_contents($this->getIndexFilePath()));
       } else {
+         if ($this->log()->isInfoEnabled()) {
+            $this->log()->info('Create a new index');
+         }
          $this->index = new ColdCache_Index();
       }
    }
@@ -62,6 +68,9 @@ class ColdCache extends Cache {
          mkdir($dir);
       }
       
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug('Store the index in ' . $this->getIndexFilePath());
+      }
       file_put_contents($this->getIndexFilePath(), serialize($this->index));
    }
    

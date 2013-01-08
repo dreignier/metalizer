@@ -46,6 +46,10 @@ class LessCssUtil extends Util {
          $this->lessc = new lessc();
       }
       
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug("Compile $inFile");
+      }
+      
       $result = $this->lessc->compileFile($inFile, $outFile);
       
       if (!$outFile) {
