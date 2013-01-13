@@ -46,13 +46,18 @@ class RedbeanUtil extends Util {
       'RedBean_QueryWriter_PostgreSQL' => 'PostgreSqlQueryWriter',
       'RedBean_QueryWriter_SQLiteT' => 'SQLiteTQueryWriter'
    );
+   
+   /**
+    * <code>true</code> if redbean is connected to the database, <code>false</code> otherwise.
+    * @var boolean
+    */
+   private $connected = false;
 
    /**
     * Construct a new RedbeanUtil
     */
    public function __construct() {
       $this->dynamicToStatic = new RedbeanUtil_DynamicToStatic();
-      $this->connect();
    }
 
    /**
@@ -60,6 +65,10 @@ class RedbeanUtil extends Util {
     * Also set the formatter.
     */
    public function connect() {
+      if ($this->connected) {
+         return;
+      }
+      
       if ($this->log()->isInfoEnabled()) {
          $this->log()->info('Initialize redbean');
       }
@@ -78,11 +87,18 @@ class RedbeanUtil extends Util {
       $this->oodb->setUtil($this);
       
       R::configureFacadeWithToolbox(new RedBean_ToolBox($this->oodb, R::$adapter, $writer));
+      
+      $this->connected = true;
    }
+   
    /**
     * Close the database connection.
     */
    public function finalize() {
+      if (!$this->connected) {
+         return;
+      }
+      
       if ($this->log()->isInfoEnabled()) {
          $this->log()->info('Finalize redbean');
       }
@@ -96,6 +112,7 @@ class RedbeanUtil extends Util {
     * 	You can use this to access to the "R" classes without the "static" way.
     */
    public function get() {
+      $this->connect();
       return $this->dynamicToStatic;
    }
 
