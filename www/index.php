@@ -21,7 +21,7 @@
  * Index file of the application. All pages are start here.
  */
  
-// *** Some very basic fonctions. For debug only ***
+// *** Some very basic functions. For debug only ***
 
 function debug($message) {
    if (is_object($message) && is_a($message, 'Exception')) {
@@ -99,8 +99,8 @@ try {
    logDebug("Path info : $pathInfo");
    
    $chainer = new FilterChainer($pathInfo);
-   $pathInfo = $chainer->run();
-   $resolver = new PageResolver($pathInfo);
+   $chainer->run();
+   $resolver = new PageResolver($chainer->getPath());
 
    // Let's go !
    ob_start();
@@ -128,7 +128,7 @@ try {
    _header()->setHttpResponseCode((is_a($exception, 'HttpException') ? $exception->getCode() : 500));
    ob_end_clean();
 
-   logError('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());
+   logError('Exception occured : ' . get_class($exception) . ' (' . $exception->getCode() . ') ' . $exception->getMessage());
    logError($exception->getFile() . '(' . $exception->getLine() . ')');
    logError($exception->getTraceAsString());
 
@@ -138,7 +138,7 @@ try {
       $age->display();
    } else {
       // Default error handle
-      echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
+      echo 'Exception occured : ' . get_class($exception) . ' (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
       echo $exception->getFile() . '(' . $exception->getLine() . ')';
       echo str_replace('#', '<br/>#', $exception->getTraceAsString());
    }

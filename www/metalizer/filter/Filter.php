@@ -24,12 +24,25 @@
 abstract class Filter extends MetalizerObject {
 
    /**
+    * The calculated path.
+    * @var string
+    */
+   protected $path = null;
+
+   /**
     * Called when the filter is triggered.
     * @param $path string
     *    The url
-    * @return string
-    *    Must return the new url or $path.
+    * @return boolean
+    *    If the filter return a false (and not a falsy value), the filter chain is broken.
     */
    abstract public function execute($path);
-
+   
+   /**
+    * @return string
+    *    The calculated path.
+    */
+   public function getPath() {
+      return $this->path;
+   }
 }

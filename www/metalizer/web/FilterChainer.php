@@ -28,7 +28,7 @@ class FilterChainer extends MetalizerObject {
     * @var string
     */
    private $path;
-
+   
    /**
     * Construct a new FilterChainer
     * @param $path string
@@ -40,8 +40,6 @@ class FilterChainer extends MetalizerObject {
 
    /**
     * Run every filters. Each filter can modify the current path.
-    * @return string
-    *    The final path modified by filters.
     */
    public function run() {
       if ($this->log()->isDebugEnabled()) {
@@ -55,16 +53,30 @@ class FilterChainer extends MetalizerObject {
             }
             
             $filter = new $filter();
-            if ($temp = $filter->execute($this->path)) {
-               $this->path = $temp;
-               
+            $result = $filter->execute($this->path);
+
+            if ($path = $filter->getPath()) {
+               $this->path = $path;
                if ($this->log()->isDebugEnabled()) {
                   $this->log()->debug("New path : $temp");
-               }   
+               }
             }
+            
+            if ($result === false) {
+               if ($this->log()->isInfoEnabled()) {
+                  $this->log()->info("Filter $filter broke the filter chain");
+                  break;
+               }
+            } 
          }
       }
-
+   }
+   
+   /**
+    * @return string
+    *    The final path modified by filters.
+    */
+   public function getPath() {
       return $this->path;
    }
 
