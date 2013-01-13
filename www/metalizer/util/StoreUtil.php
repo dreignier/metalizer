@@ -30,6 +30,12 @@ class StoreUtil extends Util {
     */
    private $cache = array();
 
+   /**
+    * @param $key string
+    *    A key
+    * @return string
+    *    The path to the file/directory associated to the directory 
+    */
    private function getFilePath($key) {
       return PATH_DATA . str_replace('.', '/', $key);
    }
@@ -39,17 +45,24 @@ class StoreUtil extends Util {
     * @param $name string
     * 	The name of the value.
     * @param $value mixed
-    *    The name. Must be serializable.
+    *    The name.
+    * @param $serialize boolean
+    *    If true, the value will be serialized. Optional. true by default.
     */
-   public function store($name, $value) {
+   public function store($name, $value, $serialize = true) {
       if ($this->log()->isDebugEnabled()) {
-         $this->log()->debug("Storing $value");
+         $this->log()->debug("Storing $name");
       }
       
       $file = $this->getFilePath($name);
       $this->cache[$file] = $value;
       _file()->checkDirectory($file);
-      file_put_contents($file, serialize($value));
+      
+      if ($serialize) {
+         $value = serialize($value);
+      }
+      
+      file_put_contents($file, $value);
    }
 
    /**
@@ -58,8 +71,10 @@ class StoreUtil extends Util {
     * 	The name of the value.
     * @return mixed
     * 	The value. Or null if no value with $name is found.
+    * @param $unserialize boolean
+    *    If true, the value will be unserialized. Optional. true by default.
     */
-   public function load($name) {
+   public function load($name, $unserialize = true) {
       if ($this->log()->isDebugEnabled()) {
          $this->log()->debug("Load $name");
       }
@@ -74,7 +89,12 @@ class StoreUtil extends Util {
          return $this->cache[$file];
       }
 
-      $result = unserialize(file_get_contents($file));
+      $result = file_get_contents($file);
+      
+      if ($unserialize) {
+         $result = unserialize($result);
+      }
+      
       $this->cache[$file] = $result;
 
       return $result;
