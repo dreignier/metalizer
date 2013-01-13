@@ -89,13 +89,13 @@ class Webscript extends Controller {
 
    public function error($exception) {
       if ($this->log()->isErrorEnabled()) {
-         $this->log()->error('Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage());
+         $this->log()->error('Exception occured : ' . get_class($exception) . ' (' . $exception->getCode() . ') ' . $exception->getMessage());
          $this->log()->error($exception->getFile() . '(' . $exception->getLine() . ')');
          $this->log()->error($exception->getTraceAsString());
       }
       
       // Default error handle
-      echo 'Exception occured : (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
+      echo 'Exception occured : ' . get_class($exception) . ' (' . $exception->getCode() . ') ' . $exception->getMessage() . '<br/>';
       echo $exception->getFile() . '(' . $exception->getLine() . ')';
       echo str_replace('#', '<br/>#', $exception->getTraceAsString());
    }

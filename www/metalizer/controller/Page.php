@@ -41,6 +41,12 @@ class Page extends Controller {
     * @var array[Webscript]
     */
    private $components = array();
+   
+   /**
+    * The parameters for webscripts. Indexed by region.
+    * @var array[mixed]
+    */
+   private $parameters = array();
 
    /**
     * If cleanOutput is false, there's no output clean.  You should set it to false if you render anything else than xhtml.
@@ -50,13 +56,16 @@ class Page extends Controller {
 
    /**
     * Add a webscript to the future view.
-    * @param region string
+    * @param $region string
     * 	The targeted region.
-    * @param webscript string
+    * @param $webscript string
     * 	The webscript class name
+    * @param $parameters array[mixed]
+    *    The parameters for the execute method of the given webscript.
     */
-   public function component($region, $webscript) {
+   public function component($region, $webscript, $parameters = array()) {
       $this->components[$region] = $webscript;
+      $this->parameters[$region] = $parameters;
    }
 
    /**
@@ -80,7 +89,7 @@ class Page extends Controller {
          $template = new Template($this->template, $this->data);
 
          foreach ($this->components as $region => $webscript) {
-            $template->component($region, $webscript);
+            $template->component($region, $webscript, $this->parameters[$region]);
          }
 
          $template->display();

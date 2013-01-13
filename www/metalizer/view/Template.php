@@ -27,9 +27,15 @@ class Template extends View {
 
    /**
     * Components of the Template.
-    * @var array[View]
+    * @var array[string]
     */
-   private $components;
+   private $components = array();
+   
+   /**
+    * Parameters for the components of the template
+    * @var array[mixed]
+    */
+   private $parameters = array();
 
    /**
     * Construct a new template.
@@ -41,7 +47,6 @@ class Template extends View {
     */
    public function __construct($name, $data = array()) {
       parent::__construct(getTemplatePath($name), $data);
-      $this->components = array();
    }
 
    /**
@@ -50,13 +55,16 @@ class Template extends View {
     * 	The name of the region.
     * @param $webscriptName string
     * 	The webscript name. When the Template will display the region, it will search for a webscript class with this name.
+    * @param $parameters array[mixed]
+    *    The parameters for the execute method of the given webscript.
     */
-   public function component($name, $webscriptName) {
+   public function component($name, $webscriptName, $parameters = array()) {
       if ($this->log()->isDebugEnabled()) {
          $this->log()->debug("Register webscript $webscriptName in region $name");
       }
       
       $this->components[$name] = $webscriptName;
+      $this->parameters[$name] = $parameters;
    }
 
    /**
@@ -78,8 +86,9 @@ class Template extends View {
          $class = $this->components[$name];
 
          $webscript = new $class($this->data);
+         $parameters = $this->parameters[$name];
          try {
-            if ($webscript->execute() !== false) {
+            if (call_user_func_array(array($webscript, 'execute'), $parameters) !== false) {
                $webscript->display($chrome);
             }
          } catch (Exception $exception) {
