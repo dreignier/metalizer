@@ -35,7 +35,7 @@ class CssBundleGenerator extends BundleGenerator {
     * @see BundleGenerator#html
     */
    public function html($url) {
-      echo '<link type="text/css" rel="stylesheet" href="' . $url . '" />';
+      echo '<link type="text/css" rel="stylesheet" href="' . $url . "\" />\n";
    }
 
    /**

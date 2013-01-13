@@ -35,7 +35,7 @@ class JsBundleGenerator extends BundleGenerator {
     * @see BundleGenerator#html
     */
    public function html($url) {
-      echo '<script type="text/javascript" src="' . $url . '" /></script>';
+      echo '<script type="text/javascript" src="' . $url . "\" /></script>\n";
    }
 
    /**
