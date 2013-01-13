@@ -47,6 +47,21 @@ manager('Util');
 logDebug('Metalizer loaded');
 logTrace('Mode : ' . mode());
 
+// *** Make sure that some mandatory directories are here ***
+$directories = array(
+   PATH_RESOURCE,
+   PATH_RESOURCE_GEN,
+   PATH_CACHE,
+   PATH_DATA,
+   PATH_LOG
+);
+
+foreach ($directories as $directory) {
+   if (!is_dir($directory)) {
+      mkdir($directory);
+   }
+}
+
 // *** Clean the cache in development mode ***
 if (isDevMode()) {
    logTrace('Clean the cache folder');
@@ -62,7 +77,7 @@ if (isDevMode()) {
 }
 
 // *** Header handling ***
-// Set some header value
+// Set some header value according to the configuration
 foreach (config('header.default') as $header => $value) {
    if ($value) {
       logTrace("Set header : '$header' = '$value'");
