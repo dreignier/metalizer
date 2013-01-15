@@ -47,6 +47,12 @@ manager('Util');
 logDebug('Metalizer loaded');
 logTrace('Mode : ' . mode());
 
+logTrace('Error reporting : ' . config('error.reporting'));
+error_reporting(config('error.reporting'));
+
+logTrace('Time limit : ' . config('php.time_limit'));
+set_time_limit(config('php.time_limit'));
+
 // *** Make sure that some mandatory directories are here ***
 $directories = array(
    PATH_RESOURCE,
@@ -75,6 +81,10 @@ if (isDevMode()) {
    _file()->rmdir(PATH_RESOURCE_GEN);
    mkdir(PATH_RESOURCE_GEN);
 }
+
+// ** Execute workers ***
+$pool = new WorkerPool();
+$pool->run();
 
 // *** Header handling ***
 // Set some header value according to the configuration
