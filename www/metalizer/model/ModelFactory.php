@@ -344,38 +344,41 @@ class ModelFactory extends MetalizerObject {
 
       // Do we use named parameters or anonymous parameters ?
       $useNamedParam = !sizeof($params);
-      if ($useNamedParam) {
+      if (!$useNamedParam) {
          $paramsKeys = array_keys($params);
          $useNamedParam = !is_integer($paramsKeys[0]);
       }
 
       // Handle order by
-      if ($this->$orderBy) {
-         $extra .= ' ORDER BY ' . ($useNamedParam ? ':orderby' : '?');
-         if ($useNamedParam) {
-            $params[':orderby'] = $this->orderBy;
-         } else {
-            $params[] = $this->orderBy;
+      if ($this->orderBy) {
+         $order = '';
+         $offset = 0;
+         
+         if (strpos($this->orderBy, 'DESC') !== false) {
+            $offset = 4;
          }
+         
+         if (strpos($this->orderBy, 'ASC') !== false) {
+            $offset = 3;
+         }
+         
+         if ($offset) {
+            $order = substr($this->orderBy, -$offset);
+            $this->orderBy = trim(substr($this->orderBy, 0, -$offset));
+         }
+         
+         $extra .= " ORDER BY `$this->orderBy` $order";
       }
 
       // Handle limit and offset
       if ($this->limit) {
-         if ($useNamedParam) {
-            $extra .= ' LIMIT :offset, :limit';
-            $params[':offset'] = $this->offset;
-            $params[':limit'] = $this->limit;
-         } else {
-            $extra .= ' LIMIT ?, ?';
-            $params[] = $this->offset;
-            $params[] = $this->limit;
-         }
+         $extra .= " LIMIT $this->offset, $this->limit";
       }
 
       $beans = R()->find($this->table, $where . $extra, $params);
-
-      $beans = $this->wrapAll($beans);
-
+      
+      $result = $this->wrapAll($beans);
+      
       if ($this->limit == 1) {
          $result = sizeof($result) > 0 ? $result[0] : null;
       }
