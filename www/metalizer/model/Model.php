@@ -184,7 +184,7 @@ abstract class Model extends MetalizerObject {
          }
       }
 
-      if (is_object($value) && is_a($value, 'Model')) {
+      if (is_object($value) && $value instanceof Model) {
          $this->fetched[$name] = $value;
          $value = $value->getBean();
       }

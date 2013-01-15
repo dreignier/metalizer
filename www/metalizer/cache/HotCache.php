@@ -51,7 +51,7 @@ class HotCache extends Cache {
     *    <code>true</code> if the given value is a directory, <code>false</code> otherwise
     */
    protected function isDirectory($value) {
-      return is_object($value) && is_a($value, 'HotCache_Directory'); 
+      return is_object($value) && $value instanceof HotCache_Directory; 
    }
    
    /**
