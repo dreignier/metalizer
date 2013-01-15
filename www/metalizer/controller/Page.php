@@ -64,6 +64,11 @@ class Page extends Controller {
     *    The parameters for the execute method of the given webscript.
     */
    public function component($region, $webscript, $parameters = array()) {
+      if (!is_array($parameters)) {
+         $arguments = func_get_args();
+         $parameters = array_slice($arguments, 2);
+      }
+      
       $this->components[$region] = $webscript;
       $this->parameters[$region] = $parameters;
    }
