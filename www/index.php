@@ -24,7 +24,7 @@
 // *** Some very basic functions. For debug only ***
 
 function debug($message) {
-   if (is_object($message) && is_a($message, 'Exception')) {
+   if (is_object($message) && $message instanceof Exception) {
       echo 'Exception occured : (' . $message->getCode() . ') ' . $message->getMessage() . '<br/>';
       echo $message->getFile() . '(' . $message->getLine() . ')';
       echo str_replace('#', '<br/>#', $message->getTraceAsString());
@@ -87,12 +87,6 @@ define('PATH_DATA', PATH_ROOT . '../data/');
 
 require PATH_METALIZER . 'initialize.php';
 
-logTrace('Error reporting : ' . config('error.reporting'));
-error_reporting(config('error.reporting'));
-
-logTrace('Time limit : ' . config('php.time_limit'));
-set_time_limit(config('php.time_limit'));
-
 try {
    // *** Resolve the page, the method and the parameters ***
 	$pathInfo = trim(@server()->get('PATH_INFO'));
@@ -125,14 +119,14 @@ try {
    
    echo $output;
 } catch (Exception $exception) {
-   _header()->setHttpResponseCode((is_a($exception, 'HttpException') ? $exception->getCode() : 500));
+   _header()->setHttpResponseCode($exception instanceof HttpException ? $exception->getCode() : 500);
    ob_end_clean();
 
    logError('Exception occured : ' . get_class($exception) . ' (' . $exception->getCode() . ') ' . $exception->getMessage());
    logError($exception->getFile() . '(' . $exception->getLine() . ')');
    logError($exception->getTraceAsString());
 
-   if (config('page.error') && class_exists(config('page.error')) && is_a(config('page.error'), 'Page')) {
+   if (config('page.error') && class_exists(config('page.error')) && config('page.error') instanceof Page) {
       $page = new Error();
       call_user_func_array(array($page, config('page.default_method')));
       $age->display();
