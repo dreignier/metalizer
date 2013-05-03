@@ -10,3 +10,9 @@ $config['url.root'] = '/';
  * @var string
  */
 $config['url.site.base'] = 'index.php';
+
+/**
+ * The parameter for all resources url in production mode
+ * @var string
+ */
+$config['url.dummy_param'] = '0';
