@@ -125,7 +125,7 @@ class Page extends Controller {
     *    A http response code.
     */
    protected function setCode($code) {
-      if ($this->log()-isInfoEnabled()) {
+      if ($this->log()->isInfoEnabled()) {
          $this->log()->info("New response code : $code");
       }
       _header()->setHttpResponseCode($code);
