@@ -26,18 +26,41 @@ class StoreUtil extends Util {
 
    /**
     * The StoreUtil use a local cache.
-    * @var array[mixed]
+    * @var array[RedBean_OODBBean]
     */
    private $cache = array();
 
    /**
-    * @param $key string
+    * Get a bean for a key
+    * @param $name string
     *    A key
-    * @return string
-    *    The path to the file/directory associated to the directory 
+    * @param $create boolean 
+    *    If true, a new bean is created is the bean can't be found
+    * @return RedBean_OODBBean
+    *    The bean for the given key.
     */
-   private function getFilePath($key) {
-      return PATH_DATA . str_replace('.', '/', $key);
+   private function getBean($name, $create = true) {
+      // Try the cache
+      if (isset($this->cache[$name])) {
+         return $this->cache[$name];
+      }
+      
+      // Try the database
+      $bean = R()->findOne('store', 'name = ?', array($name));
+      if ($bean && $bean->id != 0) {
+         $this->cache[$name] = $bean;
+         return $bean;
+      }
+      
+      if (!$create) {
+         return null;
+      }
+      
+      // Create a new bean
+      $bean = R()->dispense('store');
+      $bean->name = $name;
+      $this->cache[$name] = $bean;
+      return $bean;
    }
 
    /**
@@ -50,19 +73,8 @@ class StoreUtil extends Util {
     *    If true, the value will be serialized. Optional. true by default.
     */
    public function store($name, $value, $serialize = true) {
-      if ($this->log()->isDebugEnabled()) {
-         $this->log()->debug("Storing $name");
-      }
-      
-      $file = $this->getFilePath($name);
-      $this->cache[$file] = $value;
-      _file()->checkDirectory($file);
-      
-      if ($serialize) {
-         $value = serialize($value);
-      }
-      
-      file_put_contents($file, $value);
+      $bean = $this->getBean($name);
+      $bean->value = $serialize ? serialize($value) : $value;
    }
 
    /**
@@ -75,29 +87,11 @@ class StoreUtil extends Util {
     *    If true, the value will be unserialized. Optional. true by default.
     */
    public function load($name, $unserialize = true) {
-      if ($this->log()->isDebugEnabled()) {
-         $this->log()->debug("Load $name");
-      }
-      
-      if (!$this->exists($name)) {
+      if (!$bean = $this->getBean($name, false)) {
          return null;
       }
       
-      $file = $this->getFilePath($name);
-
-      if (isset($this->cache[$file])) {
-         return $this->cache[$file];
-      }
-
-      $result = file_get_contents($file);
-      
-      if ($unserialize) {
-         $result = unserialize($result);
-      }
-      
-      $this->cache[$file] = $result;
-
-      return $result;
+      return $unserialize ? unserialize($bean->value) : $bean->value;
    }
 
    /**
@@ -106,22 +100,9 @@ class StoreUtil extends Util {
     * 	The name of a value or a folder of values.
     */
    public function delete($name) {
-      if ($this->log()->isDebugEnabled()) {
-         $this->log()->debug("Deleting $value");
-      }
-      
-      $file = $this->getFilePath($name);
-
-      unset($this->cache[$file]);
-
-      if ($this->exists($name)) {
-         unlink($file);
-         return;
-      }
-
-      // Maybe it's a folder
-      if (is_dir($file)) {
-         rmdir($file);
+      if ($bean = $this->getBean($name, false)) {
+         $bean->trash();
+         unset($this->cache[$name]);
       }
    }
 
@@ -132,15 +113,19 @@ class StoreUtil extends Util {
     * 	true if the value is in the store, false otherwise.
     */
    public function exists($name) {
-      $file = $this->getFilePath($name);
-
-      if (isset($this->cache[$file])) {
-         return true;
-      }
-
-      return file_exists($file);
+      return $this->getBean($name, false) != null;
    }
 
+   /**
+    * Finalize the store
+    */
+   public function finalize() {
+      foreach ($this->cache as $bean) {
+         if ($bean->id == 0 || $bean->getMeta('tainted')) {
+            R()->store($bean);
+         }
+      }
+   }
 }
 
 /**
