@@ -114,7 +114,7 @@ abstract class Model extends MetalizerObject {
 
    /**
     * Set the redbean bean of this model.
-    * This method should _NOT_ be used by an other class than ModelFactory.
+    * This method should _NOT_ be used by any other class than ModelFactory.
     * @param $bean RedBean_OODBBean
     *		The new redbean bean for this model.
     */

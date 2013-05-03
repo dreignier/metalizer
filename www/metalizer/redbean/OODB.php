@@ -20,7 +20,6 @@
 /**
  * @author David Reignier
  * We override the Redbean OODB with this class in Metalizer.
- * This OODB can use the Metalizer cache for beans.
  */
 class OODB extends RedBean_OODB {
 
@@ -31,25 +30,10 @@ class OODB extends RedBean_OODB {
    private $util;
 
    /**
-    * The bean cache
-    * @var RedbeanUtil_BeanCache
-    */
-   private $cache;
-
-   /**
     * @see RedBean_OODB#__construct
     */
    public function __construct($writer) {
       parent::__construct($writer);
-      $this->cache = new BeanCache();
-   }
-
-   /**
-    * @return BeanCache
-    *    The bean cache.
-    */
-   public function getCache() {
-      return $this->cache;
    }
 
    /**
@@ -77,13 +61,7 @@ class OODB extends RedBean_OODB {
          $this->log()->debug("Load $type : $id");
       }
       
-      if ($bean = $this->cache->load($type, $id)) {
-         return $bean;
-      }
-
       $bean = parent::load($type, $id);
-
-      $this->cache->store($bean);
 
       return $bean;
    }
@@ -98,12 +76,6 @@ class OODB extends RedBean_OODB {
       
       $result = parent::store($bean);
       
-      if ($this->log()->isDebugEnabled()) {
-         $this->log()->debug("New id : " . $bean->id);
-      }
-      
-      $this->cache->store($bean);
-
       return $result;
    }
 
@@ -115,8 +87,6 @@ class OODB extends RedBean_OODB {
          $this->log()->debug("Trash " . $bean->getMeta('type') . ' : ' . $bean->id);
       }
       
-      $this->cache->trash($bean);
-
       parent::trash($bean);
    }
 
@@ -131,8 +101,6 @@ class OODB extends RedBean_OODB {
     * @see RedBean_OODB#wipe
     */
    public function wipe($type) {
-      $this->cache->trashAll($type);
-
       return parent::wipe($type);
    }
 

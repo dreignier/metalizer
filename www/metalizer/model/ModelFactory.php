@@ -84,7 +84,7 @@ class ModelFactory extends MetalizerObject {
     * 	The class to handle
     */
    public function __construct($class) {
-      if (!is_subclass_of($class, 'Model')) {
+      if (!@is_subclass_of($class, 'Model')) {
          throw new InternalErrorException("$class is not a subclass of Model");
       }
 
@@ -252,14 +252,6 @@ class ModelFactory extends MetalizerObject {
       }
 
       return $this->loadInstance($bean);
-   }
-
-   /**
-    * Alias of <code>$this->find()</code>;
-    * @deprecated Use <code>$this->find()</code>
-    */
-   public function findAll() {
-      return $this->find();
    }
 
    private function generateSubclassesSqlPart() {

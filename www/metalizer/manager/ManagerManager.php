@@ -47,7 +47,6 @@ class ManagerManager extends Manager {
 
    /**
     * Initialize the ManagerManager. After that, you can access to the ManagerManager with the ManagerManager#instance() function.
-    * In production mode, the ManagerManager will try to retrieve itself in its cache file.
     */
    static public function initialize() {
       // REMINDER : We can't use utils here, because absolutely nothing is initialized

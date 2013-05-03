@@ -5,15 +5,3 @@
  * @var bool
  */
 $config['cache.enabled'] = true;
-
-/**
- * The maximum size of the cache, in MB
- * @var int
- */
-$config['cache.size'] = 50;
-
-/**
- * The flush ratio when the cache must clean itself.
- * @var float
- */
-$config['cache.flush_ratio'] = 0.5;

@@ -55,6 +55,14 @@ class Bean extends RedBean_SimpleModel implements Serializable {
    }
    
    /**
+    * Delegate the getMeta method to the internal bean
+    * @see RedBean_OODBBean#getMeta
+    */
+   public function getMeta($meta) {
+      return $this->unbox()->getMeta($meta);
+   }
+   
+   /**
     * @return Model
     *    The Model of the current bean
     */
