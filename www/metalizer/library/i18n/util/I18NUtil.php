@@ -84,42 +84,33 @@ class I18NUtil extends Util {
       
       $this->checkLanguage($language);
 
-      if (cache()->has("lang.$language")) {
-         if ($this->log()->isInfoEnabled()) {
-            $this->log()->info("Loading from cache");
-         }
-         
-         $this->i18n = cache()->load("lang.$language");
-      } else {
-         if ($this->log()->isInfoEnabled()) {
-            $this->log()->info("Reading lang files");
-         }
-         
-         $lang = array();
-
-         // Metalizer default lang files
-         foreach (_file()->glob(PATH_METALIZER_LANG . "$language/*.php") as $file) {
-            require $file;
-         }
-
-         // Metalizer libraries lang files
-         foreach (_file()->glob(PATH_METALIZER_LIBRARY . "*/lang/$language/*.php") as $file) {
-            require $file;
-         }
-
-         // Application libraries lang files
-         foreach (_file()->glob(PATH_APPLICATION_LIBRARY . "*/lang/$language/*.php") as $file) {
-            require $file;
-         }
-
-         // Application lang files
-         foreach (_file()->glob(PATH_APPLICATION_LANG . "$language/*.php") as $file) {
-            require $file;
-         }
-
-         $this->i18n = $lang;
-         cache()->store("lang.$language", $lang);
+      if ($this->log()->isInfoEnabled()) {
+         $this->log()->info("Reading lang files");
       }
+      
+      $lang = array();
+
+      // Metalizer default lang files
+      foreach (_file()->glob(PATH_METALIZER_LANG . "$language/*.php") as $file) {
+         require $file;
+      }
+
+      // Metalizer libraries lang files
+      foreach (_file()->glob(PATH_METALIZER_LIBRARY . "*/lang/$language/*.php") as $file) {
+         require $file;
+      }
+
+      // Application libraries lang files
+      foreach (_file()->glob(PATH_APPLICATION_LIBRARY . "*/lang/$language/*.php") as $file) {
+         require $file;
+      }
+
+      // Application lang files
+      foreach (_file()->glob(PATH_APPLICATION_LANG . "$language/*.php") as $file) {
+         require $file;
+      }
+
+      $this->i18n = $lang;
 
       $this->currentLanguage = $language;
    }
@@ -145,6 +136,28 @@ class I18NUtil extends Util {
       } else {
          return '$' . $key . '$';
       }
+   }
+   
+   /**
+    * Include a internotialized text.
+    * @param $key string
+    *    The text key
+    */
+   public function text($key) {
+      $file = PATH_APPLICATION_LANG . $this->currentLanguage . "/text/$key.php";
+      
+      if (!file_exists($file)) {
+         // Look in metalizer folder
+         $file = PATH_METALIZER_LANG . $this->currentLanguage . "/text/$key.php";
+         
+         if (!file_exists($file)) {
+            // Key not found
+            echo '$' . "$key.text" . '$';
+            return;
+         }
+      }
+      
+      include($file);
    }
 
    /**
@@ -188,6 +201,31 @@ class I18NUtil extends Util {
       } else {
          return resUrl(PATH_RESOURCE_JS_LANG . "$language.js", false);
       }
+   }
+   
+   /**
+    * Load a language according to the Accept-Language header.
+    */
+   public function loadFromAcceptLanguage() {
+      $acceptLanguage = server()->get('HTTP_ACCEPT_LANGUAGE');
+      
+      $languages;
+      if (strpos($acceptLanguage, ',') !== false) {
+         $languages = explode(',', $acceptLanguage);
+      } else {
+         $languages = array($acceptLanguage);
+      }
+      
+      foreach ($languages as $language) {
+         foreach (config('lang.languages') as $available) {
+            if (strpos($language, $available) !== false) {
+               $this->load($available);
+               return;
+            }
+         }
+      }
+      
+      $this->load(config('lang.default'));
    }
 
 }

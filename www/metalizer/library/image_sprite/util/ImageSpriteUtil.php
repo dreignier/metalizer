@@ -111,9 +111,14 @@ class ImageSpriteUtil extends Util {
 				list($x, $y) = getimagesize($file);
 				$css .= '.' . $this->getCssClass($file) . " {\n";
 				$css .= "\tbackground-image: url('" . config('url.root') . $file . "');\n";
+            $css .= "\tbackground-repeat: no-repeat;\n";
 				$css .= "\theight: $y" . "px;\n";
 				$css .= "\twidth: $x" . "px;\n";
 				$css .= "}\n\n";
+            
+            $css .= '.' . $this->getCssClass($file) . "-easy {\n";
+            $css .= "\tbackground-image: url('" . config('url.root') . $file . "');\n";
+            $css .= "}\n\n";
 			}
 		}
 		
@@ -174,9 +179,14 @@ class ImageSpriteUtil extends Util {
 				$css .= '.' . $this->getCssClass($file) . " {\n";
 				$css .= "\tbackground-image: url('" . config('url.root') . $spritePath . "');\n";
 				$css .= "\tbackground-position: 0 -$y" . "px;\n";
+            $css .= "\tbackground-repeat: no-repeat;\n";
 				$css .= "\theight: $height" . "px;\n";
 				$css .= "\twidth: $x" . "px;\n";
 				$css .= "}\n\n";
+            
+            $css .= '.' . $this->getCssClass($file) . "-easy {\n";
+            $css .= "\tbackground-image: url('" . config('url.root') . $file . "');\n";
+            $css .= "}\n\n";
 				
 				$y += $height;
 			}
