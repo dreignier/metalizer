@@ -18,31 +18,24 @@
  */
 
 /**
+ * Provide some basic helpers for metalizer
  * @author David Reignier
  *
  */
-class GetUtil extends Util {
-
-   /**
-    * Get a variable in the $_GET array
-    * @param $key string
-    *    A key.
-    * @return mixed
-    *    $_GET[$key]
-    */
-   public function get($key) {
-      return isset($_GET[$key]) ? $_GET[$key] : null;
-   }
-
-}
-
-/**
- * @return GetUtil
- */
-function get($key = null) {
-   if ($key == null) {
-      return util('Get');
+class MetalizerUtil extends Util {
+   
+   private $path = null;
+   
+   public function setPath($path) {
+      $this->path = $path;
    }
    
-   return util('Get')->get($key);
+   public function path() {
+      return $this->path;
+   }
+   
+}
+
+function metalizer() {
+   return util('Metalizer');
 }

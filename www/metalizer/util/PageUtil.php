@@ -50,7 +50,7 @@ class PageUtil extends Util {
       $reflectionClass = new ReflectionClass($page);
 
       if (!$reflectionClass->hasMethod($method)) {
-         throw new InternalErrorException("There's no '$method' in the page '$page'");
+         throw new InternalErrorException("There's no method '$method' in the page '$page'");
       }
 
       $reflectionMethod = $reflectionClass->getMethod($method);

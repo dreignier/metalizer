@@ -103,7 +103,6 @@ class RedbeanUtil extends Util {
          $this->log()->info('Finalize redbean');
       }
       
-      $this->oodb->getCache()->finalize();
       R::close();
    }
 

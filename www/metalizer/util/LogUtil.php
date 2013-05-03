@@ -37,7 +37,7 @@ class LogUtil extends Util {
     * 	A string like "log/metalizer-(today)"
     */
    private function getLogFile() {
-      return PATH_LOG . 'metalizer-' . date('Y-m-d');
+      return PATH_LOG . 'metalizer-' . date('Y-m-d') . '.log';
    }
 
    /**
@@ -95,8 +95,10 @@ class LogUtil extends Util {
       if ($class) {
          $class = "[$class]";
       }
+      
+      $log = "[$time][$level]$class $message \n";
 
-      fwrite($handle, "[$time][$level]$class $message \n");
+      fwrite($handle, $log);
       fclose($handle);
    }
 

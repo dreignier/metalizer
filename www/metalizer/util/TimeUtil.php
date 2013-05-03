@@ -32,13 +32,54 @@ class TimeUtil extends Util {
 
    /**
     * Return the current time in a Unix timestamp.
-    * @return long
-    * 	The current time.
+    * @param $object boolean
+    *    If true, the result is a DateTime object.
+    * @return mixed
+    * 	The current time. If $object is true, the result is a DateTime object. If $object is false, the result is <code>time()</code>.
     */
-   public function now() {
-      return time();
+   public function now($object = false) {
+      $time = time();
+      $datetime = new DateTime();
+      $time -= $datetime->getOffset();
+      
+      if ($object) {
+         $datetime->setTimeZone(new DateTimeZone('UTC'));
+         $datetime->setTimeStamp($time);
+         return $datetime;
+      } else {
+         return $time;
+      }
    }
+   
+   public function datetime($time) {
+      $result = new DateTime();
+      $result->setTimestamp($time);
+      return $result;
+   }
+   
+   public function parse($format, $time) {
+      $result = Datetime::createFromFormat($format, $time);
+      
+      if (!$result || !($result instanceof DateTime)) {
+         throw new DateFormatException("Can't parse '$time' with the format '$format'");
+      }
+      
+      return $result->getTimestamp();
+   }
+   
+   public function format($format, $time = null) {
+      $date = new Datetime();
+      $date->setTimestamp($time ? $time : time());
+      return $date->format($format);
+   }
+   
+}
 
+/**
+ * @return TimeUtil
+ */
+function _time() {
+   return util('Time');
 }
 
 /**

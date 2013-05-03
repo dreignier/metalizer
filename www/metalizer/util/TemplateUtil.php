@@ -31,32 +31,26 @@ class TemplateUtil extends Util {
    private $templates = array();
 
    public function __construct() {
-      if ($templates = cache()->load('metalizer.templates')) {
-         $this->templates = $templates;
-      } else {
-         $paths = array(
-            PATH_METALIZER . 'template/*.php', 
-            PATH_METALIZER_LIBRARY . '*/template/*.php', 
-            PATH_APPLICATION_LIBRARY . '*/template/*.php', 
-            PATH_APPLICATION . 'template/*.php'
-         );
-         
-         if ($this->log()->isDebugEnabled()) {
-            $this->log()->debug('Loading all templates');
-         }
+      $paths = array(
+         PATH_METALIZER . 'template/*.php', 
+         PATH_METALIZER_LIBRARY . '*/template/*.php', 
+         PATH_APPLICATION_LIBRARY . '*/template/*.php', 
+         PATH_APPLICATION . 'template/*.php'
+      );
       
-         $trace = $this->log()->isTraceEnabled();
-         foreach ($paths as $path) {
-            foreach (_file()->glob($path) as $file) {
-               if ($trace) {
-                  $this->log()->trace("Found $file");
-               }
-               
-               $this->templates[substr($file, strpos($file, '/template/') + 10, -4)] = $file;
+      if ($this->log()->isDebugEnabled()) {
+         $this->log()->debug('Loading all templates');
+      }
+   
+      $trace = $this->log()->isTraceEnabled();
+      foreach ($paths as $path) {
+         foreach (_file()->glob($path) as $file) {
+            if ($trace) {
+               $this->log()->trace("Found $file");
             }
+            
+            $this->templates[substr($file, strpos($file, '/template/') + 10, -4)] = $file;
          }
-         
-         cache()->store('metalizer.template', $this->templates);
       }
    }
 

@@ -18,31 +18,34 @@
  */
 
 /**
- * @author David Reignier
+ * Helpers for the cookies
  *
+ * @author David Reignier
  */
-class GetUtil extends Util {
-
-   /**
-    * Get a variable in the $_GET array
-    * @param $key string
-    *    A key.
-    * @return mixed
-    *    $_GET[$key]
+class CookieUtil extends Util {
+   
+      /**
+    * Get a cookie value
+    * @param $name string
+    *    The cookie name
     */
-   public function get($key) {
-      return isset($_GET[$key]) ? $_GET[$key] : null;
+   public function get($name) {
+      return isset($_COOKIE[$name]) ? $_COOKIE[$name] : null; 
    }
-
+   
+   public function set($name, $value, $expire = 0) {
+      if ($expire != 0) {
+         $expire += now();
+      }
+      
+      setcookie($name, $value, $expire);
+   }
+      
 }
 
 /**
- * @return GetUtil
+ * @return CookieUtil
  */
-function get($key = null) {
-   if ($key == null) {
-      return util('Get');
-   }
-   
-   return util('Get')->get($key);
-}
+function cookie() {
+   return util('Cookie');
+}  
