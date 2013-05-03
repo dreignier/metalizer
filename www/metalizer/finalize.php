@@ -35,11 +35,9 @@ logDebug('Finalize model factories');
 manager('ModelFactory')->finalize();
 
 // *** Finalize utils ***
-logDebug('Finalize properties');
-property()->finalize();
+
+logDebug('Finalize store util');
+store()->finalize();
 
 logDebug('Finalize redbean');
 redbean()->finalize();
-
-logDebug('Finalize cache');
-cache()->finalize();

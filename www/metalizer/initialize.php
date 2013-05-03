@@ -68,34 +68,11 @@ foreach ($directories as $directory) {
    }
 }
 
-// *** Clean the cache in development mode ***
-if (isDevMode()) {
-   logTrace('Clean the cache folder');
-   _file()->rmdir(PATH_CACHE);
-   mkdir(PATH_CACHE);
-}
-
 // *** Clean the generated resources in development mode
 if (isDevMode()) {
    logTrace('Clean the generated resources folder');
    _file()->rmdir(PATH_RESOURCE_GEN);
    mkdir(PATH_RESOURCE_GEN);
-}
-
-// ** Execute workers ***
-$pool = new WorkerPool();
-$pool->run();
-
-// *** Header handling ***
-// Set some header value according to the configuration
-foreach (config('header.default') as $header => $value) {
-   if ($value) {
-      logTrace("Set header : '$header' = '$value'");
-      _header()->set($header, $value);
-   } else {
-      logTrace("Remove header : '$header'");
-      _header()->remove($header);
-   }
 }
 
 // *** Application initialization ***
