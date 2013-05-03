@@ -53,6 +53,18 @@ class StringUtil extends Util {
 
       return $result;
    }
+   
+   /**
+    * Test if a string is a valid email address
+    * @param $string string
+    *    A string
+    * @return boolean
+    *    True if the given string is a valid email address, false otherwise.
+    */
+   public function isEmail($string) {
+      static $pattern = '/^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*\@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i';
+      return preg_match($pattern, $string);
+   }
 
 }
 
